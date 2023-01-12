@@ -1,0 +1,8 @@
+﻿version: '3'
+services:
+  hometg:
+    image: HomeTGCollection
+    build:
+      dockerfile: HomeTGCollection\Dockerfile
+    ports:
+      - "3500:3500"
