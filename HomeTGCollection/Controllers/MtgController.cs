@@ -14,10 +14,16 @@ namespace HomeTG.Controllers
             _db = db;
         }
 
-        [HttpGet("cards/{name}")]
-        public IEnumerable<Card> GetCards(string name, string? set = null)
+        [HttpPost("cards/search")]
+        public IEnumerable<Card> SearchCards(SearchOptions options)
         {
-            return _db.GetCards(name, set);
+            return _db.SearchCards(options);
+        }
+
+        [HttpGet("cards")]
+        public IEnumerable<Card> GetCards([FromQuery] string[] ids)
+        {
+            return _db.GetCards(ids.ToList());
         }
     }
 }

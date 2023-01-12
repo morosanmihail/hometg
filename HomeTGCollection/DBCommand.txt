@@ -1,0 +1,1 @@
+﻿sqlite3 Collection.db "create table cards(uuid string, name string, quantity int32, foilquantity int32, setcode string, collection string); create table collection(id string, description string);"
