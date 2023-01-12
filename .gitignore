@@ -351,3 +351,4 @@ MigrationBackup/
 /HomeTGCollection/DB/AllPrintings.db-wal
 /HomeTGCollection/DB/AllPrintings.db-shm
 /HomeTGCollection/DB/AllPrintings.db
+/HomeTGCollection/DB/Collection.db
