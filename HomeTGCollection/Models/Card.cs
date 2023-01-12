@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeTG.Models
 {
     [Table("cards")]
+    [PrimaryKey("Id")]
     public class Card
     {
         [Column("uuid")]
@@ -13,5 +15,8 @@ namespace HomeTG.Models
 
         [Column("setcode")]
         public string SetCode { get; set; }
+
+        [Column("scryfallId")]
+        public string ScryfallId { get; set; }
     }
 }
