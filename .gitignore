@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/HomeTGCollection/DB/AllPrintings.db-wal
+/HomeTGCollection/DB/AllPrintings.db-shm
+/HomeTGCollection/DB/AllPrintings.db
