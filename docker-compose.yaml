@@ -3,6 +3,6 @@ services:
   hometg:
     image: hometg
     build:
-      dockerfile: HomeTGCollection\Dockerfile
+      dockerfile: HomeTGCollection/Dockerfile
     ports:
       - "3500:3500"
