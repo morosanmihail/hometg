@@ -5,4 +5,4 @@ services:
     build:
       dockerfile: HomeTGCollection/Dockerfile
     ports:
-      - "80:5234"
+      - "5234:80"
