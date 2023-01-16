@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HomeTGCollection.Controllers
+namespace HomeTGCollection.Controllers.Collection
 {
     [Route("collection")]
     [ApiController]
@@ -19,21 +19,27 @@ namespace HomeTGCollection.Controllers
         [HttpGet("cards/{name}")]
         public IEnumerable<CollectionCard> GetCards(string name, string? set = null)
         {
-            var cards = _mtgdb.SearchCards(new SearchOptions { Name = name, Set = set});
+            var cards = _mtgdb.SearchCards(new SearchOptions { Name = name, Set = set });
             var cardsInCollection = _db.GetCards(cards.Select(c => c.Id).ToList());
             return cardsInCollection;
         }
 
         [HttpPut("cards/add")]
-        public CollectionCard AddCards(string id, Int32 quantity = 0, Int32 foilquantity = 0)
+        public CollectionCard AddCards(string id, int quantity = 0, int foilquantity = 0)
         {
             return _db.AddCard(id, quantity, foilquantity);
         }
 
         [HttpPost("cards/delete")]
-        public CollectionCard RemoveCards(string id, Int32 quantity = 0, Int32 foilquantity = 0)
+        public CollectionCard RemoveCards(string id, int quantity = 0, int foilquantity = 0)
         {
             return _db.RemoveCard(id, quantity, foilquantity);
+        }
+
+        [HttpGet("cards/list")]
+        public IEnumerable<CollectionCard> ListCards(int offset = 0)
+        {
+            return _db.ListCards(offset).ToList();
         }
     }
 }
