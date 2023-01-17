@@ -21,6 +21,7 @@ namespace HomeTGCollection.Controllers.Collection
         {
             var cards = _mtgdb.SearchCards(new SearchOptions { Name = name, Set = set });
             var cardsInCollection = _db.GetCards(cards.Select(c => c.Id).ToList());
+            // cardsInCollection.Join(cards, c => c.Id, cdb => cdb.Id, (c, cdb) => new { c.Id, Scryfall = cdb.ScryfallId }).ToList();
             return cardsInCollection;
         }
 

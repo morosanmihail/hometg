@@ -17,6 +17,9 @@ namespace HomeTG.Models
 
         [Column("collection")]
         public string? Collection { get; set; }
+
+        [Column("lastupdated")]
+        public DateTime? LastUpdated { get; set; }
     }
 
     [Table("collection")]

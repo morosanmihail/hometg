@@ -16,8 +16,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var collectionSQL = "create table if not exists cards(uuid string, quantity int32, foilquantity int32, collection string); create table collection(id string, description string);";
-var incomingSQL = "create table if not exists incoming(uuid string, quantity int32, foilquantity int32, collection string);";
+var collectionSQL = (
+    "create table if not exists cards(uuid string, quantity int32, foilquantity int32, collection string, lastupdated datetime); " +
+    "create table collection(id string, description string); "
+);
+var incomingSQL = "create table if not exists incoming(uuid string, quantity int32, foilquantity int32, collection string, lastupdated datetime);";
 DBFiles.CreateDBIfNotExists(@"DB\", "Collection.db", collectionSQL + incomingSQL);
 await DBFiles.DownloadPrintingsDBIfNotExists(@"https://mtgjson.com/api/v5/AllPrintings.sqlite", @"DB\", "AllPrintings.db");
 
