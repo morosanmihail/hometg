@@ -9,6 +9,7 @@ namespace HomeTGCollection.Utils
     {
         public static void CreateDBIfNotExists(string Filename, string sql)
         {
+            if (!Directory.Exists("DB")) Directory.CreateDirectory("DB");
             if (!System.IO.File.Exists(Filename))
             {
                 using (var sqlite = new SqliteConnection(@"Data Source=" + Filename))
