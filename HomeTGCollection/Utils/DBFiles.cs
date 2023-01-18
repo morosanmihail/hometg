@@ -21,23 +21,26 @@ namespace HomeTGCollection.Utils
             }
         }
 
-        public async static Task DownloadPrintingsDBIfNotExists(string DBURL, string LocalFolder, string Filename)
+        public async static Task<bool> DownloadPrintingsDBIfNotExists(string DBURL, string Filename)
         {
             bool download = false;
 
             string remoteHash = "";
 
-            await SaveUrlContent(DBURL + ".sha256", LocalFolder, Filename + ".sha256");
-            remoteHash = File.ReadAllText(LocalFolder + Filename + ".sha256");
+            string? LocalFolder = new FileInfo(Filename).DirectoryName;
+            if (LocalFolder != null) Directory.CreateDirectory(LocalFolder);
+
+            await SaveUrlContent(DBURL + ".sha256", Filename + ".sha256");
+            remoteHash = File.ReadAllText(Filename + ".sha256");
 
             string localHash = "";
-            if (!File.Exists(LocalFolder + Filename))
+            if (!File.Exists(Filename))
             {
                 download = true;
             }
             else
             {
-                localHash = GetSHA256HashFromFile(LocalFolder + Filename);
+                localHash = GetSHA256HashFromFile(Filename);
                 if (remoteHash != localHash)
                 {
                     download = true;
@@ -47,9 +50,11 @@ namespace HomeTGCollection.Utils
             if (download)
             {
                 Console.WriteLine("File is NOT up to date. Downloading...");
-                await SaveUrlContent(DBURL, LocalFolder, Filename);
+                await SaveUrlContent(DBURL, Filename);
                 Console.WriteLine("Downloaded.");
             }
+
+            return download;
         }
 
         static string GetSHA256HashFromFile(string filePath)
@@ -64,7 +69,7 @@ namespace HomeTGCollection.Utils
             }
         }
 
-        static async Task SaveUrlContent(string url, string LocalFolder, string Filename)
+        static async Task SaveUrlContent(string url, string Filename)
         {
             using (var client = new HttpClient())
             using (var result = await client.GetAsync(url))
@@ -73,8 +78,7 @@ namespace HomeTGCollection.Utils
 
                 if (content != null)
                 {
-                    if (!Directory.Exists(LocalFolder)) Directory.CreateDirectory(LocalFolder);
-                    await File.WriteAllBytesAsync(LocalFolder + Filename, content);
+                    await File.WriteAllBytesAsync(Filename, content);
                 }
             }
         }

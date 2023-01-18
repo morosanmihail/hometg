@@ -1,10 +1,11 @@
 ﻿using HomeTG.Models;
+using HomeTGCollection.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeTG.Controllers
 {
-    [Route("api/mtg")]
+    [Route("mtg")]
     [ApiController]
     public class MtgController : ControllerBase
     {
@@ -24,6 +25,13 @@ namespace HomeTG.Controllers
         public IEnumerable<Card> GetCards([FromQuery] string[] ids)
         {
             return _db.GetCards(ids.ToList());
+        }
+
+        [HttpGet("update")]
+        public async Task<string> UpdateDatabase()
+        {
+            var downloadNeeded = await DBFiles.DownloadPrintingsDBIfNotExists(@"https://mtgjson.com/api/v5/AllPrintings.sqlite", @"DB/AllPrintings.db");
+            return downloadNeeded ? "New version downloaded." : "No new version needed.";
         }
     }
 }
