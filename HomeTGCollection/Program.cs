@@ -21,7 +21,7 @@ var collectionSQL = (
     "create table collection(id string, description string); "
 );
 var incomingSQL = "create table if not exists incoming(uuid string, quantity int32, foilquantity int32, collection string, lastupdated datetime);";
-DBFiles.CreateDBIfNotExists("Collection.db", collectionSQL + incomingSQL);
+DBFiles.CreateDBIfNotExists("DB/Collection.db", collectionSQL + incomingSQL);
 await DBFiles.DownloadPrintingsDBIfNotExists(@"https://mtgjson.com/api/v5/AllPrintings.sqlite", @"DB/", "AllPrintings.db");
 
 builder.Services.AddDbContext<DB>(options => options.UseSqlite(builder.Configuration.GetConnectionString("MtgJson")));

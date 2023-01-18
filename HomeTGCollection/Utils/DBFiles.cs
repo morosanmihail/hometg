@@ -9,9 +9,9 @@ namespace HomeTGCollection.Utils
     {
         public static void CreateDBIfNotExists(string Filename, string sql)
         {
-            if (!System.IO.File.Exists("DB/" + Filename))
+            if (!System.IO.File.Exists(Filename))
             {
-                using (var sqlite = new SqliteConnection(@"Data Source=\\DB\\" + Filename))
+                using (var sqlite = new SqliteConnection(@"Data Source=" + Filename))
                 {
                     sqlite.Open();
                     SqliteCommand command = new SqliteCommand(sql, sqlite);
