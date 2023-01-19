@@ -1,7 +1,9 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
 
 namespace HomeTG.Models
 {
@@ -17,7 +19,7 @@ namespace HomeTG.Models
 
         public IEnumerable<CollectionCard> GetCards(List<string> ids)
         {
-            return Cards.Where(c => ids.Contains(c.Id)).ToList();
+            return Cards.Where(c => ids.Contains(c.Id!)).ToList();
         }
 
         public IEnumerable<CollectionCard> ListCards(int offset)
@@ -25,11 +27,26 @@ namespace HomeTG.Models
             return Cards.Skip(offset).Take(50).ToList();
         }
 
-        public List<CollectionCard> AddCards(List<CollectionCard> newCards)
+        public IEnumerable<CollectionCard> ListIncoming(int offset)
+        {
+            return IncomingCards.Skip(offset).Take(50).ToList();
+        }
+
+        public List<CollectionCard> AddCardsToCollection(List<CollectionCard> newCards)
+        {
+            return AddCards(Cards, newCards);
+        }
+
+        public List<CollectionCard> AddCardsToIncoming(List<CollectionCard> newCards)
+        {
+            return AddCards(IncomingCards, newCards);
+        }
+
+        private List<CollectionCard> AddCards(DbSet<CollectionCard> db, List<CollectionCard> newCards)
         {
             var cards = new List<CollectionCard>();
             foreach (var newCard in newCards) {
-                var card = Cards.Find(newCard.Id);
+                var card = db.Find(newCard.Id);
                 if (card != null)
                 {
                     card.Quantity += newCard.Quantity;
@@ -37,7 +54,7 @@ namespace HomeTG.Models
                 } else
                 {
                     card = newCard;
-                    Cards.Add(newCard);
+                    db.Add(newCard);
                 }
                 cards.Add(card);
             }
@@ -45,17 +62,27 @@ namespace HomeTG.Models
             return cards;
         }
 
-        public CollectionCard RemoveCard(string id, Int32 quantity = 0, Int32 foilquantity = 0)
+        public CollectionCard? RemoveCardFromCollection(CollectionCard card)
         {
-            var existingCard = Cards.Find(id);
+            return RemoveCard(Cards, card);
+        }
+
+        public CollectionCard? RemoveCardFromIncoming(CollectionCard card)
+        {
+            return RemoveCard(IncomingCards, card);
+        }
+
+        private CollectionCard? RemoveCard(DbSet<CollectionCard> db, CollectionCard card)
+        {
+            var existingCard = db.Find(card.Id);
             if (existingCard != null)
             {
-                existingCard.Quantity = Math.Max(existingCard.Quantity - quantity, 0);
-                existingCard.FoilQuantity = Math.Max(existingCard.FoilQuantity - foilquantity, 0);
+                existingCard.Quantity = Math.Max(existingCard.Quantity - card.Quantity, 0);
+                existingCard.FoilQuantity = Math.Max(existingCard.FoilQuantity - card.FoilQuantity, 0);
 
                 if (existingCard.Quantity + existingCard.FoilQuantity == 0)
                 {
-                    Cards.Remove(existingCard);
+                    db.Remove(existingCard);
                 }
                 this.SaveChanges();
             }

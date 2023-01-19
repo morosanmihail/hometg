@@ -29,12 +29,12 @@ namespace HomeTG.Models
 
             if (searchOptions.Name != null && searchOptions.Name.Length > 0)
             {
-                cards = cards.Where(c => (c.Name.ToLower().Contains(searchOptions.Name)));
+                cards = cards.Where(c => (c.Name!.ToLower().Contains(searchOptions.Name)));
             }
 
             if (searchOptions.Set != null && searchOptions.Set.Length > 0)
             {
-                cards = cards.Where(c => c.SetCode.ToLower().Equals(searchOptions.Set));
+                cards = cards.Where(c => c.SetCode!.ToLower().Equals(searchOptions.Set));
             }
 
             return cards.ToList();
@@ -42,7 +42,7 @@ namespace HomeTG.Models
 
         public IEnumerable<Card> GetCards(List<string> ids)
         {
-            return Cards.Where(c=> ids.Contains(c.Id)).ToList();
+            return Cards.Where(c=> ids.Contains(c.Id!)).ToList();
         }
     }
 }

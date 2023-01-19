@@ -8,15 +8,15 @@ namespace HomeTG.Models
     public class Card
     {
         [Column("uuid")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Column("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Column("setcode")]
-        public string SetCode { get; set; }
+        public string? SetCode { get; set; }
 
         [Column("scryfallId")]
-        public string ScryfallId { get; set; }
+        public string? ScryfallId { get; set; }
     }
 }
