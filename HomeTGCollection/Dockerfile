@@ -6,16 +6,16 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["HomeTGCollection/HomeTGCollection.csproj", "HomeTGCollection/"]
-RUN dotnet restore "HomeTGCollection/HomeTGCollection.csproj"
+COPY ["HomeTGCollection/HomeTG.csproj", "HomeTGCollection/"]
+RUN dotnet restore "HomeTGCollection/HomeTG.csproj"
 COPY . .
 WORKDIR "/src/HomeTGCollection"
-RUN dotnet build "HomeTGCollection.csproj" -c Release -o /app/build
+RUN dotnet build "HomeTG.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "HomeTGCollection.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "HomeTG.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "HomeTGCollection.dll"]
+ENTRYPOINT ["dotnet", "HomeTG.dll"]
