@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using CsvHelper.Configuration;
+using CsvHelper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Reflection.Metadata.Ecma335;
 
 namespace HomeTG.Models
@@ -10,11 +13,11 @@ namespace HomeTG.Models
         public string? Set { get; set; }
     }
 
-    public class DB : DbContext
+    public class MTGDB : DbContext
     {
         public DbSet<Card> Cards { get; set; }
 
-        public DB(DbContextOptions<DB> options) : base(options)
+        public MTGDB(DbContextOptions<MTGDB> options) : base(options)
         {}
 
         public IEnumerable<Card> SearchCards(SearchOptions searchOptions)

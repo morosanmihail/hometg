@@ -9,8 +9,8 @@ namespace HomeTG.Controllers
     [ApiController]
     public class MtgController : ControllerBase
     {
-        private DB _db;
-        public MtgController(DB db)
+        private MTGDB _db;
+        public MtgController(MTGDB db)
         {
             _db = db;
         }

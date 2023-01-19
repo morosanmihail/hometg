@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace HomeTG.Models
 {
@@ -22,20 +25,24 @@ namespace HomeTG.Models
             return Cards.Skip(offset).Take(50).ToList();
         }
 
-        public CollectionCard AddCard(string id, Int32 quantity = 0, Int32 foilquantity = 0)
+        public List<CollectionCard> AddCards(List<CollectionCard> newCards)
         {
-            var card = Cards.Find(id);
-            if (card != null)
-            {
-                card.Quantity += quantity;
-                card.FoilQuantity += foilquantity;
-            } else
-            {
-                card = new CollectionCard { Id = id, Quantity = quantity, FoilQuantity = foilquantity };
-                Cards.Add(card);
+            var cards = new List<CollectionCard>();
+            foreach (var newCard in newCards) {
+                var card = Cards.Find(newCard.Id);
+                if (card != null)
+                {
+                    card.Quantity += newCard.Quantity;
+                    card.FoilQuantity += newCard.FoilQuantity;
+                } else
+                {
+                    card = newCard;
+                    Cards.Add(newCard);
+                }
+                cards.Add(card);
             }
             this.SaveChanges();
-            return card;
+            return cards;
         }
 
         public CollectionCard RemoveCard(string id, Int32 quantity = 0, Int32 foilquantity = 0)
