@@ -45,8 +45,10 @@ namespace HomeTG.Models
         private List<CollectionCard> AddCards(DbSet<CollectionCard> db, List<CollectionCard> newCards)
         {
             var cards = new List<CollectionCard>();
+            var existingCards = db.Where(c => newCards.Select(n => n.Id).Contains(c.Id)).ToDictionary(c => c.Id);
             foreach (var newCard in newCards) {
-                var card = db.Find(newCard.Id);
+                // var card = db.Find(newCard.Id);
+                var card = existingCards[newCard.Id];
                 if (card != null)
                 {
                     card.Quantity += newCard.Quantity;
