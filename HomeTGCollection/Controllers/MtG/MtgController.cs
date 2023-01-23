@@ -3,7 +3,7 @@ using HomeTGCollection.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HomeTG.Controllers
+namespace HomeTG.Controllers.MtG
 {
     [Route("mtg")]
     [ApiController]

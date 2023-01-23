@@ -6,3 +6,4 @@ services:
       dockerfile: HomeTGCollection/Dockerfile
     ports:
       - "5234:80"
+    restart: always

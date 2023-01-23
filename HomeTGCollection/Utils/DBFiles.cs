@@ -7,11 +7,12 @@ namespace HomeTGCollection.Utils
 {
     public static class DBFiles
     {
-        public static void CreateDBIfNotExists(string Filename, string sql)
+        public static void CreateDBIfNotExists(string Filename, string SQLMigrations)
         {
             if (!Directory.Exists("DB")) Directory.CreateDirectory("DB");
             if (!System.IO.File.Exists(Filename))
             {
+                var sql = File.ReadAllText(SQLMigrations);
                 using (var sqlite = new SqliteConnection(@"Data Source=" + Filename))
                 {
                     sqlite.Open();

@@ -7,7 +7,7 @@ namespace HomeTG.Models
     public class CollectionCard
     {
         [Column("uuid")]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         [Column("quantity")]
         public Int32 Quantity { get; set; }
