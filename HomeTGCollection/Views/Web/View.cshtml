@@ -1,0 +1,68 @@
+﻿@model IEnumerable<HomeTG.Controllers.Web.ListView>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MtGCard.ScryfallId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Card.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Card.FoilQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Card.Collection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Card.LastUpdated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+                var imagePath = @"https://api.scryfall.com/cards/" + item.MtGCard.ScryfallId +"?format=image";
+                <tr>
+                    <td>
+                        <img src="@imagePath" />
+            </td>
+            <td>
+                        @Html.DisplayFor(modelItem => item.Card.Quantity)
+            </td>
+            <td>
+                        @Html.DisplayFor(modelItem => item.Card.FoilQuantity)
+            </td>
+            <td>
+                        @Html.DisplayFor(modelItem => item.Card.Collection)
+            </td>
+            <td>
+                        @Html.DisplayFor(modelItem => item.Card.LastUpdated)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>

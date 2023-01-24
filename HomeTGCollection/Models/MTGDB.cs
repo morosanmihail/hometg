@@ -37,12 +37,12 @@ namespace HomeTG.Models
                 cards = cards.Where(c => c.SetCode!.ToLower().Equals(searchOptions.Set));
             }
 
-            return cards.ToList();
+            return cards;
         }
 
         public IEnumerable<Card> GetCards(List<string> ids)
         {
-            return Cards.Where(c=> ids.Contains(c.Id!)).ToList();
+            return Cards.Where(c => ids.Contains(c.Id!));
         }
     }
 }

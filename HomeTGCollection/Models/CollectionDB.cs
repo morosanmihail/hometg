@@ -19,17 +19,17 @@ namespace HomeTG.Models
 
         public IEnumerable<CollectionCard> GetCards(List<string> ids)
         {
-            return Cards.Where(c => ids.Contains(c.Id!)).ToList();
+            return Cards.Where(c => ids.Contains(c.Id!));
         }
 
         public IEnumerable<CollectionCard> ListCards(int offset)
         {
-            return Cards.Skip(offset).Take(50).ToList();
+            return Cards.Skip(offset).Take(50);
         }
 
         public IEnumerable<CollectionCard> ListIncoming(int offset)
         {
-            return IncomingCards.Skip(offset).Take(50).ToList();
+            return IncomingCards.Skip(offset).Take(50);
         }
 
         public List<CollectionCard> AddCardsToCollection(List<CollectionCard> newCards)
@@ -47,13 +47,14 @@ namespace HomeTG.Models
             var cards = new List<CollectionCard>();
             var existingCards = db.Where(c => newCards.Select(n => n.Id).Contains(c.Id)).ToDictionary(c => c.Id);
             foreach (var newCard in newCards) {
-                // var card = db.Find(newCard.Id);
-                var card = existingCards[newCard.Id];
-                if (card != null)
+                CollectionCard? card = null;
+                if (existingCards.ContainsKey(newCard.Id))
                 {
+                    card = existingCards[newCard.Id];
                     card.Quantity += newCard.Quantity;
                     card.FoilQuantity += newCard.FoilQuantity;
-                } else
+                }
+                if (card == null)
                 {
                     card = newCard;
                     db.Add(newCard);
