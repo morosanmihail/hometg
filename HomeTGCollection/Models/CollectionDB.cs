@@ -22,9 +22,9 @@ namespace HomeTG.Models
             return Cards.Where(c => ids.Contains(c.Id!));
         }
 
-        public IEnumerable<CollectionCard> ListCards(int offset)
+        public IEnumerable<CollectionCard> ListCards(int offset, int pagesize = 50)
         {
-            return Cards.Skip(offset).Take(50);
+            return Cards.Skip(offset).Take(pagesize);
         }
 
         public IEnumerable<CollectionCard> ListIncoming(int offset)
@@ -60,8 +60,8 @@ namespace HomeTG.Models
                     db.Add(newCard);
                 }
                 cards.Add(card);
+                this.SaveChanges();
             }
-            this.SaveChanges();
             return cards;
         }
 

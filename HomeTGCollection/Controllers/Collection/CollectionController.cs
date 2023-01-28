@@ -70,7 +70,7 @@ namespace HomeTGCollection.Controllers.Collection
                 var matchingCards = _mtgdb.SearchCards(new SearchOptions { Name = items[i].Name, Set = items[i].Set }).ToList();
                 if (matchingCards.Count() > 0)
                 {
-                    cardsAdded.Add(new CollectionCard { Id = matchingCards[0].Id, Quantity = items[i].Quantity, FoilQuantity = items[i].FoilQuantity, LastUpdated = DateTime.UtcNow });
+                    cardsAdded.Add(new CollectionCard(matchingCards[0].Id, items[i].Quantity, items[i].FoilQuantity, null, DateTime.UtcNow));
                 } else
                 {
                     cardsFailedToFind.Add(items[i]);

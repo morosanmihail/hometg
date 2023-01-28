@@ -19,7 +19,7 @@ namespace HomeTG.Controllers.Web
         [Route("ListItems")]
         public IActionResult ListItems(int offset = 0)
         {
-            var collectionCards = _db.ListCards(offset);
+            var collectionCards = _db.ListCards(offset, 400);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListView(a, b));
             return View("View", cards);
         }

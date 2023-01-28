@@ -20,12 +20,26 @@ namespace HomeTG.Models
 
         [Column("lastupdated")]
         public DateTime? LastUpdated { get; set; }
+
+        public CollectionCard(string id, int quantity, int foilQuantity, string? collection, DateTime? lastUpdated)
+        {
+            Id = id;
+            Quantity = quantity;
+            FoilQuantity = foilQuantity;
+            Collection = collection;
+            LastUpdated = lastUpdated;
+        }
     }
 
     [Table("collection")]
     public class Collection
     {
         [Column("id")]
-        public string? Id { get; set; }
+        public string Id { get; set; }
+
+        public Collection(string id)
+        {
+            Id = id;
+        }
     }
 }
