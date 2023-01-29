@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HomeTG.Controllers.Web.ListView>
+﻿@model IEnumerable<HomeTG.Controllers.Web.ListViewItem>
 
 @{
     Layout = null;
@@ -22,16 +22,7 @@
     <h1>Hello, world!</h1>
     <div class="card-grid">
 @foreach (var item in Model) {
-    var imagePath = @"https://api.scryfall.com/cards/" + item.MtGCard.ScryfallId +"?format=image";
-    <div class="card">
-      <img class="lazyload" src="@imagePath" alt="@Html.DisplayFor(modelItem => item.MtGCard.Name)" lazyload="on" />
-      <div class="card-info">
-        <h2>@Html.DisplayFor(modelItem => item.MtGCard.Name)</h2>
-        <p>@Html.DisplayFor(modelItem => item.Card.Quantity)</p>
-        <p>@Html.DisplayFor(modelItem => item.Card.FoilQuantity) foils</p>
-        <p>Collection @Html.DisplayFor(modelItem => item.Card.Collection)</p>
-      </div>
-    </div>
+    await Html.RenderPartialAsync("CardWithDetails", item);
 }
     </div>
     <!-- Optional JavaScript -->

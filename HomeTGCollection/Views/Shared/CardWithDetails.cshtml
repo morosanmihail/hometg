@@ -1,0 +1,13 @@
+﻿@model HomeTG.Controllers.Web.ListViewItem
+
+    @{ var imagePath = @"https://api.scryfall.com/cards/" + Model.MtGCard.ScryfallId +"?format=image"; }
+    <div id="@Html.DisplayFor(modelItem => Model.Card.Id)" class="card">
+    <img class="lazyload" src="@imagePath" alt="@Html.DisplayFor(modelItem => Model.MtGCard.Name)" lazyload="on" />
+      <div class="card-info">
+        <h2>@Html.DisplayFor(modelItem => Model.MtGCard.Name)</h2>
+        <p>@Html.DisplayFor(modelItem => Model.Card.Quantity)</p>
+        <p>@Html.DisplayFor(modelItem => Model.Card.FoilQuantity) foils</p>
+        <p>Collection @Html.DisplayFor(modelItem => Model.Card.Collection)</p>
+        @Html.ActionLink("Refresh?", "GetCards", "Web", new { Id = Model.Card.Id })
+      </div>
+    </div>

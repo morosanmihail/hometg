@@ -23,7 +23,7 @@ namespace HomeTGCollection.Controllers.Collection
         [HttpGet("cards/get/{name}")]
         public IEnumerable<CollectionCard> GetCards(string name, string? set = null)
         {
-            var cards = _mtgdb.SearchCards(new SearchOptions { Name = name, Set = set });
+            var cards = _mtgdb.SearchCards(new SearchOptions { Name = name, SetCode = set });
             var cardsInCollection = _db.GetCards(cards.Select(c => c.Id!).ToList());
             // cardsInCollection.Join(cards, c => c.Id, cdb => cdb.Id, (c, cdb) => new { c.Id, Scryfall = cdb.ScryfallId }).ToList();
             return cardsInCollection;
@@ -67,7 +67,7 @@ namespace HomeTGCollection.Controllers.Collection
 
             for (int i=0; i<items.Count; i++)
             {
-                var matchingCards = _mtgdb.SearchCards(new SearchOptions { Name = items[i].Name, Set = items[i].Set }).ToList();
+                var matchingCards = _mtgdb.SearchCards(new SearchOptions { Name = items[i].Name, SetCode = items[i].Set }).ToList();
                 if (matchingCards.Count() > 0)
                 {
                     cardsAdded.Add(new CollectionCard(matchingCards[0].Id, items[i].Quantity, items[i].FoilQuantity, null, DateTime.UtcNow));

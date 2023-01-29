@@ -10,7 +10,19 @@ namespace HomeTG.Models
     public class SearchOptions
     {
         public string? Name { get; set; }
-        public string? Set { get; set; }
+        public string? SetCode { get; set; }
+    }
+
+    public class StrictSearchOptions
+    {
+        public string Name { get; set; }
+        public string SetCode { get; set; }
+
+        public StrictSearchOptions(string name, string set) 
+        {
+            this.Name = name;
+            this.SetCode = set;
+        }
     }
 
     public class MTGDB : DbContext
@@ -23,7 +35,7 @@ namespace HomeTG.Models
         public IEnumerable<Card> SearchCards(SearchOptions searchOptions)
         {
             searchOptions.Name = searchOptions.Name?.ToLower();
-            searchOptions.Set = searchOptions.Set?.ToLower();
+            searchOptions.SetCode = searchOptions.SetCode?.ToLower();
 
             IQueryable<Card> cards = Cards.AsQueryable();
 
@@ -32,9 +44,9 @@ namespace HomeTG.Models
                 cards = cards.Where(c => (c.Name!.ToLower().Contains(searchOptions.Name)));
             }
 
-            if (searchOptions.Set != null && searchOptions.Set.Length > 0)
+            if (searchOptions.SetCode != null && searchOptions.SetCode.Length > 0)
             {
-                cards = cards.Where(c => c.SetCode!.ToLower().Equals(searchOptions.Set));
+                cards = cards.Where(c => c.SetCode!.ToLower().Equals(searchOptions.SetCode));
             }
 
             return cards;
