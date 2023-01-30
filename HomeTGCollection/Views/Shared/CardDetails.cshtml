@@ -1,0 +1,15 @@
+﻿@model HomeTG.Models.CollectionCard
+
+<p>Collection @Html.DisplayFor(modelItem => Model.Collection)</p>
+<p>Quantity</p>
+<div class="d-flex align-items-center">
+    <button type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', -1, 0)" class="btn btn-outline-secondary mr-2">-</button>
+    <input type="number" class="form-control text-center mr-2" value="@Html.DisplayFor(modelItem => Model.Quantity)">
+    <button type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 1, 0)" class="btn btn-outline-secondary">+</button>
+</div>
+<p>Foils</p>
+<div class="d-flex align-items-center">
+    <button type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 0, -1)" class="btn btn-outline-secondary mr-2">-</button>
+    <input type="number" class="form-control text-center mr-2" value="@Html.DisplayFor(modelItem => Model.FoilQuantity)">
+    <button type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 0, 1)" class="btn btn-outline-secondary">+</button>
+</div>

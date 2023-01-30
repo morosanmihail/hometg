@@ -31,5 +31,21 @@ namespace HomeTG.Controllers.Web
             var cardDetails = _mtgdb.GetCards(new List<string> { Id }).First();
             return View("CardWithDetails", new ListViewItem(cardDetails, card));
         }
+
+        [Route("UpdateQuantity")]
+        public IActionResult? UpdateQuantity(string Id, int deltaQuantity = 0, int deltaFoilQuantity = 0)
+        {
+            CollectionCard? card = null;
+            if (deltaQuantity <= 0 && deltaFoilQuantity <= 0)
+            {
+                card = _db.RemoveCardFromCollection(new CollectionCard(Id, -deltaQuantity, -deltaFoilQuantity, null, null));
+            } else
+            {
+                card = _db.AddCardsToCollection(new List<CollectionCard> {
+                    new CollectionCard(Id, deltaQuantity, deltaFoilQuantity, null, null)
+                }).FirstOrDefault();
+            }
+            return View("CardDetails", card);
+        }
     }
 }

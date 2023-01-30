@@ -32,5 +32,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-beta.2/lazyload.js"></script>
     <script>$("img .lazyload").lazyload();</script>
+
+    <script>
+async function updateQuantity(id, delta, deltaFoil = 0) {
+  fetch(`/Default/UpdateQuantity?Id=${id}&deltaQuantity=${delta}&deltaFoilQuantity=${deltaFoil}`, {
+    method: 'PUT',
+  })
+    .then(response => response.text())
+    .then(html => {
+        var cardDetails = document.querySelector('.card-info[id="details-' + id + '"]');
+
+        cardDetails.innerHTML = html;
+    })
+    .catch(error => {
+        console.error('An error occurred:', error);
+    });
+}
+    </script>
  </body>
 </html>
