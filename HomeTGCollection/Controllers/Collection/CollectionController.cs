@@ -99,6 +99,12 @@ namespace HomeTGCollection.Controllers.Collection
             return _db.RemoveCardFromIncoming(card);
         }
 
+        [HttpGet("incoming/count")]
+        public int IncomingCount()
+        {
+            return _db.IncomingCards.Count();
+        }
+
         List<CSVItem> ImportFromCSV(string filename)
         {
             var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
