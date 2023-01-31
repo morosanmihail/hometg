@@ -1,0 +1,8 @@
+﻿@model IEnumerable<HomeTG.Controllers.Web.ListViewItem>
+
+<div class="card-grid">
+    @foreach (var item in Model)
+    {
+        await Html.RenderPartialAsync("CardWithDetails", item);
+    }
+</div>

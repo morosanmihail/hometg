@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HomeTG.Controllers.Web
 {
     [ApiExplorerSettings(IgnoreApi = true)]
-    [Route("Default")]
+    [Route("")]
     public class WebController : Controller
     {
         private CollectionDB _db;
@@ -16,7 +16,7 @@ namespace HomeTG.Controllers.Web
             _mtgdb = mtgdb;
         }
 
-        [Route("ListItems")]
+        [Route("/")]
         public IActionResult ListItems(int offset = 0)
         {
             var collectionCards = _db.ListCards(offset, 400);
@@ -24,8 +24,8 @@ namespace HomeTG.Controllers.Web
             return View("View", cards);
         }
 
-        [Route("GetItems")]
-        public IActionResult GetItems(string Id)
+        [Route("GetItem")]
+        public IActionResult GetItem(string Id)
         {
             var card = _db.GetCards(new List<string> { Id }).First();
             var cardDetails = _mtgdb.GetCards(new List<string> { Id }).First();
@@ -46,6 +46,13 @@ namespace HomeTG.Controllers.Web
                 }).FirstOrDefault();
             }
             return View("CardDetails", card);
+        }
+
+        [Route("Search")]
+        public IActionResult Search(string? Name, string? SetCode)
+        {
+            var cards = _mtgdb.SearchCards(new SearchOptions { Name = Name, SetCode = SetCode }).ToList();
+            return View("ListView", cards.Select(c => new ListViewItem(c, null)));
         }
     }
 }

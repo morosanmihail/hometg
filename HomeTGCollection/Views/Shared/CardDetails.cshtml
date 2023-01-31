@@ -1,15 +1,19 @@
 ﻿@model HomeTG.Models.CollectionCard
 
+@if (Model != null) {
+
 <p>Collection @Html.DisplayFor(modelItem => Model.Collection)</p>
-<div class="d-flex align-items-center">
-    <span class="mr-2">Quantity</span>
-    <button class="btn btn-outline-secondary mr-2" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', -1, 0)">-</button>
-    <span class="text-center mr-2">@Html.DisplayFor(modelItem => Model.Quantity)</span>
-    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 1, 0)">+</button>
+<div class="row mb-3 align-items-center">
+    <span class="col-sm-5">Quantity</span>
+    <button class="btn btn-outline-secondary col-sm-2" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', -1, 0)">-</button>
+    <span class="text-center col-sm-2">@Html.DisplayFor(modelItem => Model.Quantity)</span>
+    <button class="btn btn-outline-secondary col-sm-2" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 1, 0)">+</button>
 </div>
-<div class="d-flex align-items-center">
-    <span class="mr-2">Foils</span>
-    <button class="btn btn-outline-secondary mr-2" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 0, -1)">-</button>
-    <span class="text-center mr-2">@Html.DisplayFor(modelItem => Model.FoilQuantity)</span>
-    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 0, 1)">+</button>
+<div class="row mb-3 align-items-center">
+    <span class="col-sm-5">Foils</span>
+    <button class="btn btn-outline-secondary col-sm-2" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 0, -1)">-</button>
+    <span class="text-center col-sm-2">@Html.DisplayFor(modelItem => Model.FoilQuantity)</span>
+    <button class="btn btn-outline-secondary col-sm-2" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', 0, 1)">+</button>
 </div>
+
+}
