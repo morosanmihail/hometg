@@ -9,7 +9,8 @@ namespace HomeTGCollection.Utils
     {
         public static void CreateDBIfNotExists(string Filename, string SQLMigrations)
         {
-            if (!Directory.Exists("DB")) Directory.CreateDirectory("DB");
+            var dir = Path.GetDirectoryName(Filename);
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
             if (!System.IO.File.Exists(Filename))
             {
                 var sql = File.ReadAllText(SQLMigrations);

@@ -16,8 +16,23 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-DBFiles.CreateDBIfNotExists(@"DB/Collection.db", @"DB/CollectionDB.sql");
-await DBFiles.DownloadPrintingsDBIfNotExists(@"https://mtgjson.com/api/v5/AllPrintings.sqlite", @"DB/AllPrintings.db");
+DBFiles.CreateDBIfNotExists(
+    Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "hometg",
+        "DB/Collection.db"
+    ),
+    "DB/CollectionDB.sql"
+);
+
+await DBFiles.DownloadPrintingsDBIfNotExists(
+    @"https://mtgjson.com/api/v5/AllPrintings.sqlite",
+    Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "hometg",
+        "DB/AllPrintings.db"
+    )
+);
 
 builder.Services.AddDbContext<MTGDB>(options => options.UseSqlite(builder.Configuration.GetConnectionString("MtgJson")));
 builder.Services.AddDbContext<CollectionDB>(options => options.UseSqlite(builder.Configuration.GetConnectionString("Collection")));

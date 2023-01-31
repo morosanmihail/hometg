@@ -6,4 +6,6 @@ services:
     pull_policy: build
     ports:
       - "5234:80"
+    volumes:
+      - /config/hometg:/usr/share/hometg
     restart: always
