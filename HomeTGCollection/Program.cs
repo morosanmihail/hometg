@@ -16,26 +16,36 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-DBFiles.CreateDBIfNotExists(
-    Path.Combine(
+var DBPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
         "hometg",
         "DB/Collection.db"
-    ),
-    "DB/CollectionDB.sql"
+    );
+var MtGDBPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "hometg",
+        "DB/AllPrintings.db"
+    );
+
+DBFiles.CreateDBIfNotExists(
+    DBPath, "DB/CollectionDB.sql"
 );
 
 await DBFiles.DownloadPrintingsDBIfNotExists(
     @"https://mtgjson.com/api/v5/AllPrintings.sqlite",
-    Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-        "hometg",
-        "DB/AllPrintings.db"
-    )
+    MtGDBPath
 );
 
-builder.Services.AddDbContext<MTGDB>(options => options.UseSqlite(builder.Configuration.GetConnectionString("MtgJson")));
-builder.Services.AddDbContext<CollectionDB>(options => options.UseSqlite(builder.Configuration.GetConnectionString("Collection")));
+builder.Services.AddDbContext<MTGDB>(
+    options => options.UseSqlite(
+        "Data Source=" + MtGDBPath + ";Mode=ReadOnly"
+    )
+);
+builder.Services.AddDbContext<CollectionDB>(
+    options => options.UseSqlite(
+        "Data Source=" + DBPath
+    )
+);
 
 var app = builder.Build();
 
