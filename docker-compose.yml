@@ -1,7 +1,6 @@
 ﻿version: '3'
 services:
-  hometg:
-    image: hometg/hometg
+  hometg-api:
     build:
       dockerfile: HomeTGCollection/Dockerfile
     ports:
