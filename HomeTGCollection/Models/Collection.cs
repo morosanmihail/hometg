@@ -29,6 +29,10 @@ namespace HomeTG.Models
             Collection = collection;
             LastUpdated = lastUpdated;
         }
+
+        public CollectionCard()
+        {
+        }
     }
 
     [Table("collection")]
