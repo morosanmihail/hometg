@@ -3,6 +3,7 @@ services:
   hometg-api:
     build:
       dockerfile: HomeTGCollection/Dockerfile
+    pull_policy: build
     ports:
       - "5234:80"
     restart: always
