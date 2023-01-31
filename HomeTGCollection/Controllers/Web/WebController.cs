@@ -52,7 +52,13 @@ namespace HomeTG.Controllers.Web
         public IActionResult Search(string? Name, string? SetCode)
         {
             var cards = _mtgdb.SearchCards(new SearchOptions { Name = Name, SetCode = SetCode }).ToList();
-            return View("ListView", cards.Select(c => new ListViewItem(c, null)));
+            var cardsInCollection = _db.GetCards(cards.Select(c => c.Id).ToList()).ToDictionary(c => c.Id, c => c);
+            return View("ListView", cards.Select(
+                c => new ListViewItem(
+                    c, 
+                    cardsInCollection.ContainsKey(c.Id) ? cardsInCollection[c.Id] : new CollectionCard(c.Id, 0, 0, null, null)
+                )
+            ));
         }
     }
 }

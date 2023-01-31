@@ -4,8 +4,10 @@
     })
         .then(response => response.text())
         .then(html => {
-            var cardDetails = document.querySelector('.card-info[id="details-' + id + '"]');
-            cardDetails.innerHTML = html;
+            var cardDetails = document.querySelectorAll('.card-info[data-id="details-' + id + '"]');
+            cardDetails.forEach((div) => {
+                div.innerHTML = html;
+            });
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -19,9 +21,8 @@ async function searchMTGDB() {
     })
         .then(response => response.text())
         .then(html => {
-            // var cardDetails = document.querySelector('.card-info[id="details-' + id + '"]');
-            // cardDetails.innerHTML = html;
-            console.info(html);
+            var searchDiv = document.querySelector('.search-results[id="search-results"]');
+            searchDiv.innerHTML = html;
         })
         .catch(error => {
             console.error('An error occurred:', error);

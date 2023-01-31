@@ -2,7 +2,6 @@
 
 @if (Model != null) {
 
-<p>Collection @Html.DisplayFor(modelItem => Model.Collection)</p>
 <div class="row mb-3 align-items-center">
     <span class="col-sm-5">Quantity</span>
     <button class="btn btn-outline-secondary col-sm-2" type="button" onclick="updateQuantity('@Html.DisplayFor(modelItem => Model.Id)', -1, 0)">-</button>
