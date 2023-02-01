@@ -23,7 +23,7 @@ namespace HomeTG.Controllers.Web
         [Route("/")]
         public IActionResult Index()
         {
-            var collectionCards = _db.ListCards(0, 24);
+            var collectionCards = _db.ListCards(0, 12);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListViewItem(a, b));
             return View("View", cards);
         }
@@ -31,7 +31,7 @@ namespace HomeTG.Controllers.Web
         [Route("/ListItems")]
         public IActionResult ListItems(int offset = 0)
         {
-            var collectionCards = _db.ListCards(offset, 24);
+            var collectionCards = _db.ListCards(offset, 12);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListViewItem(a, b));
             return View("ListView", cards);
         }

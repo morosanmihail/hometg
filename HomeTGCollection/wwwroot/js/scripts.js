@@ -8,8 +8,7 @@
             cardDetails.forEach((div) => {
                 div.innerHTML = html;
             });
-            // update offset to be, uh, correct
-            listCards(0);
+            listCards();
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -31,7 +30,11 @@ async function searchMTGDB() {
         });
 }
 
-async function listCards(offset) {
+async function listCards(delta = 0) {
+    var offsetBase = 12;
+    var currentPage = document.querySelector('#list-page').innerHTML;
+    var newPage = Math.max(1, currentPage - 1 + delta);
+    var offset = Math.max(0, newPage * offsetBase);
     fetch(`/ListItems?offset=${offset}`, {
         method: 'GET',
     })
@@ -39,6 +42,7 @@ async function listCards(offset) {
         .then(html => {
             var contentDiv = document.querySelector('#main-content');
             contentDiv.innerHTML = html;
+            document.querySelector('#list-page').innerHTML = newPage + 1;
         })
         .catch(error => {
             console.error('An error occurred:', error);

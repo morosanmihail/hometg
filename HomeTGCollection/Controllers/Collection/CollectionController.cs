@@ -59,26 +59,26 @@ namespace HomeTGCollection.Controllers.Collection
                 }
             }
 
-            var cardsAdded = new List<CollectionCard>();
-            var cardsFailedToFind = new List<CSVItem>();
-
             var items = ImportFromCSV(filePath);
             System.IO.File.Delete(filePath);
 
-            for (int i=0; i<items.Count; i++)
-            {
-                var matchingCards = _mtgdb.SearchCards(new SearchOptions { Name = items[i].Name, SetCode = items[i].Set }).ToList();
-                if (matchingCards.Count() > 0)
-                {
-                    cardsAdded.Add(new CollectionCard(matchingCards[0].Id, items[i].Quantity, items[i].FoilQuantity, null, DateTime.UtcNow));
-                } else
-                {
-                    cardsFailedToFind.Add(items[i]);
-                }
-            }
-            _db.AddCardsToCollection(cardsAdded);
+            var matchingCards = _mtgdb.BulkSearchCards(items.Select(c => new StrictSearchOptions(c.Name, c.Set)).ToList());
+            var cardsToAdd = items.Where(c => matchingCards.ContainsKey((c.Name, c.Set))).Select(
+                c => new CollectionCard(
+                    matchingCards[(c.Name, c.Set)].Id, c.Quantity, c.FoilQuantity, null, DateTime.UtcNow
+                )
+            ).GroupBy(c => c.Id).
+            Select(l => new CollectionCard(
+                        l.First().Id,
+                        l.Sum(c => c.Quantity),
+                        l.Sum(c => c.FoilQuantity),
+                        null,
+                        l.First().LastUpdated
+                    )).ToList();
 
-            return cardsAdded;
+            _db.AddCardsToCollection(cardsToAdd);
+
+            return cardsToAdd;
         }
 
         [HttpPut("incoming/add")]

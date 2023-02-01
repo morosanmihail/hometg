@@ -24,7 +24,7 @@ namespace HomeTG.Models
 
         public IEnumerable<CollectionCard> ListCards(int offset, int pagesize = 50)
         {
-            return Cards.Skip(offset).Take(pagesize);
+            return Cards.OrderBy(c => c.LastUpdated).Skip(offset).Take(pagesize);
         }
 
         public IEnumerable<CollectionCard> ListIncoming(int offset)
