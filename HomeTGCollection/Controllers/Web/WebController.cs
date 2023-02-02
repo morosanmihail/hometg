@@ -20,23 +20,23 @@ namespace HomeTG.Controllers.Web
             _mtgdb = mtgdb;
         }
 
-        [Route("/")]
-        public IActionResult Index()
+        [Route("/{collection?}")]
+        public IActionResult Index(string collection = "Main")
         {
-            var collectionCards = _db.ListCards(0, 12);
+            var collectionCards = _db.ListCards(collection, 0, 12);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListViewItem(a, b));
-            return View("View", cards);
+            return View("View", new MainPageData(cards, collection));
         }
 
-        [Route("/ListItems")]
-        public IActionResult ListItems(int offset = 0)
+        [Route("{collection}/ListItems")]
+        public IActionResult ListItems(string collection, int offset = 0)
         {
-            var collectionCards = _db.ListCards(offset, 12);
+            var collectionCards = _db.ListCards(collection, offset, 12);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListViewItem(a, b));
             return View("ListView", cards);
         }
 
-        [Route("GetItem")]
+        [Route("{collection}/GetItem")]
         public IActionResult GetItem(string Id)
         {
             var card = _db.GetCards(new List<string> { Id }).First();
@@ -44,17 +44,17 @@ namespace HomeTG.Controllers.Web
             return View("CardWithDetails", new ListViewItem(cardDetails, card));
         }
 
-        [Route("UpdateQuantity")]
-        public IActionResult? UpdateQuantity(string Id, int deltaQuantity = 0, int deltaFoilQuantity = 0)
+        [Route("{collection}/UpdateQuantity")]
+        public IActionResult? UpdateQuantity(string Id, string collection, int deltaQuantity = 0, int deltaFoilQuantity = 0)
         {
             CollectionCard? card = null;
             if (deltaQuantity <= 0 && deltaFoilQuantity <= 0)
             {
-                card = _db.RemoveCardFromCollection(new CollectionCard(Id, -deltaQuantity, -deltaFoilQuantity, null, null));
+                card = _db.RemoveCard(new CollectionCard(Id, -deltaQuantity, -deltaFoilQuantity, collection, null));
             } else
             {
-                card = _db.AddCardsToCollection(new List<CollectionCard> {
-                    new CollectionCard(Id, deltaQuantity, deltaFoilQuantity, null, null)
+                card = _db.AddCards(collection, new List<CollectionCard> {
+                    new CollectionCard(Id, deltaQuantity, deltaFoilQuantity, collection, null)
                 }).FirstOrDefault();
             }
             return View("CardDetails", card);
@@ -64,11 +64,16 @@ namespace HomeTG.Controllers.Web
         public IActionResult Search(string? Name, string? SetCode)
         {
             var cards = _mtgdb.SearchCards(new SearchOptions { Name = Name, SetCode = SetCode }).ToList();
-            var cardsInCollection = _db.GetCards(cards.Select(c => c.Id).ToList()).ToDictionary(c => c.Id, c => c);
+            var cardsInCollection = _db.GetCards(
+                cards.Select(c => c.Id).ToList()
+            ).GroupBy(c => c.Id).
+            ToDictionary(c => c.Key, c => c.ToList());
+
+            // TODO: could group by collection?
             return View("ListView", cards.Select(
                 c => new ListViewItem(
                     c, 
-                    cardsInCollection.ContainsKey(c.Id) ? cardsInCollection[c.Id] : new CollectionCard(c.Id, 0, 0, null, null)
+                    cardsInCollection.ContainsKey(c.Id) ? cardsInCollection[c.Id].First() : new CollectionCard(c.Id, 0, 0, "", null)
                 )
             ));
         }
@@ -79,7 +84,7 @@ namespace HomeTG.Controllers.Web
             return GetTask(Filename);
         }
 
-        [Route("ImportCSV")]
+        [Route("{collection}/ImportCSV")]
         public ImportTask ImportCSV()
         {
             var task = CreateTask("test", 10);

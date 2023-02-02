@@ -1,11 +1,15 @@
 ﻿using HomeTG.Models;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeTG.Models
 {
     [Table("cards")]
+    [PrimaryKey("Id", "Collection")]
     public class CollectionCard
     {
+        [Key]
         [Column("uuid")]
         public string Id { get; set; }
 
@@ -15,13 +19,14 @@ namespace HomeTG.Models
         [Column("foilquantity")]
         public Int32 FoilQuantity { get; set; }
 
+        [Key]
         [Column("collection")]
-        public string? Collection { get; set; }
+        public string Collection { get; set; }
 
         [Column("lastupdated")]
         public DateTime? LastUpdated { get; set; }
 
-        public CollectionCard(string id, int quantity, int foilQuantity, string? collection, DateTime? lastUpdated)
+        public CollectionCard(string id, int quantity, int foilQuantity, string collection, DateTime? lastUpdated)
         {
             Id = id;
             Quantity = quantity;

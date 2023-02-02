@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HomeTG.Controllers.Web.ListViewItem>
+﻿@model HomeTG.Controllers.Web.MainPageData
 
 @{
     Layout = null;
@@ -48,6 +48,10 @@
                     HomeTG
                 </a>
 
+                <div>Collection: 
+                    <div id="collection-name">@Model.Collection</div>
+                </div>
+
                 <div class="progress col">
                     <div title="import-progress" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
@@ -60,7 +64,7 @@
     <main style="margin-top: 58px">
         <div id="main-content" class="container pt-4">
     @{
-        await Html.RenderPartialAsync("ListView", Model);
+        await Html.RenderPartialAsync("ListView", Model.ListViewItems);
     }
 
         </div>

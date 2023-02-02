@@ -29,26 +29,30 @@ namespace HomeTGCollection.Controllers.Collection
             return cardsInCollection;
         }
 
-        [HttpPut("cards/add")]
-        public IEnumerable<CollectionCard> AddCards([FromQuery] CollectionCard card)
+        [HttpPut("cards/{collection}/add")]
+        public IEnumerable<CollectionCard> AddCards(string collection, [FromQuery] CollectionCard card)
         {
-            return _db.AddCardsToCollection(new List<CollectionCard> { card });
+            return _db.AddCards(collection, new List<CollectionCard> { card });
         }
 
-        [HttpPost("cards/delete")]
-        public CollectionCard? RemoveCards([FromQuery] CollectionCard card)
+        [HttpPost("cards/{collection}/delete")]
+        public CollectionCard? RemoveCards(string collection, [FromQuery] CollectionCard card)
         {
-            return _db.RemoveCardFromCollection(card);
+            if (collection.ToLower() != card.Collection.ToLower())
+            {
+                return null;
+            }
+            return _db.RemoveCard(card);
         }
 
-        [HttpGet("cards/list")]
-        public IEnumerable<CollectionCard> ListCards(int offset = 0)
+        [HttpGet("cards/{collection}/list")]
+        public IEnumerable<CollectionCard> ListCards(string collection, int offset = 0)
         {
-            return _db.ListCards(offset).ToList();
+            return _db.ListCards(collection, offset).ToList();
         }
 
-        [HttpPost("cards/import")]
-        public async Task<IEnumerable<CollectionCard>> UploadCardsList(IFormFile file)
+        [HttpPost("cards/{collection}/import")]
+        public async Task<IEnumerable<CollectionCard>> UploadCardsList(string collection, IFormFile file)
         {
             var filePath = Path.GetTempFileName();
             if (file.Length > 0)
@@ -72,37 +76,19 @@ namespace HomeTGCollection.Controllers.Collection
                         l.First().Id,
                         l.Sum(c => c.Quantity),
                         l.Sum(c => c.FoilQuantity),
-                        null,
+                        collection,
                         l.First().LastUpdated
                     )).ToList();
 
-            _db.AddCardsToCollection(cardsToAdd);
+            _db.AddCards(collection, cardsToAdd);
 
             return cardsToAdd;
         }
 
-        [HttpPut("incoming/add")]
-        public IEnumerable<CollectionCard> AddIncomingCard([FromQuery] CollectionCard card)
+        [HttpGet("cards/{collection}/count")]
+        public int IncomingCount(string collection)
         {
-            return _db.AddCardsToIncoming(new List<CollectionCard> { card });
-        }
-
-        [HttpGet("incoming/list")]
-        public IEnumerable<CollectionCard> ListIncoming(int offset = 0)
-        {
-            return _db.ListIncoming(offset).ToList();
-        }
-
-        [HttpPost("incoming/delete")]
-        public CollectionCard? RemoveIncomingCards([FromQuery] CollectionCard card)
-        {
-            return _db.RemoveCardFromIncoming(card);
-        }
-
-        [HttpGet("incoming/count")]
-        public int IncomingCount()
-        {
-            return _db.IncomingCards.Count();
+            return _db.Cards.Where(c => c.Collection.ToLower() == collection.ToLower()).Count();
         }
 
         List<CSVItem> ImportFromCSV(string filename)

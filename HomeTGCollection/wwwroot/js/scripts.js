@@ -1,5 +1,6 @@
 ﻿async function updateQuantity(id, delta, deltaFoil = 0) {
-    fetch(`/UpdateQuantity?Id=${id}&deltaQuantity=${delta}&deltaFoilQuantity=${deltaFoil}`, {
+    var collection = document.querySelector('#collection-name').innerHTML;
+    fetch(`/${collection}/UpdateQuantity?Id=${id}&deltaQuantity=${delta}&deltaFoilQuantity=${deltaFoil}`, {
         method: 'PUT',
     })
         .then(response => response.text())
@@ -8,7 +9,7 @@
             cardDetails.forEach((div) => {
                 div.innerHTML = html;
             });
-            listCards();
+            listCards(collection);
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -31,18 +32,22 @@ async function searchMTGDB() {
 }
 
 async function listCards(delta = 0) {
+    var collection = document.querySelector('#collection-name').innerHTML;
     var offsetBase = 12;
     var currentPage = document.querySelector('#list-page').innerHTML;
     var newPage = Math.max(0, currentPage - 1 + delta);
     var offset = Math.max(0, newPage * offsetBase);
-    fetch(`/ListItems?offset=${offset}`, {
+    fetch(`/${collection}/ListItems?offset=${offset}`, {
         method: 'GET',
     })
         .then(response => response.text())
         .then(html => {
             var contentDiv = document.querySelector('#main-content');
             contentDiv.innerHTML = html;
+
             document.querySelector('#list-page').innerHTML = newPage + 1;
+
+            document.querySelector('#collection-name').innerHTML = collection;
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -51,7 +56,7 @@ async function listCards(delta = 0) {
 
 async function importCSV() {
     var filenameId = "test";
-    fetch('/ImportCSV', { method: 'POST' })
+    fetch('/Main/ImportCSV', { method: 'POST' })
         .then(response => response.json())
         .then(taskId => {
             var progress = 0;
