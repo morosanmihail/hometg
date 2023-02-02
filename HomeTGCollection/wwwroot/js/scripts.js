@@ -33,7 +33,7 @@ async function searchMTGDB() {
 async function listCards(delta = 0) {
     var offsetBase = 12;
     var currentPage = document.querySelector('#list-page').innerHTML;
-    var newPage = Math.max(1, currentPage - 1 + delta);
+    var newPage = Math.max(0, currentPage - 1 + delta);
     var offset = Math.max(0, newPage * offsetBase);
     fetch(`/ListItems?offset=${offset}`, {
         method: 'GET',
