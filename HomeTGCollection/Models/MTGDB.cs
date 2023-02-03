@@ -41,12 +41,12 @@ namespace HomeTG.Models
 
             if (searchOptions.Name != null && searchOptions.Name.Length > 0)
             {
-                cards = cards.Where(c => (c.Name!.ToLower().Contains(searchOptions.Name)));
+                cards = cards.Where(c => c.Name.ToLower().Contains(searchOptions.Name));
             }
 
             if (searchOptions.SetCode != null && searchOptions.SetCode.Length > 0)
             {
-                cards = cards.Where(c => c.SetCode!.ToLower().Equals(searchOptions.SetCode));
+                cards = cards.Where(c => c.SetCode.ToLower().Equals(searchOptions.SetCode));
             }
 
             return cards;

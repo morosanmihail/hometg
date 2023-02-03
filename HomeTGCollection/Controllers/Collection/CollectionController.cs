@@ -69,7 +69,7 @@ namespace HomeTGCollection.Controllers.Collection
             var matchingCards = _mtgdb.BulkSearchCards(items.Select(c => new StrictSearchOptions(c.Name, c.Set)).ToList());
             var cardsToAdd = items.Where(c => matchingCards.ContainsKey((c.Name, c.Set))).Select(
                 c => new CollectionCard(
-                    matchingCards[(c.Name, c.Set)].Id, c.Quantity, c.FoilQuantity, null, DateTime.UtcNow
+                    matchingCards[(c.Name, c.Set)].Id, c.Quantity, c.FoilQuantity, collection, DateTime.UtcNow
                 )
             ).GroupBy(c => c.Id).
             Select(l => new CollectionCard(

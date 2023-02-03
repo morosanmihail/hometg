@@ -1,9 +1,9 @@
 ﻿@model HomeTG.Controllers.Web.ListViewItem
 
  @{ var imagePath = @"https://api.scryfall.com/cards/" + Model.MtGCard.ScryfallId +"?format=image"; }
- <div id="@Html.DisplayFor(modelItem => Model.Card.Id)" class="card">
+ <div id="@Html.DisplayFor(modelItem => Model.Card!.Id)" class="card">
     <img class="lazyload" src="@imagePath" alt="@Html.DisplayFor(modelItem => Model.MtGCard.Name)" lazyload="on" />
-    <div class="card-info" data-id="details-@Html.DisplayFor(modelItem => Model.Card.Id)">
+    <div class="card-info" data-id="details-@Html.DisplayFor(modelItem => Model.Card!.Id)">
     @{
         await Html.RenderPartialAsync("CardDetails", Model.Card); 
     }
