@@ -10,8 +10,8 @@ namespace HomeTG.Tests.Models
         MTGDB dbContext;
         List<Card> entities = new List<Card>
         {
-            new Card("1", "TEST NAME", "SET", "someScryfallId"),
-            new Card("2", "TESTS MANE", "SET", "someScryfallId")
+            new Card("1", "TEST NAME", "SET", "123", "someScryfallId"),
+            new Card("2", "TESTS MANE", "SET", "124", "someScryfallId")
         };
 
         [OneTimeSetUp]
@@ -40,15 +40,22 @@ namespace HomeTG.Tests.Models
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(2));
             Assert.That(results.First().SetCode, Is.EqualTo("SET"));
+
+            results = dbContext.SearchCards(new SearchOptions { CollectorNumber = "124" });
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.First().SetCode, Is.EqualTo("SET"));
+            Assert.That(results.First().CollectorNumber, Is.EqualTo("124"));
+            Assert.That(results.First().Name, Is.EqualTo("TESTS MANE"));
         }
 
         [Test]
         public void TestBulkSearchCards()
         {
-            var results = dbContext.BulkSearchCards(new List<StrictSearchOptions> { new StrictSearchOptions("TEST NAME", "SET") });
+            var results = dbContext.BulkSearchCards(new List<StrictSearchOptions> { new StrictSearchOptions("123", "SET") });
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(1));
-            Assert.That(results[("TEST NAME", "SET")].Name, Is.EqualTo("TEST NAME"));
+            Assert.That(results[("123", "SET")].Name, Is.EqualTo("TEST NAME"));
         }
 
         [Test]

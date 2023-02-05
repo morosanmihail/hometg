@@ -7,6 +7,15 @@ namespace HomeTG.Models
     [PrimaryKey("Id")]
     public class Card
     {
+        public Card(string id, string name, string setCode, string collectorNumber, string? scryfallId)
+        {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            SetCode = setCode ?? throw new ArgumentNullException(nameof(setCode));
+            CollectorNumber = collectorNumber ?? throw new ArgumentNullException(nameof(collectorNumber));
+            ScryfallId = scryfallId;
+        }
+
         [Column("uuid")]
         public string Id { get; set; }
 
@@ -16,15 +25,10 @@ namespace HomeTG.Models
         [Column("setcode")]
         public string SetCode { get; set; }
 
+        [Column("collectornumber")]
+        public string CollectorNumber { get; set; }
+
         [Column("scryfallId")]
         public string? ScryfallId { get; set; }
-
-        public Card(string id, string name, string setCode, string? scryfallId)
-        {
-            Id = id;
-            Name = name;
-            SetCode = setCode;
-            ScryfallId = scryfallId;
-        }
     }
 }
