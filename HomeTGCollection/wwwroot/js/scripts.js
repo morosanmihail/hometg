@@ -1,5 +1,5 @@
 ﻿async function updateQuantity(id, delta, deltaFoil = 0) {
-    var collection = document.querySelector('#collection-name').innerHTML;
+    var collection = getCollection();
     fetch(`/${collection}/UpdateQuantity?Id=${id}&deltaQuantity=${delta}&deltaFoilQuantity=${deltaFoil}`, {
         method: 'PUT',
     })
@@ -9,7 +9,7 @@
             cardDetails.forEach((div) => {
                 div.innerHTML = html;
             });
-            listCards(collection);
+            listCards();
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -31,8 +31,11 @@ async function searchMTGDB() {
         });
 }
 
-async function listCards(delta = 0) {
-    var collection = document.querySelector('#collection-name').innerHTML;
+async function listCards(delta = 0, collection = "") {
+    var collection = collection;
+    if (collection == "") {
+        collection = getCollection();
+    }
     var offsetBase = 12;
     var currentPage = document.querySelector('#list-page').innerHTML;
     var newPage = Math.max(0, currentPage - 1 + delta);
@@ -47,7 +50,10 @@ async function listCards(delta = 0) {
 
             document.querySelector('#list-page').innerHTML = newPage + 1;
 
-            document.querySelector('#collection-name').innerHTML = collection;
+            const nextURL = "/" + collection + "?offset=" + offset;
+            window.history.pushState({} , '', nextURL);
+
+            listCollections(collection);
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -82,6 +88,24 @@ async function importCSV() {
                         console.error('An error occurred:', error);
                     });
             }, 1000);
+        })
+        .catch(error => {
+            console.error('An error occurred:', error);
+        });
+}
+
+function getCollection() {
+    var collection = document.querySelector('#collection-name');
+    return collection.options[collection.selectedIndex].text;
+}
+
+async function listCollections(collection) {
+    fetch(`/ListCollections?collection=${collection}`, {
+        method: 'GET',
+    })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('#collection-name').innerHTML = html;
         })
         .catch(error => {
             console.error('An error occurred:', error);

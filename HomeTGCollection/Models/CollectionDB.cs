@@ -15,6 +15,27 @@ namespace HomeTG.Models
         public CollectionDB(DbContextOptions<CollectionDB> options) : base(options)
         { }
 
+        public Collection? GetCollection(string collectionName)
+        {
+            return Collection.Find(collectionName);
+        }
+
+        public Collection GetOrCreateCollection(string collectionName)
+        {
+            var collection = Collection.Find(collectionName);
+            if (collection == null)
+            {
+                collection = Collection.Add(new Collection(collectionName)).Entity;
+                this.SaveChanges();
+            }
+            return collection;
+        }
+
+        public List<Collection> ListCollections()
+        {
+            return Collection.ToList();
+        }
+
         public IEnumerable<CollectionCard> GetCards(List<string> ids)
         {
             return Cards.Where(c => ids.Contains(c.Id!));
@@ -23,13 +44,14 @@ namespace HomeTG.Models
         public IEnumerable<CollectionCard> ListCards(string collection, int offset, int pagesize = 50)
         {
             return Cards.Where(
-                c => c.Collection.ToLower() == collection.ToLower()
+                c => c.CollectionId.ToLower() == collection.ToLower()
             ).OrderBy(c => c.LastUpdated).Skip(offset).Take(pagesize);
         }
 
-        public List<CollectionCard> AddCards(string collection, List<CollectionCard> newCards)
+        public List<CollectionCard> AddCards(string collectionName, List<CollectionCard> newCards)
         {
-            var existingCards = Cards.Where(c => c.Collection.ToLower() == collection.ToLower()).
+            var collection = GetOrCreateCollection(collectionName);
+            var existingCards = Cards.Where(c => c.CollectionId.ToLower() == collectionName.ToLower()).
                 Where(
                     c => newCards.Select(n => n.Id).
                     Contains(c.Id)
@@ -55,7 +77,7 @@ namespace HomeTG.Models
 
         public CollectionCard? RemoveCard(CollectionCard card)
         {
-            var existingCard = Cards.Find(card.Id, card.Collection);
+            var existingCard = Cards.Find(card.Id, card.CollectionId);
             if (existingCard != null)
             {
                 existingCard.Quantity = Math.Max(existingCard.Quantity - card.Quantity, 0);

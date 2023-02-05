@@ -38,7 +38,7 @@ namespace HomeTGCollection.Controllers.Collection
         [HttpPost("cards/{collection}/delete")]
         public CollectionCard? RemoveCards(string collection, [FromQuery] CollectionCard card)
         {
-            if (collection.ToLower() != card.Collection.ToLower())
+            if (collection.ToLower() != card.CollectionId.ToLower())
             {
                 return null;
             }
@@ -88,7 +88,7 @@ namespace HomeTGCollection.Controllers.Collection
         [HttpGet("cards/{collection}/count")]
         public int IncomingCount(string collection)
         {
-            return _db.Cards.Where(c => c.Collection.ToLower() == collection.ToLower()).Count();
+            return _db.Cards.Where(c => c.CollectionId.ToLower() == collection.ToLower()).Count();
         }
 
         List<CSVItem> ImportFromCSV(string filename)

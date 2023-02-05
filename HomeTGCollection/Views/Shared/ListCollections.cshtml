@@ -1,0 +1,8 @@
+﻿@model HomeTG.Controllers.Web.ListCollectionsModel
+
+<select id="collection-name" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="listCards()">
+    @foreach (var item in Model.Collections)
+    {
+        <option value="@(item.Id)" @(item.Id == Model.CurrentCollection ? "selected" : "")>@item.Id</option>
+    }
+</select>

@@ -20,12 +20,28 @@ namespace HomeTG.Controllers.Web
             _mtgdb = mtgdb;
         }
 
-        [Route("/{collection?}")]
-        public IActionResult Index(string collection = "Main")
+        [Route("/ListCollections")]
+        public IActionResult ListCollections(string collection)
         {
-            var collectionCards = _db.ListCards(collection, 0, 12);
+            return View(
+                "ListCollections", 
+                new ListCollectionsModel(
+                    _db.ListCollections(),
+                    collection
+                )
+            );
+        }
+
+        [Route("/{collection?}")]
+        public IActionResult Index(string collection = "Main", int offset = 0)
+        {
+            var collectionCards = _db.ListCards(collection, offset, 12);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListViewItem(a, b));
-            return View("View", new MainPageData(cards, collection));
+            var collections = _db.ListCollections();
+            return View("View", new MainPageData(
+                cards, 
+                new ListCollectionsModel(collections, collection)
+            ));
         }
 
         [Route("{collection}/ListItems")]

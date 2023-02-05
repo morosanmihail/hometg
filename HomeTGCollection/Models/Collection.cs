@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace HomeTG.Models
 {
     [Table("cards")]
-    [PrimaryKey("Id", "Collection")]
+    [PrimaryKey("Id", "CollectionId")]
     public class CollectionCard
     {
         [Key]
@@ -21,7 +21,7 @@ namespace HomeTG.Models
 
         [Key]
         [Column("collection")]
-        public string Collection { get; set; }
+        public string CollectionId { get; set; }
 
         [Column("lastupdated")]
         public DateTime? LastUpdated { get; set; }
@@ -31,7 +31,7 @@ namespace HomeTG.Models
             Id = id;
             Quantity = quantity;
             FoilQuantity = foilQuantity;
-            Collection = collection;
+            CollectionId = collection;
             LastUpdated = lastUpdated;
         }
 
@@ -43,6 +43,7 @@ namespace HomeTG.Models
     [Table("collection")]
     public class Collection
     {
+        [Key]
         [Column("id")]
         public string Id { get; set; }
 

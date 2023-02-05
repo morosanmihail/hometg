@@ -25,7 +25,7 @@ namespace HomeTG.Models
         [Column("setcode")]
         public string SetCode { get; set; }
 
-        [Column("collectornumber")]
+        [Column("number")]
         public string CollectorNumber { get; set; }
 
         [Column("scryfallId")]
