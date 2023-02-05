@@ -95,8 +95,11 @@ async function importCSV() {
 }
 
 function getCollection() {
-    var collection = document.querySelector('#collection-name');
-    return collection.options[collection.selectedIndex].text;
+    if ($('#collection-name option').length > 0) {
+        var collection = document.querySelector('#collection-name');
+        return collection.options[collection.selectedIndex].text;
+    }
+    return "Main";
 }
 
 async function listCollections(collection) {
