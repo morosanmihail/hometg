@@ -29,7 +29,6 @@ namespace HomeTG.Models
 
         public List<CollectionCard> AddCards(string collection, List<CollectionCard> newCards)
         {
-            var cards = new List<CollectionCard>();
             var existingCards = Cards.Where(c => c.Collection.ToLower() == collection.ToLower()).
                 Where(
                     c => newCards.Select(n => n.Id).
@@ -47,11 +46,11 @@ namespace HomeTG.Models
                 {
                     card = newCard;
                     Cards.Add(newCard);
+                    existingCards[newCard.Id] = card;
                 }
-                cards.Add(card);
                 this.SaveChanges();
             }
-            return cards;
+            return existingCards.Values.ToList();
         }
 
         public CollectionCard? RemoveCard(CollectionCard card)
