@@ -1,5 +1,5 @@
 ﻿using HomeTG.Models;
-using HomeTG.Tests.Utils;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,12 +20,21 @@ namespace HomeTG.Tests.Models
             new CollectionCard("1", 1, 0, "Incoming", null)
         };
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
-            var dbSet = MockDbSetFactory.Create(cards);
-            dbContext = new CollectionDB(new DbContextOptions<CollectionDB>());
-            dbContext.Cards = dbSet.Object;
+            var _connection = new SqliteConnection("Filename=:memory:");
+            _connection.Open();
+            var options = new DbContextOptionsBuilder<CollectionDB>()
+                                .UseSqlite(_connection)
+                                .Options;
+            dbContext = new CollectionDB(options);
+
+            dbContext.Database.EnsureCreated();
+
+            dbContext.AddRange(cards);
+            
+            dbContext.SaveChanges();
         }
 
         [Test]
@@ -46,7 +55,6 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        [Ignore("No idea what's wrong. Figure out later.")]
         public void TestAddCards()
         {
             var results = dbContext.AddCards("Incoming", new List<CollectionCard>()
@@ -59,7 +67,7 @@ namespace HomeTG.Tests.Models
 
             var listResults = dbContext.ListCards("Incoming", 0);
             Assert.NotNull(listResults);
-            Assert.That(results.Count(), Is.EqualTo(2));
+            Assert.That(listResults.Count(), Is.EqualTo(2));
         }
     }
 }

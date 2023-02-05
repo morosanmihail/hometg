@@ -37,7 +37,7 @@ namespace HomeTG.Models
             searchOptions.Name = searchOptions.Name?.ToLower();
             searchOptions.SetCode = searchOptions.SetCode?.ToLower();
 
-            IQueryable<Card> cards = Cards.Include(x => x);
+            IQueryable<Card> cards = Cards.Select(x => x);
 
             if (searchOptions.Name != null && searchOptions.Name.Length > 0)
             {
