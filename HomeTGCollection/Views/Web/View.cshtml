@@ -23,12 +23,12 @@
         <nav id="sidebarMenu"
              class="collapse d-lg-block sidebar collapse bg-white">
             <div class="position-sticky">
-                <div class="list-group list-group-flush mx-3 mt-4">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="search-bar" placeholder="Card search" aria-describedby="button-addon2">
-                            <button onclick="searchMTGDB()" class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
-                    </div>
-                    <div class="search-results" id="search-results"></div>
+                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link" id="nav-search-tab" data-bs-toggle="tab" data-bs-target="#nav-search" type="button" role="tab" aria-controls="nav-search" aria-selected="true">Search</button>
+                    @foreach (var item in Model.Collections.Collections)
+                    {
+                        <button class="nav-link@(item.Id == Model.Collections.CurrentCollection ? " active" : "")" id="nav-@item.Id-tab" data-bs-toggle="tab" data-bs-target="#nav-main" type="button" role="tab" aria-controls="nav-main" aria-selected="true" onclick="listCards(0, '@item.Id')">@item.Id</button>
+                    }
                 </div>
             </div>
         </nav>
@@ -48,15 +48,6 @@
                     HomeTG
                 </a>
 
-                    <div id="collection-div">
-                        @{
-                            await Html.RenderPartialAsync(
-                                "ListCollections",
-                                Model.Collections
-                            );
-                        }
-                    </div>
-
                 <div class="progress col">
                     <div title="import-progress" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
@@ -67,19 +58,34 @@
     </header>
 
     <main style="margin-top: 58px">
-        <div id="main-content" class="container pt-4">
-    @{
-        await Html.RenderPartialAsync("ListView", Model.ListViewItems);
-    }
+        <div class="container pt-4 tab-content">
+            <div class="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="nav-main-tab">
+                <div id="main-content">
+                @{
+                    await Html.RenderPartialAsync("ListView", Model.ListViewItems);
+                }
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination center">
+                        <li class="page-item"><a class="page-link" onclick="listCards(-1)" href="#">Previous</a></li>
+                        <li class="page-item"><a id="list-page" class="page-link">1</a></li>
+                        <li class="page-item"><a class="page-link" onclick="listCards(1)" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="tab-pane fade" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
+                <h2>Search</h2>
+                <div class="list-group list-group-flush mx-3 mt-4">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="search-bar" placeholder="Card search" aria-describedby="button-addon2">
+                        <button onclick="searchMTGDB()" class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                    </div>
+                    <div class="search-results" id="search-results"></div>
+                </div>
+            </div>
 
         </div>
-        <nav aria-label="Page navigation">
-            <ul class="pagination center">
-                <li class="page-item"><a class="page-link" onclick="listCards(-1)" href="#">Previous</a></li>
-                <li class="page-item"><a id="list-page" class="page-link">1</a></li>
-                <li class="page-item"><a class="page-link" onclick="listCards(1)" href="#">Next</a></li>
-            </ul>
-        </nav>
     </main>
     
 
