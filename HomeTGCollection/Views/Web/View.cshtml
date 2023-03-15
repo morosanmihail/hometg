@@ -78,7 +78,17 @@
                 <h2>Search</h2>
                 <div class="list-group list-group-flush mx-3 mt-4">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="search-bar" placeholder="Card search" aria-describedby="button-addon2">
+                        <input type="text" class="form-control" id="search-bar-name" placeholder="Name" aria-describedby="button-addon2">
+                        <input type="text" class="form-control" id="search-bar-set" placeholder="Set" aria-describedby="button-addon2">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="search-bar-artist" placeholder="Artist" aria-describedby="button-addon2">
+                        <input type="text" class="form-control" id="search-bar-collector-number" placeholder="Collector Number" aria-describedby="button-addon2">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="search-bar-text" placeholder="Text" aria-describedby="button-addon2">
+                    </div>
+                    <div class="input-group mb-3">
                         <button onclick="searchMTGDB()" class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
                     </div>
                     <div class="search-results" id="search-results"></div>

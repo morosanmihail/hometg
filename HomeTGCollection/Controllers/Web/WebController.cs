@@ -77,9 +77,9 @@ namespace HomeTG.Controllers.Web
         }
 
         [Route("Search")]
-        public IActionResult Search(string? Name, string? SetCode)
+        public IActionResult Search(SearchOptions searchOptions)
         {
-            var cards = _mtgdb.SearchCards(new SearchOptions { Name = Name, SetCode = SetCode }).ToList();
+            var cards = _mtgdb.SearchCards(searchOptions).ToList();
             var cardsInCollection = _db.GetCards(
                 cards.Select(c => c.Id).ToList()
             ).GroupBy(c => c.Id).

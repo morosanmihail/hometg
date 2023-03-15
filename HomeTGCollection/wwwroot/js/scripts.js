@@ -17,8 +17,12 @@
 }
 
 async function searchMTGDB() {
-    var inputData = document.querySelector('#search-bar').value;
-    fetch(`/Search?Name=${inputData}`, {
+    var searchName = document.querySelector('#search-bar-name').value;
+    var searchSet = document.querySelector('#search-bar-set').value;
+    var searchArtist = document.querySelector('#search-bar-artist').value;
+    var searchCollectorNumber = document.querySelector('#search-bar-collector-number').value;
+    var searchText = document.querySelector('#search-bar-text').value;
+    fetch(`/Search?Name=${searchName}&SetCode=${searchSet}&CollectorNumber=${searchCollectorNumber}&Artist=${searchArtist}&Text=${searchText}`, {
         method: 'GET',
     })
         .then(response => response.text())
