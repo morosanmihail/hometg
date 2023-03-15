@@ -52,6 +52,8 @@ async function listCards(delta = 0, collection = "") {
             var contentDiv = document.querySelector('#main-content');
             contentDiv.innerHTML = html;
 
+            resetFilters();
+
             document.querySelector('#list-page').innerHTML = newPage + 1;
 
             const nextURL = "/" + collection + "?offset=" + offset;
@@ -62,6 +64,13 @@ async function listCards(delta = 0, collection = "") {
         .catch(error => {
             console.error('An error occurred:', error);
         });
+}
+
+function resetFilters() {
+    var options = {
+        valueNames: ['name', 'setCode']
+    };
+    var cardList = new List('listjs-grid', options);
 }
 
 async function importCSV() {
@@ -98,6 +107,7 @@ async function importCSV() {
         });
 }
 
+// TODO: fix this
 function getCollection() {
     if ($('#collection-name option').length > 0) {
         var collection = document.querySelector('#collection-name');

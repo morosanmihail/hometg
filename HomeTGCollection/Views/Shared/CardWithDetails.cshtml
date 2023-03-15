@@ -4,6 +4,12 @@
  <div id="@Html.DisplayFor(modelItem => Model.Card!.Id)" class="card">
     <img class="lazyload" src="@imagePath" alt="@Html.DisplayFor(modelItem => Model.MtGCard.Name)" lazyload="on" />
     <div class="card-info" data-id="details-@Html.DisplayFor(modelItem => Model.Card!.Id)">
+
+        <div class="row mb-3 align-items-center">
+            <span class="name">@Model.MtGCard.Name</span>
+            <span class="setCode">@Model.MtGCard.SetCode</span>
+        </div>
+
     @{
         await Html.RenderPartialAsync("CardDetails", Model.Card); 
     }

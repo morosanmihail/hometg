@@ -94,6 +94,23 @@ namespace HomeTG.Controllers.Web
             ));
         }
 
+        [Route("{collection}/Search")]
+        public IActionResult SearchCollection(string collection, SearchOptions searchOptions)
+        {
+            var cards = _mtgdb.SearchCards(searchOptions).ToList();
+            var cardsInCollection = _db.GetCards(
+                cards.Select(c => c.Id).ToList()
+            ).Where(c => c.CollectionId == collection).
+            GroupBy(c => c.Id).
+            ToDictionary(c => c.Key, c => c.ToList());
+
+            return View("ListView", cards.Where(c => cardsInCollection.ContainsKey(c.Id)).Select(
+                c => new ListViewItem(
+                    c, cardsInCollection[c.Id].First()
+                )
+            ));
+        }
+
         [Route("ImportProgress")]
         public ImportTask ImportProgress(string Filename)
         {

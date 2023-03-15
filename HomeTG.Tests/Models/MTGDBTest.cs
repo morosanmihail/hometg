@@ -10,8 +10,8 @@ namespace HomeTG.Tests.Models
         MTGDB dbContext;
         List<Card> entities = new List<Card>
         {
-            new Card("1", "TEST NAME", "SET", "123", "someScryfallId"),
-            new Card("2", "TESTS MANE", "SET", "124", "someScryfallId")
+            new Card("1", "TEST NAME", "SET", "123", "someScryfallId", "R", "Artist 1", "B,G", "Win the game."),
+            new Card("2", "TESTS MANE", "SET", "124", "someScryfallId", "C", "Artist 2", "U", "Lose the game.")
         };
 
         [OneTimeSetUp]

@@ -1,8 +1,15 @@
 ﻿@model IEnumerable<HomeTG.Controllers.Web.ListViewItem>
 
-<div class="card-grid">
-    @foreach (var item in Model)
-    {
-        await Html.RenderPartialAsync("CardWithDetails", item);
-    }
+<div id="listjs-grid">
+    <div class="input-group">
+        <input class="search form-control" placeholder="Quick filter" />
+    <span class="btn btn-secondary sort" data-sort="name">Sort by name</span>
+    <span class="btn btn-secondary sort" data-sort="setCode">Sort by set</span>
+    </div>
+    <div class="card-grid list">
+        @foreach (var item in Model)
+        {
+            await Html.RenderPartialAsync("CardWithDetails", item);
+        }
+    </div>
 </div>
