@@ -57,9 +57,9 @@ async function listCards(delta = 0, collection = "") {
             document.querySelector('#list-page').innerHTML = newPage + 1;
 
             const nextURL = "/" + collection + "?offset=" + offset;
-            window.history.pushState({} , '', nextURL);
+            window.history.pushState({}, '', nextURL);
 
-            listCollections(collection);
+            setCollection(collection);
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -107,24 +107,27 @@ async function importCSV() {
         });
 }
 
-// TODO: fix this
 function getCollection() {
-    if ($('#collection-name option').length > 0) {
-        var collection = document.querySelector('#collection-name');
-        return collection.options[collection.selectedIndex].text;
-    }
-    return "Main";
+    return window.activeCollection;
 }
 
-async function listCollections(collection) {
-    fetch(`/ListCollections?collection=${collection}`, {
-        method: 'GET',
-    })
-        .then(response => response.text())
-        .then(html => {
-            document.querySelector('#collection-name').innerHTML = html;
-        })
-        .catch(error => {
-            console.error('An error occurred:', error);
-        });
+function resetCollection() {
+    const pathname = window.location.pathname;
+    const firstSlashIndex = pathname.indexOf('/');
+    const questionMarkIndex = pathname.indexOf('?');
+    let mySubstring;
+    if (questionMarkIndex !== -1) {
+        mySubstring = pathname.substring(firstSlashIndex + 1, questionMarkIndex);
+    } else {
+        mySubstring = pathname.substring(firstSlashIndex + 1);
+    }
+    if (mySubstring == "") {
+        mySubstring = "Main"
+    }
+
+    setCollection(mySubstring);
+}
+
+function setCollection(collection) {
+    window.activeCollection = collection;
 }

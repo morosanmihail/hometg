@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Reflection.Metadata.Ecma335;
+using HomeTG.Models.Contexts.Options;
 
-namespace HomeTG.Models
+namespace HomeTG.Models.Contexts
 {
     public class MTGDB : DbContext
     {
         public DbSet<Card> Cards { get; set; }
 
         public MTGDB(DbContextOptions<MTGDB> options) : base(options)
-        {}
+        { }
 
         public IEnumerable<Card> SearchCards(SearchOptions searchOptions)
         {
@@ -30,7 +31,7 @@ namespace HomeTG.Models
             var matchingCardsTest = Cards.AsEnumerable().
                 Where(c => itemsList.Any(t => c.CollectorNumber == t.Item1 && c.SetCode == t.Item2)).
                 GroupBy(c => (c.CollectorNumber, c.SetCode)).
-                ToDictionary(c => (c.Key), c => c.First());
+                ToDictionary(c => c.Key, c => c.First());
 
             return matchingCardsTest;
         }

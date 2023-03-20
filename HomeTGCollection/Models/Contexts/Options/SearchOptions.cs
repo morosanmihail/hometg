@@ -1,4 +1,4 @@
-﻿namespace HomeTG.Models
+﻿namespace HomeTG.Models.Contexts.Options
 {
     public class SearchOptions
     {

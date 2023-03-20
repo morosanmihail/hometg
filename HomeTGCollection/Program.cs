@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using HomeTG.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.Sqlite;
 using System.Security.Cryptography;
@@ -7,6 +6,7 @@ using System.Net;
 using System;
 using System.IO;
 using HomeTGCollection.Utils;
+using HomeTG.Models.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 

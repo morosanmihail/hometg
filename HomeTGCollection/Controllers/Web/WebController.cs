@@ -1,4 +1,6 @@
 ﻿using HomeTG.Models;
+using HomeTG.Models.Contexts;
+using HomeTG.Models.Contexts.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
@@ -12,12 +14,15 @@ namespace HomeTG.Controllers.Web
         private CollectionDB _db;
         private MTGDB _mtgdb;
 
+        private Operations _ops;
+
         private static Dictionary<string, ImportTask> _tasks = new Dictionary<string, ImportTask>();
 
         public WebController(CollectionDB db, MTGDB mtgdb)
         {
             _db = db;
             _mtgdb = mtgdb;
+            _ops = new Operations(_db, _mtgdb);
         }
 
         [Route("/ListCollections")]
@@ -80,9 +85,8 @@ namespace HomeTG.Controllers.Web
         public IActionResult Search(SearchOptions searchOptions)
         {
             var cards = _mtgdb.SearchCards(searchOptions).ToList();
-            var cardsInCollection = _db.GetCards(
-                cards.Select(c => c.Id).ToList()
-            ).GroupBy(c => c.Id).
+            var cardsInCollection = _ops.SearchCollection("", searchOptions).
+            GroupBy(c => c.Id).
             ToDictionary(c => c.Key, c => c.ToList());
 
             // TODO: could group by collection?
@@ -98,9 +102,7 @@ namespace HomeTG.Controllers.Web
         public IActionResult SearchCollection(string collection, SearchOptions searchOptions)
         {
             var cards = _mtgdb.SearchCards(searchOptions).ToList();
-            var cardsInCollection = _db.GetCards(
-                cards.Select(c => c.Id).ToList()
-            ).Where(c => c.CollectionId == collection).
+            var cardsInCollection = _ops.SearchCollection(collection, searchOptions).
             GroupBy(c => c.Id).
             ToDictionary(c => c.Key, c => c.ToList());
 

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using HomeTG.Models.Contexts;
+using HomeTG.Models.Contexts.Options;
 
 namespace HomeTGCollection.Controllers.Collection
 {
@@ -14,19 +16,20 @@ namespace HomeTGCollection.Controllers.Collection
     {
         private CollectionDB _db;
         private MTGDB _mtgdb;
+
+        private Operations _ops;
+
         public CollectionController(CollectionDB db, MTGDB mtgdb)
         {
             _db = db;
             _mtgdb = mtgdb;
+            _ops = new Operations(_db, _mtgdb);
         }
 
         [HttpGet("cards/get/{name}")]
         public IEnumerable<CollectionCard> GetCards(string name, string? set = null)
         {
-            var cards = _mtgdb.SearchCards(new SearchOptions { Name = name, SetCode = set });
-            var cardsInCollection = _db.GetCards(cards.Select(c => c.Id!).ToList());
-            // cardsInCollection.Join(cards, c => c.Id, cdb => cdb.Id, (c, cdb) => new { c.Id, Scryfall = cdb.ScryfallId }).ToList();
-            return cardsInCollection;
+            return _ops.GetCards(name, set);
         }
 
         [HttpPut("cards/{collection}/add")]
@@ -86,9 +89,15 @@ namespace HomeTGCollection.Controllers.Collection
         }
 
         [HttpGet("cards/{collection}/count")]
-        public int IncomingCount(string collection)
+        public int Count(string collection)
         {
-            return _db.Cards.Where(c => c.CollectionId.ToLower() == collection.ToLower()).Count();
+            return _ops.Count(collection);
+        }
+
+        [HttpGet("cards/{collection}/search")]
+        public IEnumerable<CollectionCard> Search(string collection, SearchOptions searchOptions)
+        {
+            return _ops.SearchCollection(collection, searchOptions);
         }
 
         List<CSVItem> ImportFromCSV(string filename)

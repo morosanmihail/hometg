@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Reflection.Metadata.Ecma335;
 
-namespace HomeTG.Models
+namespace HomeTG.Models.Contexts
 {
     public class CollectionDB : DbContext
     {
@@ -26,7 +26,7 @@ namespace HomeTG.Models
             if (collection == null)
             {
                 collection = Collection.Add(new Collection(collectionName)).Entity;
-                this.SaveChanges();
+                SaveChanges();
             }
             return collection;
         }
@@ -56,7 +56,8 @@ namespace HomeTG.Models
                     c => newCards.Select(n => n.Id).
                     Contains(c.Id)
                 ).ToDictionary(c => c.Id);
-            foreach (var newCard in newCards) {
+            foreach (var newCard in newCards)
+            {
                 CollectionCard? card = null;
                 if (existingCards.ContainsKey(newCard.Id))
                 {
@@ -70,7 +71,7 @@ namespace HomeTG.Models
                     Cards.Add(newCard);
                     existingCards[newCard.Id] = card;
                 }
-                this.SaveChanges();
+                SaveChanges();
             }
             return existingCards.Values.ToList();
         }
@@ -87,7 +88,7 @@ namespace HomeTG.Models
                 {
                     Cards.Remove(existingCard);
                 }
-                this.SaveChanges();
+                SaveChanges();
             }
             return existingCard;
         }
