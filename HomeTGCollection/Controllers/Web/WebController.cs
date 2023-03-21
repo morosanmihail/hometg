@@ -25,23 +25,10 @@ namespace HomeTG.Controllers.Web
             _ops = new Operations(_db, _mtgdb);
         }
 
-        [Route("/ListCollections")]
-        public IActionResult ListCollections(string collection)
-        {
-            return View(
-                "ListCollections", 
-                new ListCollectionsModel(
-                    _db.ListCollections(),
-                    collection
-                )
-            );
-        }
-
         [Route("/{collection?}")]
         public IActionResult Index(string collection = "Main", int offset = 0)
         {
-            var collectionCards = _db.ListCards(collection, offset, 12);
-            var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListViewItem(a, b));
+            var cards = _ops.ListCards(collection, offset);
             var collections = _db.ListCollections();
             return View("View", new MainPageData(
                 cards, 
@@ -52,30 +39,28 @@ namespace HomeTG.Controllers.Web
         [Route("{collection}/ListItems")]
         public IActionResult ListItems(string collection, int offset = 0)
         {
-            var collectionCards = _db.ListCards(collection, offset, 12);
-            var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new ListViewItem(a, b));
+            var cards = _ops.ListCards(collection, offset);
             return View("ListView", cards);
         }
 
-        [Route("{collection}/GetItem")]
-        public IActionResult GetItem(string Id)
+        [Route("{collection}/GetItem/{id}")]
+        public IActionResult GetItem(string id)
         {
-            var card = _db.GetCards(new List<string> { Id }).First();
-            var cardDetails = _mtgdb.GetCards(new List<string> { Id }).First();
-            return View("CardWithDetails", new ListViewItem(cardDetails, card));
+            return View("CardWithDetails", _ops.GetCardByID(id));
         }
 
+        // TODO: this should probably look like CollectionDB.cs/AddCards (or RemoveCard) more
         [Route("{collection}/UpdateQuantity")]
-        public IActionResult? UpdateQuantity(string Id, string collection, int deltaQuantity = 0, int deltaFoilQuantity = 0)
+        public IActionResult? UpdateQuantity(string id, string collection, int deltaQuantity = 0, int deltaFoilQuantity = 0)
         {
             CollectionCard? card = null;
             if (deltaQuantity <= 0 && deltaFoilQuantity <= 0)
             {
-                card = _db.RemoveCard(new CollectionCard(Id, -deltaQuantity, -deltaFoilQuantity, collection, null));
+                card = _db.RemoveCard(new CollectionCard(id, -deltaQuantity, -deltaFoilQuantity, collection, null));
             } else
             {
                 card = _db.AddCards(collection, new List<CollectionCard> {
-                    new CollectionCard(Id, deltaQuantity, deltaFoilQuantity, collection, null)
+                    new CollectionCard(id, deltaQuantity, deltaFoilQuantity, collection, null)
                 }).FirstOrDefault();
             }
             return View("CardDetails", card);
@@ -84,33 +69,18 @@ namespace HomeTG.Controllers.Web
         [Route("Search")]
         public IActionResult Search(SearchOptions searchOptions)
         {
-            var cards = _mtgdb.SearchCards(searchOptions).ToList();
-            var cardsInCollection = _ops.SearchCollection("", searchOptions).
-            GroupBy(c => c.Id).
-            ToDictionary(c => c.Key, c => c.ToList());
+            var cardsInCollection = _ops.SearchCollection("", searchOptions);
 
             // TODO: could group by collection?
-            return View("ListView", cards.Select(
-                c => new ListViewItem(
-                    c, 
-                    cardsInCollection.ContainsKey(c.Id) ? cardsInCollection[c.Id].First() : new CollectionCard(c.Id, 0, 0, "", null)
-                )
-            ));
+            return View("ListView", cardsInCollection);
         }
 
         [Route("{collection}/Search")]
         public IActionResult SearchCollection(string collection, SearchOptions searchOptions)
         {
-            var cards = _mtgdb.SearchCards(searchOptions).ToList();
-            var cardsInCollection = _ops.SearchCollection(collection, searchOptions).
-            GroupBy(c => c.Id).
-            ToDictionary(c => c.Key, c => c.ToList());
+            var cardsInCollection = _ops.SearchCollection(collection, searchOptions);
 
-            return View("ListView", cards.Where(c => cardsInCollection.ContainsKey(c.Id)).Select(
-                c => new ListViewItem(
-                    c, cardsInCollection[c.Id].First()
-                )
-            ));
+            return View("ListView", cardsInCollection);
         }
 
         [Route("ImportProgress")]

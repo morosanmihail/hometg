@@ -47,7 +47,8 @@ namespace HomeTG.Models.Contexts
                 c => c.CollectionId.ToLower() == collection.ToLower()
             ).OrderBy(c => c.LastUpdated).Skip(offset).Take(pagesize);
         }
-
+        
+        // TODO: mix Add/Remove cards together maybe? One clean function?
         public List<CollectionCard> AddCards(string collectionName, List<CollectionCard> newCards)
         {
             var collection = GetOrCreateCollection(collectionName);

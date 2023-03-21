@@ -14,7 +14,7 @@ namespace HomeTG.Models.Contexts
             _mtgdb = mtgdb;
         }
 
-        public IEnumerable<CollectionCard> SearchCollection(string collection, SearchOptions searchOptions)
+        public IEnumerable<CollectionCardWithDetails> SearchCollection(string collection, SearchOptions searchOptions)
         {
             var cards = _mtgdb.SearchCards(searchOptions).ToList();
             var cardsInCollection = _db.GetCards(
@@ -26,7 +26,15 @@ namespace HomeTG.Models.Contexts
                 cardsInCollection = cardsInCollection.Where(c => c.CollectionId == collection);
             }
 
-            return cardsInCollection;
+            var groupedCards = cardsInCollection.GroupBy(c => c.Id).
+                ToDictionary(c => c.Key, c => c.ToList());
+
+            return cards.Select(
+                c => new CollectionCardWithDetails(
+                    c,
+                    groupedCards.ContainsKey(c.Id) ? groupedCards[c.Id].First() : new CollectionCard(c.Id, 0, 0, "", null)
+                )
+            );
         }
 
         public int Count(string collection)
@@ -40,6 +48,42 @@ namespace HomeTG.Models.Contexts
             var cardsInCollection = _db.GetCards(cards.Select(c => c.Id!).ToList());
             // cardsInCollection.Join(cards, c => c.Id, cdb => cdb.Id, (c, cdb) => new { c.Id, Scryfall = cdb.ScryfallId }).ToList();
             return cardsInCollection;
+        }
+
+        public CollectionCardWithDetails GetCardByID(string id)
+        {
+            var card = _db.GetCards(new List<string> { id }).First();
+            var cardDetails = _mtgdb.GetCards(new List<string> { id }).First();
+            return new CollectionCardWithDetails(cardDetails, card);
+        }
+
+        public IEnumerable<CollectionCard> BulkAddCards(string collection, List<CSVItem> items)
+        {
+            var matchingCards = _mtgdb.BulkSearchCards(items.Select(c => new StrictSearchOptions(c.CollectorNumber, c.Set)).ToList());
+            var cardsToAdd = items.Where(c => matchingCards.ContainsKey((c.CollectorNumber, c.Set))).Select(
+                c => new CollectionCard(
+                    matchingCards[(c.CollectorNumber, c.Set)].Id, c.Quantity, c.FoilQuantity, collection, DateTime.UtcNow
+                )
+            ).GroupBy(c => c.Id).
+            Select(l => new CollectionCard(
+                        l.First().Id,
+                        l.Sum(c => c.Quantity),
+                        l.Sum(c => c.FoilQuantity),
+                        collection,
+                        l.First().LastUpdated
+                    )).ToList();
+
+            _db.AddCards(collection, cardsToAdd);
+
+            return cardsToAdd;
+        }
+
+        public IEnumerable<CollectionCardWithDetails> ListCards(string collection, int offset = 0)
+        {
+            var collectionCards = _db.ListCards(collection, offset, 12);
+            var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).
+                Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new CollectionCardWithDetails(a, b));
+            return cards;
         }
     }
 
@@ -84,5 +128,14 @@ namespace HomeTG.Models.Contexts
 
             return cards;
         }
+    }
+
+    public struct CSVItem
+    {
+        public string CollectorNumber { get; set; }
+        public string Set { get; set; }
+        public int Quantity { get; set; }
+        public int FoilQuantity { get; set; }
+        public string Acquired { get; set; }
     }
 }

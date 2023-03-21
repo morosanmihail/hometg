@@ -31,11 +31,8 @@ namespace HomeTG.Tests.Models
                                 .UseSqlite(_connection)
                                 .Options;
             dbContext = new CollectionDB(options);
-
             dbContext.Database.EnsureCreated();
-
-            dbContext.AddRange(cards);
-            
+            dbContext.AddRange(cards); 
             dbContext.SaveChanges();
         }
 

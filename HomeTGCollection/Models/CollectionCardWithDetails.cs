@@ -1,13 +1,11 @@
-﻿using HomeTG.Models;
-
-namespace HomeTG.Controllers.Web
+﻿namespace HomeTG.Models
 {
-    public class ListViewItem
+    public class CollectionCardWithDetails
     {
         public Card MtGCard { get; set; }
         public CollectionCard? Card { get; set; }
 
-        public ListViewItem(Card MtGCard, CollectionCard? Card)
+        public CollectionCardWithDetails(Card MtGCard, CollectionCard? Card)
         {
             this.MtGCard = MtGCard;
             this.Card = Card;

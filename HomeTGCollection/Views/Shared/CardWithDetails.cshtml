@@ -1,4 +1,4 @@
-﻿@model HomeTG.Controllers.Web.ListViewItem
+﻿@model HomeTG.Models.CollectionCardWithDetails
 
  @{ var imagePath = @"https://api.scryfall.com/cards/" + Model.MtGCard.ScryfallId +"?format=image"; }
  <div id="@Html.DisplayFor(modelItem => Model.Card!.Id)" class="card">
