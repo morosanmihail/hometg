@@ -88,6 +88,25 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
+        public void TestAddCardsWrongCollection()
+        {
+            Assert.Ignore();
+
+            var results = dbContext.AddCards("Incoming", new List<CollectionCard>()
+            {
+                new CollectionCard("3", 0, 4, "Outgoing", null)
+            });
+            Assert.NotNull(results);
+
+            // Fix this bug, then re-enable test
+            var resultsAgain = dbContext.AddCards("Incoming", new List<CollectionCard>()
+            {
+                new CollectionCard("3", 0, 4, "Outgoing", null)
+            });
+            Assert.NotNull(results);
+        }
+
+        [Test]
         public void TestGetCards()
         {
             var results = dbContext.GetCards(new List<string> { "1" });
