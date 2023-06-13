@@ -68,6 +68,7 @@ namespace HomeTG.Models.Contexts
                 }
                 if (card == null)
                 {
+                    newCard.CollectionId = collectionName;
                     card = newCard;
                     Cards.Add(newCard);
                     existingCards[newCard.Id] = card;

@@ -90,20 +90,20 @@ namespace HomeTG.Tests.Models
         [Test]
         public void TestAddCardsWrongCollection()
         {
-            Assert.Ignore();
-
             var results = dbContext.AddCards("Incoming", new List<CollectionCard>()
             {
                 new CollectionCard("3", 0, 4, "Outgoing", null)
             });
             Assert.NotNull(results);
 
-            // Fix this bug, then re-enable test
             var resultsAgain = dbContext.AddCards("Incoming", new List<CollectionCard>()
             {
                 new CollectionCard("3", 0, 4, "Outgoing", null)
             });
             Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.First().FoilQuantity, Is.EqualTo(8));
+            Assert.That(results.First().CollectionId, Is.EqualTo("Incoming"));
         }
 
         [Test]
