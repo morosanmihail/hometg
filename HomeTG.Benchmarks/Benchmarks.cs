@@ -8,12 +8,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HomeTG.Tests.Helpers;
+using BenchmarkDotNet.Engines;
 
 namespace HomeTG.Benchmarks
 {
-    public class CollectionAdd
+    public class Benchmarks
     {
         CollectionDB dbContext;
+        MTGDB mtgContext;
+        private Operations _ops;
+
+        List<CSVItem> itemsToAdd;
+
         List<CollectionCard> cards = new List<CollectionCard>
         {
             new CollectionCard("1", 2, 0, "Somecollection", null),
@@ -26,14 +33,13 @@ namespace HomeTG.Benchmarks
         [GlobalSetup]
         public void GlobalSetup()
         {
-            var _connection = new SqliteConnection("Filename=:memory:");
-            _connection.Open();
-            var options = new DbContextOptionsBuilder<CollectionDB>()
-                                .UseSqlite(_connection)
-                                .Options;
-            dbContext = new CollectionDB(options);
-            dbContext.Database.EnsureCreated();
-            dbContext.SaveChanges();
+            dbContext = TestHelpers.GetTestCollectionDB();
+            mtgContext = TestHelpers.GetActualMTGDB();
+
+            _ops = new Operations(dbContext, mtgContext);
+
+            var file1 = TestHelpers.GetTestFile("short_list.csv");
+            itemsToAdd = CSVOperations.ImportFromCSV(file1);
         }
 
         [Benchmark]
@@ -43,6 +49,12 @@ namespace HomeTG.Benchmarks
         public List<CollectionCard> TestCollectionAdd(int count)
         {
             return dbContext.AddCards("Somecollection", cards.Take(count).ToList());
+        }
+
+        [Benchmark]
+        public List<CollectionCard> TestBulkCollectionAdd()
+        {
+            return _ops.BulkAddCards("collection", itemsToAdd).ToList()    ;
         }
     }
 }

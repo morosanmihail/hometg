@@ -1,6 +1,7 @@
 ﻿using HomeTG.Models;
 using HomeTG.Models.Contexts;
 using HomeTG.Models.Contexts.Options;
+using HomeTG.Tests.Helpers;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,13 +26,7 @@ namespace HomeTG.Tests.Models
         [OneTimeSetUp]
         public void Setup()
         {
-            var _connection = new SqliteConnection("Filename=:memory:");
-            _connection.Open();
-            var options = new DbContextOptionsBuilder<MTGDB>()
-                                .UseSqlite(_connection)
-                                .Options;
-            dbContext = new MTGDB(options);
-            dbContext.Database.EnsureCreated();
+            dbContext = TestHelpers.GetTestEmptyMTGDB();
             dbContext.AddRange(identifiers);
             dbContext.AddRange(entities);
             dbContext.SaveChanges();

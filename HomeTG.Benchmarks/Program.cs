@@ -10,7 +10,7 @@ namespace HomeTG.Benchmarks
     {
         public static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<CollectionAdd>();
+            var summary = BenchmarkRunner.Run<Benchmarks>();
         }
     }
 }

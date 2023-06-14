@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,7 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HomeTG.Tests\HomeTG.Tests.csproj" />
     <ProjectReference Include="..\HomeTGCollection\HomeTG.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestData\short_list.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using HomeTG.Models;
 using HomeTG.Models.Contexts;
+using HomeTG.Tests.Helpers;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,13 +26,7 @@ namespace HomeTG.Tests.Models
         [SetUp]
         public void Setup()
         {
-            var _connection = new SqliteConnection("Filename=:memory:");
-            _connection.Open();
-            var options = new DbContextOptionsBuilder<CollectionDB>()
-                                .UseSqlite(_connection)
-                                .Options;
-            dbContext = new CollectionDB(options);
-            dbContext.Database.EnsureCreated();
+            dbContext = TestHelpers.GetTestCollectionDB();
             dbContext.AddRange(cards); 
             dbContext.SaveChanges();
         }
