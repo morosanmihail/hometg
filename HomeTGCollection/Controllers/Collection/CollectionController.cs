@@ -55,7 +55,7 @@ namespace HomeTGCollection.Controllers.Collection
         }
 
         [HttpPost("cards/{collection}/import")]
-        public async Task<IEnumerable<CollectionCard>> UploadCardsList(string collection, IFormFile file)
+        public async Task<IEnumerable<CollectionCard>> UploadCardsList(string collection, IFormFile file, Dictionary<string, string>? customMapping = null)
         {
             var filePath = Path.GetTempFileName();
             if (file.Length > 0)
@@ -66,7 +66,7 @@ namespace HomeTGCollection.Controllers.Collection
                 }
             }
 
-            var items = ImportFromCSV(filePath);
+            var items = CSVOperations.ImportFromCSV(filePath, customMapping);
             System.IO.File.Delete(filePath);
 
             return _ops.BulkAddCards(collection, items);
@@ -82,22 +82,6 @@ namespace HomeTGCollection.Controllers.Collection
         public IEnumerable<CollectionCardWithDetails> Search(string collection, SearchOptions searchOptions)
         {
             return _ops.SearchCollection(collection, searchOptions);
-        }
-
-        List<CSVItem> ImportFromCSV(string filename)
-        {
-            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
-            {
-                HasHeaderRecord = true
-            };
-
-            var items = new List<CSVItem>();
-            using (var reader = System.IO.File.OpenText(filename))
-            using (var csv = new CsvReader(reader, csvConfig))
-            {
-                items = csv.GetRecords<CSVItem>().ToList();
-            }
-            return items;
         }
     }
 }

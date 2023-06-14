@@ -12,8 +12,14 @@ namespace HomeTG.Tests.Models
         MTGDB dbContext;
         List<Card> entities = new List<Card>
         {
-            new Card("1", "TEST NAME", "SET", "123", "someScryfallId", "R", "Artist 1", "B,G", "Win the game."),
-            new Card("2", "TESTS MANE", "SET", "124", "someScryfallId", "C", "Artist 2", "U", "Lose the game.")
+            new Card("1", "TEST NAME", "SET", "123", "R", "Artist 1", "B,G", "Win the game."),
+            new Card("2", "TESTS MANE", "SET", "124", "C", "Artist 2", "U", "Lose the game.")
+        };
+
+        List<CardIdentifiers> identifiers = new List<CardIdentifiers>
+        {
+            new CardIdentifiers("1", "Scry1"),
+            new CardIdentifiers("2", "Scry2")
         };
 
         [OneTimeSetUp]
@@ -26,6 +32,7 @@ namespace HomeTG.Tests.Models
                                 .Options;
             dbContext = new MTGDB(options);
             dbContext.Database.EnsureCreated();
+            dbContext.AddRange(identifiers);
             dbContext.AddRange(entities);
             dbContext.SaveChanges();
         }

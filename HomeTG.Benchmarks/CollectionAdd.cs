@@ -17,10 +17,10 @@ namespace HomeTG.Benchmarks
         List<CollectionCard> cards = new List<CollectionCard>
         {
             new CollectionCard("1", 2, 0, "Somecollection", null),
-            new CollectionCard("2", 1, 0, "Somecollection", null),
-            new CollectionCard("1", 1, 0, "Somecollection", null),
-            new CollectionCard("3", 2, 0, "Somecollection", null),
-            new CollectionCard("5", 3, 0, "Somecollection", null),
+            new CollectionCard("2", 1, 0, "a", null),
+            new CollectionCard("1", 1, 0, "b", null),
+            new CollectionCard("3", 2, 0, "c", null),
+            new CollectionCard("5", 3, 0, "d", null),
         };
 
         [GlobalSetup]
