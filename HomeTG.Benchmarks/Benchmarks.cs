@@ -54,7 +54,7 @@ namespace HomeTG.Benchmarks
         [Benchmark]
         public List<CollectionCard> TestBulkCollectionAdd()
         {
-            return _ops.BulkAddCards("collection", itemsToAdd).ToList()    ;
+            return _ops.BulkAddCards("collection", itemsToAdd).ToList();
         }
     }
 }

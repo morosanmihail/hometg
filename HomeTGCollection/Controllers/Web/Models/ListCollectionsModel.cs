@@ -1,6 +1,6 @@
 ﻿using HomeTG.Models;
 
-namespace HomeTG.Controllers.Web
+namespace HomeTG.Controllers.Web.Models
 {
     public class ListCollectionsModel
     {

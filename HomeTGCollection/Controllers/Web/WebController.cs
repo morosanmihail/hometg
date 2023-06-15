@@ -1,4 +1,5 @@
-﻿using HomeTG.Models;
+﻿using HomeTG.Controllers.Web.Models;
+using HomeTG.Models;
 using HomeTG.Models.Contexts;
 using HomeTG.Models.Contexts.Options;
 using Microsoft.AspNetCore.Http;

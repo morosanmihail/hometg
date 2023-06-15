@@ -1,4 +1,4 @@
-﻿namespace HomeTG.Controllers.Web
+﻿namespace HomeTG.Controllers.Web.Models
 {
     public class ImportTask
     {
@@ -6,7 +6,8 @@
         public int Current { get; set; }
         public int Total { get; set; }
 
-        public ImportTask(string filename, int total = 1, int current = 0) {
+        public ImportTask(string filename, int total = 1, int current = 0)
+        {
             Filename = filename;
             Current = current;
             Total = total;

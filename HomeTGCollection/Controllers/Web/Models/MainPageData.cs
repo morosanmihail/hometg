@@ -1,12 +1,12 @@
 ﻿using HomeTG.Models;
 
-namespace HomeTG.Controllers.Web
+namespace HomeTG.Controllers.Web.Models
 {
     public class MainPageData
     {
         public MainPageData(IEnumerable<CollectionCardWithDetails> listViewItems, ListCollectionsModel collections)
         {
-            this.ListViewItems = listViewItems;
+            ListViewItems = listViewItems;
             Collections = collections;
         }
 

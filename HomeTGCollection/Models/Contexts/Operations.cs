@@ -52,6 +52,8 @@ namespace HomeTG.Models.Contexts
 
         public CollectionCardWithDetails GetCardByID(string id)
         {
+            // TODO: this is potentially undesirable behaviour. And unclear.
+            // This should return all items from the collections with that ID.
             var card = _db.GetCards(new List<string> { id }).First();
             var cardDetails = _mtgdb.GetCards(new List<string> { id }).First();
             return new CollectionCardWithDetails(cardDetails, card);
