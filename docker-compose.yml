@@ -6,3 +6,10 @@ services:
     build:
       context: .
       dockerfile: HomeTG.API/Dockerfile
+
+  hometg:
+    image: ${DOCKER_REGISTRY-}hometg
+    build:
+      context: .
+      dockerfile: HomeTGCollection/Dockerfile
+
