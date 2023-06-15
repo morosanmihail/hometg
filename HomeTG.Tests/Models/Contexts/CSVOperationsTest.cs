@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeTG.Tests.Contexts
+namespace HomeTG.Models.Contexts.Tests
 {
     [TestFixture]
     public class CSVOperationsTest
@@ -22,7 +22,7 @@ namespace HomeTG.Tests.Contexts
         }
 
         [Test]
-        public void TestImportShortList()
+        public void ImportShortListTest()
         {
             var results = CSVOperations.ImportFromCSV(file1);
             Assert.NotNull(results);
@@ -33,7 +33,7 @@ namespace HomeTG.Tests.Contexts
         }
 
         [Test]
-        public void TestImportShortListWithCustomMapping()
+        public void ImportShortListWithCustomMappingTest()
         {
             var mapping = new Dictionary<string, string> {
                 {"CollectorNumber", "CollectorNumber"},
@@ -51,7 +51,7 @@ namespace HomeTG.Tests.Contexts
         }
 
         [Test]
-        public void TestInvalidCustomMappingDefaultsToNoMapping()
+        public void InvalidCustomMappingDefaultsToNoMappingTest()
         {
             // Custom Mapping requires CollectorNumber, Set and one of Quantity or FoilQuantity
             var mapping = new Dictionary<string, string> {

@@ -1,4 +1,5 @@
-﻿using HomeTG.Models;
+﻿using NUnit.Framework;
+using HomeTG.Models;
 using HomeTG.Models.Contexts;
 using HomeTG.Tests.Helpers;
 using Microsoft.Data.Sqlite;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeTG.Tests.Models
+namespace HomeTG.Models.Contexts.Tests
 {
     [TestFixture]
     public class CollectionDBTest
@@ -32,13 +33,13 @@ namespace HomeTG.Tests.Models
         public void Setup()
         {
             dbContext = TestHelpers.GetTestCollectionDB();
-            dbContext.AddRange(cards); 
+            dbContext.AddRange(cards);
             dbContext.AddRange(collections);
             dbContext.SaveChanges();
         }
 
         [Test]
-        public void TestListCards()
+        public void ListCardsTest()
         {
             var results = dbContext.ListCards("Main", 0);
             Assert.NotNull(results);
@@ -55,7 +56,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestAddCards()
+        public void AddCardsTest()
         {
             var results = dbContext.AddCards("Incoming", new List<CollectionCard>()
             {
@@ -89,7 +90,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestAddCardsWrongCollection()
+        public void AddCardsWrongCollectionTest()
         {
             var results = dbContext.AddCards("Incoming", new List<CollectionCard>()
             {
@@ -108,7 +109,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestGetCards()
+        public void GetCardsTest()
         {
             var results = dbContext.GetCards(new List<string> { "1" });
             Assert.NotNull(results);
@@ -116,7 +117,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestRemoveCard()
+        public void RemoveCardTest()
         {
             // Remove one quantity
             var result = dbContext.RemoveCard(
@@ -155,7 +156,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestGetCollection()
+        public void GetCollectionTest()
         {
             var result = dbContext.GetCollection("Main");
             Assert.NotNull(result);
@@ -166,7 +167,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestGetOrCreateCollection()
+        public void GetOrCreateCollectionTest()
         {
             var result = dbContext.GetOrCreateCollection("Main");
             Assert.NotNull(result);
@@ -178,7 +179,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestListCollections()
+        public void ListCollectionsTest()
         {
             var results = dbContext.ListCollections();
             Assert.NotNull(results);

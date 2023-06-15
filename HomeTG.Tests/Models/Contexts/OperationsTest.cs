@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeTG.Tests.Models
+namespace HomeTG.Models.Contexts.Tests
 {
     [TestFixture]
     public class OperationsTest
@@ -52,14 +52,14 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestCount()
+        public void CountTest()
         {
             var result = ops.Count("Main");
             Assert.That(result, Is.EqualTo(2));
         }
 
         [Test]
-        public void TestSearchCollection()
+        public void SearchCollectionTest()
         {
             var results = ops.SearchCollection("Main", new SearchOptions { Name = "TEST NAME" }).ToList();
             Assert.NotNull(results);
@@ -74,7 +74,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestSearchCollectionWithFailToFind()
+        public void SearchCollectionWithFailToFindTest()
         {
             var results = ops.SearchCollection("Main", new SearchOptions { Name = "NO NAME" }).ToList();
             Assert.NotNull(results);
@@ -86,7 +86,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestGetCards()
+        public void GetCardsTest()
         {
             var results = ops.GetCards("TEST NAME").ToList();
             Assert.NotNull(results);
@@ -105,7 +105,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestGetCardByID()
+        public void GetCardByIDTest()
         {
             var result = ops.GetCardByID("1");
             Assert.NotNull(result);
@@ -113,7 +113,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestListCards()
+        public void ListCardsTest()
         {
             var results = ops.ListCards("Main").ToList();
             var r = results.Select(x => x.Card).ToList();
@@ -134,7 +134,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestBulkAddCards()
+        public void BulkAddCardsTest()
         {
             var results = ops.ListCards("Main").ToList();
             Assert.NotNull(results);

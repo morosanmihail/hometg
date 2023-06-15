@@ -5,7 +5,7 @@ using HomeTG.Tests.Helpers;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeTG.Tests.Models
+namespace HomeTG.Models.Contexts.Tests
 {
     [TestFixture]
     public class MTGDBTest
@@ -33,7 +33,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestSearchCards()
+        public void SearchCardsTest()
         {
             var results = dbContext.SearchCards(new SearchOptions { Name = "NAME" });
             Assert.NotNull(results);
@@ -54,7 +54,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestBulkSearchCards()
+        public void BulkSearchCardsTest()
         {
             var results = dbContext.BulkSearchCards(new List<StrictSearchOptions> { new StrictSearchOptions("123", "SET") });
             Assert.NotNull(results);
@@ -72,7 +72,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestBulkSearchCardsWithFailToFind()
+        public void BulkSearchCardsWithFailToFindTest()
         {
             var results = dbContext.BulkSearchCards(new List<StrictSearchOptions> { new StrictSearchOptions("126", "SET") });
             Assert.NotNull(results);
@@ -88,7 +88,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestGetCards()
+        public void GetCardsTest()
         {
             var results = dbContext.GetCards(new List<string> { "1" });
             Assert.NotNull(results);
@@ -97,7 +97,7 @@ namespace HomeTG.Tests.Models
         }
 
         [Test]
-        public void TestGetCardsWithFailToFind()
+        public void GetCardsWithFailToFindTest()
         {
             var results = dbContext.GetCards(new List<string> { "6doesnotexist" });
             Assert.NotNull(results);
