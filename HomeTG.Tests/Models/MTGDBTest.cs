@@ -60,12 +60,50 @@ namespace HomeTG.Tests.Models
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(1));
             Assert.That(results[("123", "SET")].Name, Is.EqualTo("TEST NAME"));
+
+            results = dbContext.BulkSearchCards(new List<StrictSearchOptions> { 
+                new StrictSearchOptions("123", "SET"),
+                new StrictSearchOptions("124", "SET")
+            });
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(2));
+            Assert.That(results[("123", "SET")].Name, Is.EqualTo("TEST NAME"));
+            Assert.That(results[("124", "SET")].Name, Is.EqualTo("TESTS MANE"));
+        }
+
+        [Test]
+        public void TestBulkSearchCardsWithFailToFind()
+        {
+            var results = dbContext.BulkSearchCards(new List<StrictSearchOptions> { new StrictSearchOptions("126", "SET") });
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(0));
+
+            results = dbContext.BulkSearchCards(new List<StrictSearchOptions> {
+                new StrictSearchOptions("123", "SET"),
+                new StrictSearchOptions("126", "SET")
+            });
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results[("123", "SET")].Name, Is.EqualTo("TEST NAME"));
         }
 
         [Test]
         public void TestGetCards()
         {
             var results = dbContext.GetCards(new List<string> { "1" });
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.First().Name, Is.EqualTo("TEST NAME"));
+        }
+
+        [Test]
+        public void TestGetCardsWithFailToFind()
+        {
+            var results = dbContext.GetCards(new List<string> { "6doesnotexist" });
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(0));
+
+            results = dbContext.GetCards(new List<string> { "1", "7alsoismissing" });
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(1));
             Assert.That(results.First().Name, Is.EqualTo("TEST NAME"));

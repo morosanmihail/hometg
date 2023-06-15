@@ -23,11 +23,17 @@ namespace HomeTG.Tests.Models
             new CollectionCard("3", 2, 0, "SpecialList", null),
         };
 
+        List<Collection> collections = new List<Collection>
+        {
+            new Collection("Main")
+        };
+
         [SetUp]
         public void Setup()
         {
             dbContext = TestHelpers.GetTestCollectionDB();
             dbContext.AddRange(cards); 
+            dbContext.AddRange(collections);
             dbContext.SaveChanges();
         }
 
@@ -146,6 +152,43 @@ namespace HomeTG.Tests.Models
             results = dbContext.ListCards("Incoming", 0);
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void TestGetCollection()
+        {
+            var result = dbContext.GetCollection("Main");
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo("Main"));
+
+            result = dbContext.GetCollection("NoExisty");
+            Assert.Null(result);
+        }
+
+        [Test]
+        public void TestGetOrCreateCollection()
+        {
+            var result = dbContext.GetOrCreateCollection("Main");
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo("Main"));
+
+            result = dbContext.GetOrCreateCollection("NoExisty");
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo("NoExisty"));
+        }
+
+        [Test]
+        public void TestListCollections()
+        {
+            var results = dbContext.ListCollections();
+            Assert.NotNull(results);
+            Assert.That(results.Count, Is.EqualTo(1));
+
+            _ = dbContext.GetOrCreateCollection("NoExisty");
+
+            results = dbContext.ListCollections();
+            Assert.NotNull(results);
+            Assert.That(results.Count, Is.EqualTo(2));
         }
     }
 }

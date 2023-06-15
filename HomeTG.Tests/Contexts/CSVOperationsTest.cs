@@ -53,6 +53,7 @@ namespace HomeTG.Tests.Contexts
         [Test]
         public void TestInvalidCustomMappingDefaultsToNoMapping()
         {
+            // Custom Mapping requires CollectorNumber, Set and one of Quantity or FoilQuantity
             var mapping = new Dictionary<string, string> {
                 {"Set", "Set"},
             };
