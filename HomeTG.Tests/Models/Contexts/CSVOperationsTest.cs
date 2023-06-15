@@ -22,7 +22,7 @@ namespace HomeTG.Models.Contexts.Tests
         }
 
         [Test]
-        public void ImportShortListTest()
+        public void ImportFromCSVTest()
         {
             var results = CSVOperations.ImportFromCSV(file1);
             Assert.NotNull(results);
@@ -33,7 +33,7 @@ namespace HomeTG.Models.Contexts.Tests
         }
 
         [Test]
-        public void ImportShortListWithCustomMappingTest()
+        public void ImportFromCSVShortListWithCustomMappingTest()
         {
             var mapping = new Dictionary<string, string> {
                 {"CollectorNumber", "CollectorNumber"},
@@ -51,7 +51,7 @@ namespace HomeTG.Models.Contexts.Tests
         }
 
         [Test]
-        public void InvalidCustomMappingDefaultsToNoMappingTest()
+        public void ImportFromCSVInvalidCustomMappingDefaultsToNoMappingTest()
         {
             // Custom Mapping requires CollectorNumber, Set and one of Quantity or FoilQuantity
             var mapping = new Dictionary<string, string> {
