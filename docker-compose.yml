@@ -1,11 +1,8 @@
-﻿version: '3'
+version: '3.4'
+
 services:
-  hometg-api:
+  hometg.api:
+    image: ${DOCKER_REGISTRY-}hometgapi
     build:
-      dockerfile: HomeTGCollection/Dockerfile
-    pull_policy: build
-    ports:
-      - "5234:80"
-    volumes:
-      - /config/hometg:/usr/share/hometg
-    restart: always
+      context: .
+      dockerfile: HomeTG.API/Dockerfile

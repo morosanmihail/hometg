@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HomeTGCollection\HomeTG.csproj" />
+    <Folder Include="TestData\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestData\" />
+    <ProjectReference Include="..\HomeTG.API\HomeTG.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
