@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTG.Tests", "HomeTG.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTG.Benchmarks", "HomeTG.Benchmarks\HomeTG.Benchmarks.csproj", "{98F085BF-D7DA-487D-8B7A-FA625ACD512E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeTG.API", "HomeTG.API\HomeTG.API.csproj", "{7C8DDB87-D8B4-4341-ABF8-E4E334E0E8C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTG.API", "HomeTG.API\HomeTG.API.csproj", "{7C8DDB87-D8B4-4341-ABF8-E4E334E0E8C9}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C6DEBA07-9096-495C-AC28-DEA49B404B04}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "reactapp", "reactapp\reactapp.esproj", "{8089EFDC-4F57-4FF4-A577-E9F06F91F1A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,12 @@ Global
 		{C6DEBA07-9096-495C-AC28-DEA49B404B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6DEBA07-9096-495C-AC28-DEA49B404B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6DEBA07-9096-495C-AC28-DEA49B404B04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8089EFDC-4F57-4FF4-A577-E9F06F91F1A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8089EFDC-4F57-4FF4-A577-E9F06F91F1A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8089EFDC-4F57-4FF4-A577-E9F06F91F1A0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8089EFDC-4F57-4FF4-A577-E9F06F91F1A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8089EFDC-4F57-4FF4-A577-E9F06F91F1A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8089EFDC-4F57-4FF4-A577-E9F06F91F1A0}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
