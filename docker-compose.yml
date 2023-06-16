@@ -4,7 +4,7 @@ services:
   hometg:
     build:
       context: .
-      dockerfile: HomeTGCollection/Dockerfile
+      dockerfile: HomeTG.API/Dockerfile
     pull_policy: build
     ports:
       - "5234:80"
