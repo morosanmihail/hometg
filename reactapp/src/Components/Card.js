@@ -3,26 +3,37 @@ import React, { Component } from 'react';
 export default class MtGCard extends Component {
     constructor(props) {
         super(props);
-        this.state = { name: "", set: "", loading: true };
+        this.state = {
+            id: props.id, card: {}, loading: true
+        };
     }
 
     componentDidMount() {
         this.populateCard();
     }
 
-    static renderCard(name, set) {
+    static renderCard(card) {
+        let imagePath = "";
+        imagePath = "https://api.scryfall.com/cards/" + card.cardIdentifiers.scryfallId + "?format=image";
         return (
-            <div>
-                <p>{name}</p>
-                <p>{set}</p>
+    <div id={card.id} class="card">
+        <img class="lazyload" src={imagePath} alt={card.name} lazyload="on" />
+        <div class="card-info" data-id="details-{card.id}">
+
+            <div class="row mb-3 align-items-center">
+                            <span class="name">{card.name}</span>
+                            <span class="setCode">{card.setCode}</span>
             </div>
+        </div>
+    </div>
+
         );
     }
 
     render() {
         let contents = this.state.loading
             ? <p>Loading...</p>
-            : MtGCard.renderCard(this.state.name, this.state.set);
+            : MtGCard.renderCard(this.state.card);
 
         return (
             <div>
@@ -32,10 +43,10 @@ export default class MtGCard extends Component {
     }
 
     async populateCard() {
-        const response = await fetch('mtg/cards?ids=3ef58d1c-993e-5ade-af6a-aa77edb53fd1');
+        const response = await fetch('mtg/cards?ids=' + this.state.id);
         if (response.status === 200) {
             const data = await response.json();
-            this.setState({ name: data[0].name, set: data[0].setCode, loading: false });
+            this.setState({id: this.state.id, card: data[0], loading: false });
         }
     }
 }
