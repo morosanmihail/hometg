@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from "react-router-dom";
+import AddCollectionForm from './AddCollectionForm';
 
 function Sidebar() {
     const { collection = "Main" } = useParams();
@@ -41,6 +42,7 @@ function Sidebar() {
                     <hr/>
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
                         {contents}
+                        <AddCollectionForm/>
                     </div>
                 </div>
             </nav>
