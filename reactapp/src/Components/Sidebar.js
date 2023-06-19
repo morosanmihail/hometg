@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Card from './Card';
 import { Link, useParams } from "react-router-dom";
 
 function Sidebar() {
