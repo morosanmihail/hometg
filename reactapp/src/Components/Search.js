@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Card from './Card';
 
-function Search({ collection }) {
+function Search({ collection, onAdd }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchOptions, setSearchOptions] = useState({});
@@ -10,7 +10,7 @@ function Search({ collection }) {
         return (
             <div className="card-grid list">
                 {cards.map(card =>
-                    <Card key={card.id} id={card.id} card={card} currentCollection={collection} />
+                    <Card key={card.id} id={card.id} card={card} currentCollection={collection} onAdd={onAdd} />
                 )}
             </div>
         );
@@ -47,7 +47,7 @@ function Search({ collection }) {
 
     return (
         <div className="collapse" id="search">
-            <h2>Search - Add to {collection}</h2>
+            <h2>Search</h2>
             <div className="list-group list-group-flush mx-3 mt-4">
                 <div className="input-group mb-3">
                     <input onChange={event => handleSearchInput(event, "name")} type="text" className="form-control" id="search-bar-name" placeholder="Name" aria-describedby="button-addon2" />

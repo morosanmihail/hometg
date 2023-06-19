@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function MtGCard({ id, card = null, details = null, currentCollection = null }) {
+function MtGCard({ id, card = null, details = null, currentCollection = null, onAdd = null }) {
     const [_card, setCard] = useState(card);
     const [_details, setDetails] = useState(details);
 
@@ -33,6 +33,10 @@ function MtGCard({ id, card = null, details = null, currentCollection = null }) 
                 response.json().then(data => {
                     if (_details != null) {
                         setDetails(add ? data[0] : data);
+                    } else {
+                        if (onAdd != null) {
+                            onAdd();
+                        }
                     }
                 })
             }
@@ -47,7 +51,6 @@ function MtGCard({ id, card = null, details = null, currentCollection = null }) 
                 <img className="lazyload" src={imagePath} alt={card.name} lazyload="on" />
                 <div className="card-info">
                     <div className="row mb-3 align-items-center">
-                        <span className="name col-sm-11">{(_details != null ? _details.collectionId : "")}</span>
                         <span className="name col-sm-11">{card.name}</span>
                         <span className="setCode col-sm-11">{card.setCode}</span>
                     </div>
@@ -69,7 +72,8 @@ function MtGCard({ id, card = null, details = null, currentCollection = null }) 
                         :
                         <React.Fragment>
                             <div className="row mb-3 align-items-center">
-                                <button onClick={event => updateQuantity(1, 0)} className="btn btn-default col-sm-11" type="button">Add Non-foil</button>
+                                <button onClick={event => updateQuantity(1, 0)} className="btn btn-default col-sm-12" type="button">Add Non-foil</button>
+                                <button onClick={event => updateQuantity(0, 1)} className="btn btn-default col-sm-12" type="button">Add Foil</button>
                             </div>
                         </React.Fragment>
                     }
