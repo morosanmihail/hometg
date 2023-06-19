@@ -14,14 +14,14 @@ export default class CardList extends Component {
     static renderCards(cards) {
         return (
             <div id="listjs-grid">
-                <div class="input-group">
-                    <input class="search form-control" placeholder="Quick filter" />
-                    <span class="btn btn-secondary sort" data-sort="name">Sort by name</span>
-                    <span class="btn btn-secondary sort" data-sort="setCode">Sort by set</span>
+                <div className="input-group">
+                    <input className="search form-control" placeholder="Quick filter" />
+                    <span className="btn btn-secondary sort" data-sort="name">Sort by name</span>
+                    <span className="btn btn-secondary sort" data-sort="setCode">Sort by set</span>
                 </div>
-                <div class="card-grid list">
+                <div className="card-grid list">
                     {cards.map(card =>
-                        <div>
+                        <div key={card.id}>
                             <Card id={card.id} />
                         </div>
                     )}
