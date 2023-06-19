@@ -1,7 +1,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const context = [
-    "/mtg/cards",
+    "/mtg",
     "/collection",
 ];
 
