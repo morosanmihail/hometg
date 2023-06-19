@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-function MtGCard({ id, card = null }) {
+function MtGCard({ id, card = null, details = null, currentCollection = null }) {
     const [_card, setCard] = useState(card);
+    const [_details, setDetails] = useState(details);
 
     useEffect(() => {
         if (_card == null) {
@@ -13,19 +14,65 @@ function MtGCard({ id, card = null }) {
                 }
             });
         }
-    }, [id, _card])
+    }, [id, _card, _details])
+
+    const updateQuantity = (delta, deltaFoil) => {
+        let collection = currentCollection != null ? currentCollection : _details.collectionId;
+        let add = parseInt(delta) >= 0;
+        let url = '/collection/cards/' + collection + '/' + (add ? 'add' : 'delete');
+        url = url + '?Id=' + _card.id + '&CollectionID=' + collection + '&Quantity=' + Math.abs(parseInt(delta));
+        url = url + '&FoilQuantity=' + Math.abs(parseInt(deltaFoil));
+        fetch(url, {
+            method: add ? "put" : "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (response.status === 200) {
+                response.json().then(data => {
+                    if (_details != null) {
+                        setDetails(add ? data[0] : data);
+                    }
+                })
+            }
+        })
+    }
 
     const renderCard = (card) => {
         let imagePath = "";
         imagePath = "https://api.scryfall.com/cards/" + card.cardIdentifiers.scryfallId + "?format=image";
         return (
-            <div id={card.id} className="card">
+            <div className="card">
                 <img className="lazyload" src={imagePath} alt={card.name} lazyload="on" />
-                <div className="card-info" data-id="details-{card.id}">
+                <div className="card-info">
                     <div className="row mb-3 align-items-center">
-                        <span className="name">{card.name}</span>
-                        <span className="setCode">{card.setCode}</span>
+                        <span className="name col-sm-11">{(_details != null ? _details.collectionId : "")}</span>
+                        <span className="name col-sm-11">{card.name}</span>
+                        <span className="setCode col-sm-11">{card.setCode}</span>
                     </div>
+                    {_details != null ?
+                        <React.Fragment>
+                            <div className="row mb-3 align-items-center">
+                                <span className="col-sm-5">Quantity</span>
+                                <button onClick={event => updateQuantity(-1, 0)} className="btn btn-outline-secondary col-sm-2" type="button">-</button>
+                                <span className="text-center col-sm-2">{_details.quantity}</span>
+                                <button onClick={event => updateQuantity(1, 0)} className="btn btn-outline-secondary col-sm-2" type="button">+</button>
+                            </div>
+                            <div className="row mb-3 align-items-center">
+                                <span className="col-sm-5">Foils</span>
+                                <button onClick={event => updateQuantity(0, -1)} className="btn btn-outline-secondary col-sm-2" type="button">-</button>
+                                <span className="text-center col-sm-2">{_details.foilQuantity}</span>
+                                <button onClick={event => updateQuantity(0, 1)} className="btn btn-outline-secondary col-sm-2" type="button">+</button>
+                            </div>
+                        </React.Fragment>
+                        :
+                        <React.Fragment>
+                            <div className="row mb-3 align-items-center">
+                                <button onClick={event => updateQuantity(1, 0)} className="btn btn-default col-sm-11" type="button">Add Non-foil</button>
+                            </div>
+                        </React.Fragment>
+                    }
                 </div>
             </div>
         );

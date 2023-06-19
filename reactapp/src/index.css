@@ -12,6 +12,16 @@ code {
     monospace;
 }
 
+@media (min-width: 991.98px) {
+    main {
+        padding-left: 240px;
+    }
+}
+
+main {
+    margin-top: 58px;
+}
+
 /* Add some custom CSS for the grid and hover effects */
 .card-grid {
     display: grid;
@@ -45,12 +55,6 @@ code {
         opacity: 1;
     }
 
-@media (min-width: 991.98px) {
-    main {
-        padding-left: 240px;
-    }
-}
-
 /* Sidebar */
 .sidebar {
     position: fixed;
@@ -82,8 +86,4 @@ code {
     padding-top: 0.5rem;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-}
-
-main {
-    margin-top: 58px;
 }

@@ -1,39 +1,18 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import CardList from './Components/CardList';
-import Search from './Components/Search';
-import Sidebar from './Components/Sidebar';
+import BaseApp from './BaseApp';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
-        <Fragment>
-            <header>
-                <Routes>
-                    <Route exact path="/" element={<Sidebar />} />
-                    <Route path="/:collection" element={<Sidebar />} />
-                </Routes>
-                
-                <nav id="main-navbar" className="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-                    <div className="container-fluid">
-                        <a className="navbar-brand" href="/">
-                            HomeTG
-                        </a>
-                    </div>
-                </nav>
-            </header>
-            <main>
-                <Search />
-                <Routes>
-                    <Route exact path="/" element={<CardList />} />
-                    <Route path="/:collection" element={<CardList/> } />
-                    <Route path="/:collection/:offset" element={<CardList />} />
-                </Routes>
-            </main>
-        </Fragment>
+        <Routes>
+            <Route exact path="/" element={<BaseApp />} />
+            <Route path="/:collection" element={<BaseApp />} />
+            <Route path="/:collection/:offset" element={<BaseApp />} />
+        </Routes>
     </BrowserRouter>
 );
 

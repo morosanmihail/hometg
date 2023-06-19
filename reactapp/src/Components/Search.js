@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Card from './Card';
 
-function Search() {
+function Search({ collection }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchOptions, setSearchOptions] = useState({});
@@ -10,9 +10,7 @@ function Search() {
         return (
             <div className="card-grid list">
                 {cards.map(card =>
-                    <div key={card.id}>
-                        <Card id={card.id} card={card} />
-                    </div>
+                    <Card key={card.id} id={card.id} card={card} currentCollection={collection} />
                 )}
             </div>
         );
@@ -20,7 +18,7 @@ function Search() {
 
     const populateSearch = () => {
         setLoading(true);
-        fetch('mtg/cards/search', {
+        fetch('/mtg/cards/search', {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -49,7 +47,7 @@ function Search() {
 
     return (
         <div className="collapse" id="search">
-            <h2>Search</h2>
+            <h2>Search - Add to {collection}</h2>
             <div className="list-group list-group-flush mx-3 mt-4">
                 <div className="input-group mb-3">
                     <input onChange={event => handleSearchInput(event, "name")} type="text" className="form-control" id="search-bar-name" placeholder="Name" aria-describedby="button-addon2" />
