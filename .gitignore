@@ -353,3 +353,4 @@ MigrationBackup/
 /HomeTGCollection/DB/AllPrintings.db
 /HomeTGCollection/DB/Collection.db
 /HomeTGCollection/DB/AllPrintings.db.sha256
+/reactapp/.env.development.local

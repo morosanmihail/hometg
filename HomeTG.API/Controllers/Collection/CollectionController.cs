@@ -26,6 +26,12 @@ namespace HomeTGCollection.Controllers.Collection
             _ops = new Operations(_db, _mtgdb);
         }
 
+        [HttpGet("list")]
+        public IEnumerable<HomeTG.Models.Collection> ListCollections()
+        {
+            return _db.ListCollections();
+        }
+
         [HttpGet("cards/get/{name}")]
         public IEnumerable<CollectionCard> GetCards(string name, string? set = null)
         {
