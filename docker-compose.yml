@@ -10,4 +10,24 @@ services:
       - "5234:80"
     volumes:
       - /config/hometg:/usr/share/hometg
+    networks:
+      - public
+      - private
     restart: always
+
+  hometg-react:
+    build:
+      context: .
+      dockerfile: reactapp/Dockerfile
+    environment:
+      REACT_APP_PROXY_HOST: "http://hometg"
+    pull_policy: build
+    ports:
+      - "5235:3000"
+    networks:
+      - public
+    restart: unless-stopped
+    
+networks:
+  public:
+  private:
