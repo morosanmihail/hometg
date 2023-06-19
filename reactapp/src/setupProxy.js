@@ -2,7 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const context = [
     "/mtg/cards",
-    "/collection/cards/Main/list"
+    "/collection",
 ];
 
 module.exports = function (app) {

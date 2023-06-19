@@ -1,51 +1,45 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default class MtGCard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: props.id, card: props.card
-        };
-    }
+function MtGCard({ id, card = null }) {
+    const [_card, setCard] = useState(card);
 
-    componentDidMount() {
-        if (this.state.card == null)
-            this.populateCard();
-    }
+    useEffect(() => {
+        if (_card == null) {
+            fetch('/mtg/cards?ids=' + id).then(response => {
+                if (response.status === 200) {
+                    response.json().then(data => {
+                        setCard(data[0]);
+                    })
+                }
+            });
+        }
+    }, [id, _card])
 
-    static renderCard(card) {
+    const renderCard = (card) => {
         let imagePath = "";
         imagePath = "https://api.scryfall.com/cards/" + card.cardIdentifiers.scryfallId + "?format=image";
         return (
-    <div id={card.id} className="card">
-        <img className="lazyload" src={imagePath} alt={card.name} lazyload="on" />
-        <div className="card-info" data-id="details-{card.id}">
-            <div className="row mb-3 align-items-center">
-                <span className="name">{card.name}</span>
-                <span className="setCode">{card.setCode}</span>
+            <div id={card.id} className="card">
+                <img className="lazyload" src={imagePath} alt={card.name} lazyload="on" />
+                <div className="card-info" data-id="details-{card.id}">
+                    <div className="row mb-3 align-items-center">
+                        <span className="name">{card.name}</span>
+                        <span className="setCode">{card.setCode}</span>
+                    </div>
+                </div>
             </div>
+        );
+    }
+
+    let contents = _card == null
+        ? <p>Loading...</p>
+        : renderCard(_card);
+
+    return (
+        <div>
+            {contents}
         </div>
-    </div>
-        );
-    }
-
-    render() {
-        let contents = this.state.card == null
-            ? <p>Loading...</p>
-            : MtGCard.renderCard(this.state.card);
-
-        return (
-            <div>
-                {contents}
-            </div>
-        );
-    }
-
-    async populateCard() {
-        const response = await fetch('mtg/cards?ids=' + this.state.id);
-        if (response.status === 200) {
-            const data = await response.json();
-            this.setState({id: this.state.id, card: data[0] });
-        }
-    }
+    );
 }
+
+export default MtGCard;
