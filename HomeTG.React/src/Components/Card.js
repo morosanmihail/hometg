@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
-function MtGCard({ id, card = null, details = null, currentCollection = null, onAdd = null }) {
+function MtGCard({ id, card = null, details = null, currentCollection = null, onAdd = null, onSelectCard = null }) {
     const [_card, setCard] = useState(card);
     const [_details, setDetails] = useState(details);
+    const [selected, setSelected] = useState(false);
 
     useEffect(() => {
         if (_card == null) {
@@ -15,6 +16,11 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
             });
         }
     }, [id, _card, _details])
+
+    const toggleSelected = () => {
+        setSelected(s => !s);
+        onSelectCard(_details, !selected);
+    }
 
     const updateQuantity = (delta, deltaFoil) => {
         let collection = currentCollection != null ? currentCollection : _details.collectionId;
@@ -47,22 +53,26 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
         let imagePath = "";
         imagePath = "https://api.scryfall.com/cards/" + card.cardIdentifiers.scryfallId + "?format=image";
         return (
-            <div className="card">
+            <div className={"card" + (selected ? " border border-primary" : "")}>
                 <img className="lazyload" src={imagePath} alt={card.name} lazyload="on" />
 
                 {_details != null ?
                     <div className="card-img-overlay d-flex">
                         <div className="align-self-center">
                             <div className="btn-group-vertical">
-                                <button onClick={event => updateQuantity(1, 0)} className="btn btn-sm btn-success">+</button>
-                                <span className="btn badge badge-light">{_details.quantity}</span>
-                                <button onClick={event => updateQuantity(-1, 0)} className="btn btn-sm btn-danger">-</button>
+                                <button className="btn btn-sm btn-outline-primary" onClick={toggleSelected}>{selected ? "☑️" : "◼️"}</button>
 
                                 <span className="btn"></span>
 
-                                <button onClick={event => updateQuantity(0, 1)} className="btn btn-sm btn-success">+</button>
+                                <button onClick={event => updateQuantity(1, 0)} className="btn btn-sm btn-outline-success">+</button>
+                                <span className="btn badge badge-light">{_details.quantity}</span>
+                                <button onClick={event => updateQuantity(-1, 0)} className="btn btn-sm btn-outline-danger">-</button>
+
+                                <span className="btn"></span>
+
+                                <button onClick={event => updateQuantity(0, 1)} className="btn btn-sm btn-outline-success">+</button>
                                 <span className="btn badge badge-info">{_details.foilQuantity}</span>
-                                <button onClick={event => updateQuantity(0, -1)} className="btn btn-sm btn-danger">-</button>
+                                <button onClick={event => updateQuantity(0, -1)} className="btn btn-sm btn-outline-danger">-</button>
                             </div>
                         </div>
                     </div>

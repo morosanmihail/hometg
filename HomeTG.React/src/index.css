@@ -33,6 +33,7 @@ main {
     position: relative;
     overflow: hidden;
     padding: 1em;
+    border: 0px;
 }
 
     .card img {
