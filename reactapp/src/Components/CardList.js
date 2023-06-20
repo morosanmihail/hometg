@@ -32,44 +32,53 @@ function CardList({ collection, offset }) {
         );
     }
 
+    const onAdd = (newCard) => {
+        // TODO: this does not trigger a rerender of any updated cards, only new ones
+        let updated = false;
+        const newCards = cards.map(c => {
+            if (c.id === newCard.id) {
+                updated = true;
+                return newCard;
+            }
+            return c;
+        })
+        if (updated) {
+            setCards(newCards);
+        } else {
+            if (offset === 0) {
+                setCards([newCard, ...cards]);
+            } else {
+                setRefresh(true)
+            }
+        }
+    }
+
     let contents = (loading || refresh) ? <p>Loading...</p> : renderCards(cards);
 
     return (
         <React.Fragment>
-            <Search collection={collection} onAdd={() => setRefresh(true) } />
-            <div className="container pt-4 tab-content">
-                <div className="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="nav-main-tab">
-                    <div id="main-content">
-                        <div id="listjs-grid">
-                            <div className="input-group">
-                                <input className="search form-control" placeholder="Quick filter" />
-                                <span className="btn btn-secondary sort" data-sort="name">Sort by name</span>
-                                <span className="btn btn-secondary sort" data-sort="setCode">Sort by set</span>
-                            </div>
-                            <div className="card-grid list">
-                                {contents}
-                            </div>
-                        </div>
-                    </div>
-                    <nav aria-label="Page navigation">
-                        <ul className="pagination center">
-                            <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
-                                <Link to={"/" + collection + "/" + (parseInt(offset) - pageSize)}>
-                                    <button className="page-link">Previous</button>
-                                </Link>
-                            </li>
-                            <li className="page-item disabled">
-                                <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
-                            </li>
-                            <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
-                                <Link to={"/" + collection + "/" + (parseInt(offset) + pageSize)}>
-                                    <button className="page-link">Next</button>
-                                </Link>
-                            </li>
-                        </ul>
-                    </nav>
+            <Search collection={collection} onAdd={onAdd} />
+
+                <div className="card-grid list">
+                    {contents}
                 </div>
-            </div>
+                <nav aria-label="Page navigation">
+                    <ul className="pagination center">
+                        <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
+                            <Link to={"/" + collection + "/" + (parseInt(offset) - pageSize)}>
+                                <button className="page-link">Previous</button>
+                            </Link>
+                        </li>
+                        <li className="page-item disabled">
+                            <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
+                        </li>
+                        <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
+                            <Link to={"/" + collection + "/" + (parseInt(offset) + pageSize)}>
+                                <button className="page-link">Next</button>
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
         </React.Fragment>
     );
 }

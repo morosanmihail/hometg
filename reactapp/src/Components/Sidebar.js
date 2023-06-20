@@ -28,6 +28,12 @@ function Sidebar() {
         );
     }
 
+    const addCollection = (newCollection) => {
+        setCollections(
+            [...collections, newCollection]
+        );
+    }
+
     let contents = loading
         ? <p>Loading...</p>
         : renderCollections(collections);
@@ -42,7 +48,7 @@ function Sidebar() {
                     <hr/>
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
                         {contents}
-                        <AddCollectionForm/>
+                        <AddCollectionForm onAdd={addCollection} />
                     </div>
                 </div>
             </nav>

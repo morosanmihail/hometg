@@ -46,28 +46,31 @@ function Search({ collection, onAdd }) {
         : renderCards(cards);
 
     return (
-        <div className="collapse" id="search">
-            <h2>Search</h2>
-            <div className="list-group list-group-flush mx-3 mt-4">
-                <div className="input-group mb-3">
-                    <input onChange={event => handleSearchInput(event, "name")} type="text" className="form-control" id="search-bar-name" placeholder="Name" aria-describedby="button-addon2" />
-                    <input onChange={event => handleSearchInput(event, "setCode")} type="text" className="form-control" id="search-bar-set" placeholder="Set" aria-describedby="button-addon2" />
+        <React.Fragment>
+            <div className="collapse" id="search">
+                <h2>Search</h2>
+                <div className="list-group list-group-flush mx-3 mt-4">
+                    <div className="input-group mb-3">
+                        <input onChange={event => handleSearchInput(event, "name")} type="text" className="form-control" id="search-bar-name" placeholder="Name" aria-describedby="button-addon2" />
+                        <input onChange={event => handleSearchInput(event, "setCode")} type="text" className="form-control" id="search-bar-set" placeholder="Set" aria-describedby="button-addon2" />
+                    </div>
+                    <div className="input-group mb-3">
+                        <input onChange={event => handleSearchInput(event, "artist")} type="text" className="form-control" id="search-bar-artist" placeholder="Artist" aria-describedby="button-addon2" />
+                        <input onChange={event => handleSearchInput(event, "collectorNumber")} type="text" className="form-control" id="search-bar-collector-number" placeholder="Collector Number" aria-describedby="button-addon2" />
+                    </div>
+                    <div className="input-group mb-3">
+                        <input onChange={event => handleSearchInput(event, "text")} type="text" className="form-control" id="search-bar-text" placeholder="Text" aria-describedby="button-addon2" />
+                    </div>
+                    <div className="input-group mb-3">
+                        <button onClick={populateSearch} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                    </div>
+                    <div className="search-results" id="search-results">
+                        {contents}
+                    </div>
                 </div>
-                <div className="input-group mb-3">
-                    <input onChange={event => handleSearchInput(event, "artist")} type="text" className="form-control" id="search-bar-artist" placeholder="Artist" aria-describedby="button-addon2" />
-                    <input onChange={event => handleSearchInput(event, "collectorNumber")} type="text" className="form-control" id="search-bar-collector-number" placeholder="Collector Number" aria-describedby="button-addon2" />
-                </div>
-                <div className="input-group mb-3">
-                    <input onChange={event => handleSearchInput(event, "text")} type="text" className="form-control" id="search-bar-text" placeholder="Text" aria-describedby="button-addon2" />
-                </div>
-                <div className="input-group mb-3">
-                    <button onClick={populateSearch} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
-                </div>
-                <div className="search-results" id="search-results">
-                    {contents}
-                </div>
+                <hr />
             </div>
-        </div>
+        </React.Fragment>
     );
 }
 

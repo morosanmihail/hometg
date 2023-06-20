@@ -35,7 +35,7 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
                         setDetails(add ? data[0] : data);
                     } else {
                         if (onAdd != null) {
-                            onAdd();
+                            onAdd(data[0]);
                         }
                     }
                 })
@@ -82,14 +82,12 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
         );
     }
 
-    let contents = _card == null
-        ? <p>Loading...</p>
-        : renderCard(_card);
+    let contents = (_card == null) ? <p>Loading...</p> : renderCard(_card);
 
     return (
-        <div>
+        <React.Fragment>
             {contents}
-        </div>
+        </React.Fragment>
     );
 }
 

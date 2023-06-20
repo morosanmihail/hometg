@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
-const AddCollectionForm = () => {
+function AddCollectionForm({ onAdd }) {
     const [showForm, setShowForm] = useState(false);
     const [newItem, setNewItem] = useState('');
 
@@ -13,10 +13,10 @@ const AddCollectionForm = () => {
         fetch('/collection/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ item: newItem }),
+            body: JSON.stringify({ id: newItem }),
         })
             .then((response) => response.json())
-            .then((data) => console.log(data))
+            .then((data) => onAdd({id:newItem}))
             .catch((error) => console.error(error));
     };
 
