@@ -25,13 +25,14 @@ main {
 /* Add some custom CSS for the grid and hover effects */
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 10px;
 }
 
 .card {
     position: relative;
     overflow: hidden;
+    padding: 1em;
 }
 
     .card img {
@@ -53,6 +54,12 @@ main {
     .card:hover .card-info {
         bottom: 0;
         opacity: 1;
+    }
+
+    .card .card-img-overlay {
+        padding: 0em;
+        top: -3em;
+        left: 0em;
     }
 
 /* Sidebar */

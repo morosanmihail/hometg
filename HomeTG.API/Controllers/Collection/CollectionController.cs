@@ -41,6 +41,13 @@ namespace HomeTG.API.Controllers.Collection
             return _db.RemoveCollection(collection, keepCardsInCollection);
         }
 
+        [HttpPost("move/{from}/{to}")]
+        public IEnumerable<Models.CollectionCard> MoveCardsToCollection(string from, string to, [FromQuery] List<CollectionCard> cards)
+        {
+            // TODO
+            return cards;
+        }
+
         [HttpGet("cards/{collection}/{id}")]
         public CollectionCard? GetCard(string collection, string id)
         {
