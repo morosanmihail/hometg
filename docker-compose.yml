@@ -21,6 +21,7 @@ services:
       dockerfile: HomeTG.React/Dockerfile
     environment:
       REACT_APP_PROXY_HOST: "http://hometg"
+      WDS_SOCKET_PORT: 0
     pull_policy: build
     ports:
       - "5235:3000"
