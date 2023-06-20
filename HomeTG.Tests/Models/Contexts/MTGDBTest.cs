@@ -89,7 +89,7 @@ namespace HomeTG.API.Models.Contexts.Tests
             var results = dbContext.GetCards(new List<string> { "1" });
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(1));
-            Assert.That(results.First().Name, Is.EqualTo("TEST NAME"));
+            Assert.That(results["1"].Name, Is.EqualTo("TEST NAME"));
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace HomeTG.API.Models.Contexts.Tests
             results = dbContext.GetCards(new List<string> { "1", "7alsoismissing" });
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(1));
-            Assert.That(results.First().Name, Is.EqualTo("TEST NAME"));
+            Assert.That(results["1"].Name, Is.EqualTo("TEST NAME"));
         }
     }
 }

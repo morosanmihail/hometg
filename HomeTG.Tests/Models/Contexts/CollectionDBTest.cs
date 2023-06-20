@@ -103,7 +103,8 @@ namespace HomeTG.API.Models.Contexts.Tests
         {
             var results = dbContext.GetCards(new List<string> { "1" });
             Assert.NotNull(results);
-            Assert.That(results.Count(), Is.EqualTo(2));
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results["1"].Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -119,10 +120,10 @@ namespace HomeTG.API.Models.Contexts.Tests
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(1));
 
-            results = dbContext.GetCards(new List<string> { "3" });
-            Assert.NotNull(results);
-            Assert.That(results.Count(), Is.EqualTo(1));
-            Assert.That(results.First().Quantity, Is.EqualTo(1));
+            var getResults = dbContext.GetCards(new List<string> { "3" });
+            Assert.NotNull(getResults);
+            Assert.That(getResults["3"].Count(), Is.EqualTo(1));
+            Assert.That(getResults["3"].First().Quantity, Is.EqualTo(1));
 
             // Remove final quantity
             result = dbContext.RemoveCard(
@@ -182,8 +183,8 @@ namespace HomeTG.API.Models.Contexts.Tests
             Assert.That(results.Count, Is.EqualTo(2));
         }
 
-        [Test()]
-        public void MoveCardToCollectionTest()
+        [Test]
+        public void MoveEntireCardToCollectionTest()
         {
             var results = dbContext.ListCards("Main", 0);
             Assert.NotNull(results);
@@ -223,8 +224,8 @@ namespace HomeTG.API.Models.Contexts.Tests
             Assert.That(results.First().FoilQuantity, Is.EqualTo(0));
         }
 
-        [Test()]
-        public void MoveCardsToCollectionTest()
+        [Test]
+        public void MoveFragmentCardToCollectionTest()
         {
             var results = dbContext.ListCards("Main", 0);
             Assert.NotNull(results);

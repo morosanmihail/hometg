@@ -7,6 +7,7 @@ namespace HomeTG.API.Models.Contexts
         private CollectionDB _db;
         private MTGDB _mtgdb;
 
+        const int PAGE_SIZE = 12;
         public Operations(CollectionDB db, MTGDB mtgdb)
         {
             _db = db;
@@ -16,22 +17,12 @@ namespace HomeTG.API.Models.Contexts
         public IEnumerable<CollectionCardWithDetails> SearchCollection(string collection, SearchOptions searchOptions)
         {
             var cards = _mtgdb.SearchCards(searchOptions).ToList();
-            var cardsInCollection = _db.GetCards(
-                cards.Select(c => c.Id).ToList()
-            );
-
-            if (collection.Length > 0)
-            {
-                cardsInCollection = cardsInCollection.Where(c => c.CollectionId == collection);
-            }
-
-            var groupedCards = cardsInCollection.GroupBy(c => c.Id).
-                ToDictionary(c => c.Key, c => c.ToList());
+            var cardsInCollection = _db.GetCardsFromCollection(collection, cards.Select(c => c.Id).ToList());
 
             return cards.Select(
                 c => new CollectionCardWithDetails(
                     c,
-                    groupedCards.ContainsKey(c.Id) ? groupedCards[c.Id].First() : new CollectionCard(c.Id, 0, 0, "", null)
+                    cardsInCollection[c.Id]
                 )
             );
         }
@@ -43,18 +34,21 @@ namespace HomeTG.API.Models.Contexts
 
         public CollectionCard? GetCard(string collectionName, string id)
         {
-            var cardInCollection = _db.GetCards(new List<string> { id }).Where(c => c.CollectionId == collectionName).FirstOrDefault();
-            // cardsInCollection.Join(cards, c => c.Id, cdb => cdb.Id, (c, cdb) => new { c.Id, Scryfall = cdb.ScryfallId }).ToList();
-            return cardInCollection;
+            var cardInCollections = _db.GetCardsFromCollection(collectionName, new List<string> { id });
+            if (cardInCollections.ContainsKey(id))
+            {
+                return cardInCollections[id];
+            }
+            return null;
         }
 
-        public CollectionCardWithDetails GetCardByID(string id)
+        public IEnumerable<CollectionCardWithDetails> GetCardsByID(string id)
         {
-            // TODO: this is potentially undesirable behaviour. And unclear.
-            // This should return all items from the collections with that ID.
-            var card = _db.GetCards(new List<string> { id }).First();
-            var cardDetails = _mtgdb.GetCards(new List<string> { id }).First();
-            return new CollectionCardWithDetails(cardDetails, card);
+            var cards = _db.GetCards(new List<string> { id })[id];
+            var cardDetails = _mtgdb.GetCards(new List<string> { id })[id];
+            return cards.Select(
+                c => new CollectionCardWithDetails(cardDetails, c)
+            );
         }
 
         public IEnumerable<CollectionCard> BulkAddCards(string collection, List<CSVItem> items)
@@ -85,9 +79,9 @@ namespace HomeTG.API.Models.Contexts
 
         public IEnumerable<CollectionCardWithDetails> ListCards(string collection, int offset = 0)
         {
-            var collectionCards = _db.ListCards(collection, offset, 12);
+            var collectionCards = _db.ListCards(collection, offset, PAGE_SIZE);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).
-                Join(collectionCards, c => c.Id, c => c.Id, (a, b) => new CollectionCardWithDetails(a, b));
+                Join(collectionCards, c => c.Value.Id, c => c.Id, (a, b) => new CollectionCardWithDetails(a.Value, b));
             return cards;
         }
     }

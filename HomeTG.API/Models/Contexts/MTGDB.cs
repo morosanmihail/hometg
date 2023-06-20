@@ -32,9 +32,9 @@ namespace HomeTG.API.Models.Contexts
             return matchingCardsTest;
         }
 
-        public IEnumerable<Card> GetCards(List<string> ids)
+        public Dictionary<string, Card> GetCards(List<string> ids)
         {
-            return Cards.Include(x => x.CardIdentifiers).Where(c => ids.Contains(c.Id!));
+            return Cards.Include(x => x.CardIdentifiers).Where(c => ids.Contains(c.Id!)).ToDictionary(c => c.Id, c => c);
         }
     }
 }

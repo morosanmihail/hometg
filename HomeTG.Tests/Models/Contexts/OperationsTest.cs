@@ -88,11 +88,12 @@ namespace HomeTG.API.Models.Contexts.Tests
         }
 
         [Test]
-        public void GetCardByIDTest()
+        public void GetCardsByIDTest()
         {
-            var result = ops.GetCardByID("1");
-            Assert.NotNull(result);
-            Assert.That(result.MtGCard, Is.EqualTo(cards["1"]));
+            var results = ops.GetCardsByID("1");
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(2));
+            Assert.That(results.First().MtGCard, Is.EqualTo(cards["1"]));
         }
 
         [Test]

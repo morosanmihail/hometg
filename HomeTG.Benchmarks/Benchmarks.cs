@@ -1,15 +1,7 @@
-﻿using HomeTG.Models;
-using HomeTG.Models.Contexts;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using BenchmarkDotNet.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BenchmarkDotNet.Attributes;
+using HomeTG.API.Models;
+using HomeTG.API.Models.Contexts;
 using HomeTG.Tests.Helpers;
-using BenchmarkDotNet.Engines;
 
 namespace HomeTG.Benchmarks
 {

@@ -52,14 +52,15 @@ namespace HomeTG.API.Models.Contexts
             return Collection.ToList();
         }
 
-        public IEnumerable<CollectionCard> GetCards(List<string> ids)
+        public Dictionary<string, List<CollectionCard>> GetCards(List<string> ids)
         {
-            return Cards.Where(c => ids.Contains(c.Id!));
+            return Cards.Where(c => ids.Contains(c.Id!)).GroupBy(c => c.Id).ToDictionary(c => c.Key, c => c.ToList());
         }
 
-        public IEnumerable<CollectionCard> GetCardsFromCollection(string collectionName, List<string> ids)
+        public Dictionary<string, CollectionCard> GetCardsFromCollection(string collectionName, List<string> ids)
         {
-            return GetCards(ids).Where(c => c.CollectionId.ToLower() == collectionName.ToLower());
+            return Cards.Where(c => ids.Contains(c.Id!) && c.CollectionId.ToLower() == collectionName.ToLower()).
+                ToDictionary(c => c.Id, c => c);
         }
 
         public IEnumerable<CollectionCard> ListCards(string collection, int offset, int pagesize = 12)

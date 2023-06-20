@@ -23,7 +23,7 @@ namespace HomeTG.API.Controllers.MtG
         }
 
         [HttpGet("cards")]
-        public IEnumerable<Card> GetCards([FromQuery] string[] ids)
+        public Dictionary<string, Card> GetCards([FromQuery] string[] ids)
         {
             return _db.GetCards(ids.ToList());
         }

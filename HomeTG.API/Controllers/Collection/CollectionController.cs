@@ -48,7 +48,7 @@ namespace HomeTG.API.Controllers.Collection
         }
 
         [HttpGet("cards/{collection}/get")]
-        public IEnumerable<CollectionCard> GetCards(string collection, [FromQuery] List<string> ids)
+        public Dictionary<string, CollectionCard> GetCards(string collection, [FromQuery] List<string> ids)
         {
             return _db.GetCardsFromCollection(collection, ids);
         }
