@@ -1,9 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
-using System.Net;
 using System.Security.Cryptography;
 
-namespace HomeTGCollection.Utils
+namespace HomeTG.API.Utils
 {
     public static class DBFiles
     {

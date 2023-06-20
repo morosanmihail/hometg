@@ -1,9 +1,8 @@
-﻿using HomeTG.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HomeTG.Models
+namespace HomeTG.API.Models
 {
     [Table("cards")]
     [PrimaryKey("Id", "CollectionId")]
@@ -37,6 +36,8 @@ namespace HomeTG.Models
 
         public CollectionCard()
         {
+            Id = "";
+            CollectionId = "";
         }
     }
 

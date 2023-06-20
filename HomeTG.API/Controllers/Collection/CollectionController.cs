@@ -1,14 +1,9 @@
-﻿using CsvHelper.Configuration;
-using CsvHelper;
-using HomeTG.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
+﻿using HomeTG.API.Models;
+using HomeTG.API.Models.Contexts;
+using HomeTG.API.Models.Contexts.Options;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
-using HomeTG.Models.Contexts;
-using HomeTG.Models.Contexts.Options;
 
-namespace HomeTGCollection.Controllers.Collection
+namespace HomeTG.API.Controllers.Collection
 {
     [Route("collection")]
     [ApiController]
@@ -19,6 +14,8 @@ namespace HomeTGCollection.Controllers.Collection
 
         private Operations _ops;
 
+        private static Dictionary<string, ImportTask> _tasks = new Dictionary<string, ImportTask>();
+
         public CollectionController(CollectionDB db, MTGDB mtgdb)
         {
             _db = db;
@@ -27,19 +24,19 @@ namespace HomeTGCollection.Controllers.Collection
         }
 
         [HttpGet("list")]
-        public IEnumerable<HomeTG.Models.Collection> ListCollections()
+        public IEnumerable<HomeTG.API.Models.Collection> ListCollections()
         {
             return _db.ListCollections();
         }
 
         [HttpPost("add")]
-        public HomeTG.Models.Collection AddCollection(HomeTG.Models.Collection collection)
+        public HomeTG.API.Models.Collection AddCollection(HomeTG.API.Models.Collection collection)
         {
             return _db.GetOrCreateCollection(collection.Id);
         }
 
         [HttpPost("remove/{collection}")]
-        public HomeTG.Models.Collection? RemoveCollection(string collection, string keepCardsInCollection = "")
+        public HomeTG.API.Models.Collection? RemoveCollection(string collection, string keepCardsInCollection = "")
         {
             return _db.RemoveCollection(collection, keepCardsInCollection);
         }
@@ -75,6 +72,11 @@ namespace HomeTGCollection.Controllers.Collection
         [HttpPost("cards/{collection}/import")]
         public async Task<IEnumerable<CollectionCard>> UploadCardsList(string collection, IFormFile file, Dictionary<string, string>? customMapping = null)
         {
+            // TODO: use long running tasks
+            //var task = CreateTask("test", 10);
+            //Task.Run(() => LongRunningImport("test"));
+            //return task;
+
             var filePath = Path.GetTempFileName();
             if (file.Length > 0)
             {
@@ -100,6 +102,42 @@ namespace HomeTGCollection.Controllers.Collection
         public IEnumerable<CollectionCardWithDetails> Search(string collection, SearchOptions searchOptions)
         {
             return _ops.SearchCollection(collection, searchOptions);
+        }
+
+        [HttpGet("progress/{filename}")]
+        public ImportTask ImportProgress(string Filename)
+        {
+            return GetTask(Filename);
+        }
+
+        private void LongRunningImport(string Filename)
+        {
+            var task = GetTask(Filename);
+            for (int i = 1; i <= task.Total; i++)
+            {
+                Thread.Sleep(1000);
+                task.Current = i;
+            }
+            RemoveTask(Filename);
+        }
+
+        private ImportTask GetTask(string Filename)
+        {
+            return _tasks.ContainsKey(Filename) ? _tasks[Filename] : new ImportTask(Filename, 1, 1);
+        }
+
+        private ImportTask CreateTask(string Filename, int Total)
+        {
+            var task = new ImportTask("test", Total, 0);
+
+            _tasks.Add(Filename, task);
+
+            return task;
+        }
+
+        private void RemoveTask(string Filename)
+        {
+            _tasks.Remove(Filename);
         }
     }
 }

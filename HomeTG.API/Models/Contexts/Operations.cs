@@ -1,6 +1,6 @@
-﻿using HomeTG.Models.Contexts.Options;
+﻿using HomeTG.API.Models.Contexts.Options;
 
-namespace HomeTG.Models.Contexts
+namespace HomeTG.API.Models.Contexts
 {
     public class Operations
     {

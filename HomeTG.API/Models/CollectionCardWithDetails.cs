@@ -1,4 +1,4 @@
-﻿namespace HomeTG.Models
+﻿namespace HomeTG.API.Models
 {
     public class CollectionCardWithDetails
     {

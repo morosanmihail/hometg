@@ -1,16 +1,15 @@
-﻿using HomeTG.Models.Contexts.Options;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HomeTG.Models
+namespace HomeTG.API.Models
 {
     [Table("cards")]
     [PrimaryKey("Id")]
     public class Card
     {
         public Card(
-            string id, string name, string setCode, string collectorNumber, 
+            string id, string name, string setCode, string collectorNumber,
             string? rarity, string? artist, string? colorIdentity, string? text
         )
         {

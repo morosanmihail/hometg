@@ -1,5 +1,5 @@
-using HomeTG.Models.Contexts;
-using HomeTGCollection.Utils;
+using HomeTG.API.Models.Contexts;
+using HomeTG.API.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

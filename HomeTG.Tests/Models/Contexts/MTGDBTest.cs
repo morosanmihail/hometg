@@ -1,9 +1,7 @@
-﻿using HomeTG.Models;
-using HomeTG.Models.Contexts;
-using HomeTG.Models.Contexts.Options;
+﻿using HomeTG.API.Models;
+using HomeTG.API.Models.Contexts;
+using HomeTG.API.Models.Contexts.Options;
 using HomeTG.Tests.Helpers;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 
 namespace HomeTG.Models.Contexts.Tests
 {
@@ -61,7 +59,7 @@ namespace HomeTG.Models.Contexts.Tests
             Assert.That(results.Count(), Is.EqualTo(1));
             Assert.That(results[("123", "SET")].Name, Is.EqualTo("TEST NAME"));
 
-            results = dbContext.BulkSearchCards(new List<StrictSearchOptions> { 
+            results = dbContext.BulkSearchCards(new List<StrictSearchOptions> {
                 new StrictSearchOptions("123", "SET"),
                 new StrictSearchOptions("124", "SET")
             });

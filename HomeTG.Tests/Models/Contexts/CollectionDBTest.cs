@@ -1,14 +1,6 @@
-﻿using NUnit.Framework;
-using HomeTG.Models;
-using HomeTG.Models.Contexts;
+﻿using HomeTG.API.Models;
+using HomeTG.API.Models.Contexts;
 using HomeTG.Tests.Helpers;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeTG.Models.Contexts.Tests
 {

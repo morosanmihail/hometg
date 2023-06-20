@@ -1,12 +1,7 @@
-﻿using CsvHelper.Configuration;
-using CsvHelper;
-using Microsoft.AspNetCore.Authentication;
+﻿using HomeTG.API.Models.Contexts.Options;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using System.Reflection.Metadata.Ecma335;
-using HomeTG.Models.Contexts.Options;
 
-namespace HomeTG.Models.Contexts
+namespace HomeTG.API.Models.Contexts
 {
     public class MTGDB : DbContext
     {

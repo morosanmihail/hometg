@@ -2,7 +2,7 @@
 using CsvHelper.Configuration;
 using System.Globalization;
 
-namespace HomeTG.Models.Contexts
+namespace HomeTG.API.Models.Contexts
 {
     public static class CSVOperations
     {

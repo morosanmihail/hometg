@@ -1,4 +1,4 @@
-﻿namespace HomeTG.Controllers.Web.Models
+﻿namespace HomeTG.API.Controllers.Collection
 {
     public class ImportTask
     {

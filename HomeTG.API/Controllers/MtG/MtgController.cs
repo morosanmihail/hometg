@@ -1,11 +1,10 @@
-﻿using HomeTG.Models;
-using HomeTG.Models.Contexts;
-using HomeTG.Models.Contexts.Options;
-using HomeTGCollection.Utils;
-using Microsoft.AspNetCore.Http;
+﻿using HomeTG.API.Models;
+using HomeTG.API.Models.Contexts;
+using HomeTG.API.Models.Contexts.Options;
+using HomeTG.API.Utils;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HomeTG.Controllers.MtG
+namespace HomeTG.API.Controllers.MtG
 {
     [Route("mtg")]
     [ApiController]

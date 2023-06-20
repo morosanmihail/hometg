@@ -1,12 +1,7 @@
-﻿using HomeTG.Models.Contexts;
-using HomeTGCollection.Utils;
+﻿using HomeTG.API.Models.Contexts;
+using HomeTG.API.Utils;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeTG.Tests.Helpers
 {
@@ -63,8 +58,8 @@ namespace HomeTG.Tests.Helpers
         public static string GetTestFile(string filename)
         {
             return Path.Combine(
-                Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), 
-                "TestData", 
+                Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                "TestData",
                 filename
             );
         }

@@ -1,11 +1,6 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using System.Reflection.Metadata.Ecma335;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace HomeTG.Models.Contexts
+namespace HomeTG.API.Models.Contexts
 {
     public class CollectionDB : DbContext
     {
@@ -38,10 +33,11 @@ namespace HomeTG.Models.Contexts
             {
                 return null;
             }
-            var to = keepCardsInCollection != ""  ? Collection.Find(keepCardsInCollection) : null;
+            var to = keepCardsInCollection != "" ? Collection.Find(keepCardsInCollection) : null;
             if (to != null)
             {
-                foreach(var c in Cards.Where(c => c.CollectionId == from.Id)) {
+                foreach (var c in Cards.Where(c => c.CollectionId == from.Id))
+                {
                     c.CollectionId = to.Id;
                 }
             }
@@ -66,7 +62,7 @@ namespace HomeTG.Models.Contexts
                 c => c.CollectionId.ToLower() == collection.ToLower()
             ).OrderByDescending(c => c.LastUpdated).Skip(offset).Take(pagesize);
         }
-        
+
         // TODO: mix Add/Remove cards together maybe? One clean function?
         public List<CollectionCard> AddCards(string collectionName, List<CollectionCard> newCards)
         {

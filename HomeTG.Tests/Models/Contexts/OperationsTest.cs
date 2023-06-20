@@ -1,14 +1,7 @@
-﻿using HomeTG.Models;
-using HomeTG.Models.Contexts;
-using HomeTG.Models.Contexts.Options;
+﻿using HomeTG.API.Models;
+using HomeTG.API.Models.Contexts;
+using HomeTG.API.Models.Contexts.Options;
 using HomeTG.Tests.Helpers;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeTG.Models.Contexts.Tests
 {
@@ -86,22 +79,14 @@ namespace HomeTG.Models.Contexts.Tests
         }
 
         [Test]
-        public void GetCardsTest()
+        public void GetCardTest()
         {
-            var results = ops.GetCards("TEST NAME").ToList();
-            Assert.NotNull(results);
-            Assert.That(results.Count(), Is.EqualTo(2));
-            Assert.Contains(collectionCards["Main1"], results);
-            Assert.Contains(collectionCards["Incoming1"], results);
+            var result = ops.GetCard("Main", "1");
+            Assert.NotNull(result);
+            Assert.That(result, Is.EqualTo(collectionCards["Main1"]));
 
-            results = ops.GetCards("", "NOT").ToList();
-            Assert.NotNull(results);
-            Assert.That(results.Count(), Is.EqualTo(1));
-            Assert.Contains(collectionCards["SpecialList3"], results);
-
-            results = ops.GetCards("", "BOT").ToList();
-            Assert.NotNull(results);
-            Assert.That(results.Count(), Is.EqualTo(0));
+            result = ops.GetCard("Main", "NOT");
+            Assert.Null(result);
         }
 
         [Test]
