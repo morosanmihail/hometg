@@ -32,10 +32,22 @@ namespace HomeTGCollection.Controllers.Collection
             return _db.ListCollections();
         }
 
-        [HttpGet("cards/get/{name}")]
-        public IEnumerable<CollectionCard> GetCards(string name, string? set = null)
+        [HttpPost("add")]
+        public HomeTG.Models.Collection AddCollection(HomeTG.Models.Collection collection)
         {
-            return _ops.GetCards(name, set);
+            return _db.GetOrCreateCollection(collection.Id);
+        }
+
+        [HttpPost("remove/{collection}")]
+        public HomeTG.Models.Collection? RemoveCollection(string collection, string keepCardsInCollection = "")
+        {
+            return _db.RemoveCollection(collection, keepCardsInCollection);
+        }
+
+        [HttpGet("cards/{collection}/{id}")]
+        public CollectionCard? GetCard(string collection, string id)
+        {
+            return _ops.GetCard(collection, id);
         }
 
         [HttpPut("cards/{collection}/add")]

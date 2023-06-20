@@ -31,6 +31,25 @@ namespace HomeTG.Models.Contexts
             return collection;
         }
 
+        public Collection? RemoveCollection(string collectionName, string keepCardsInCollection = "")
+        {
+            var from = Collection.Find(collectionName);
+            if (from == null)
+            {
+                return null;
+            }
+            var to = keepCardsInCollection != ""  ? Collection.Find(keepCardsInCollection) : null;
+            if (to != null)
+            {
+                foreach(var c in Cards.Where(c => c.CollectionId == from.Id)) {
+                    c.CollectionId = to.Id;
+                }
+            }
+            Collection.Remove(from);
+            SaveChanges();
+            return from;
+        }
+
         public List<Collection> ListCollections()
         {
             return Collection.ToList();
@@ -41,11 +60,11 @@ namespace HomeTG.Models.Contexts
             return Cards.Where(c => ids.Contains(c.Id!));
         }
 
-        public IEnumerable<CollectionCard> ListCards(string collection, int offset, int pagesize = 50)
+        public IEnumerable<CollectionCard> ListCards(string collection, int offset, int pagesize = 12)
         {
             return Cards.Where(
                 c => c.CollectionId.ToLower() == collection.ToLower()
-            ).OrderBy(c => c.LastUpdated).Skip(offset).Take(pagesize);
+            ).OrderByDescending(c => c.LastUpdated).Skip(offset).Take(pagesize);
         }
         
         // TODO: mix Add/Remove cards together maybe? One clean function?
@@ -59,6 +78,7 @@ namespace HomeTG.Models.Contexts
                 ).ToDictionary(c => c.Id);
             foreach (var newCard in newCards)
             {
+                newCard.LastUpdated = DateTime.Now;
                 CollectionCard? card = null;
                 if (existingCards.ContainsKey(newCard.Id))
                 {

@@ -41,12 +41,11 @@ namespace HomeTG.Models.Contexts
             return _db.Cards.Where(c => c.CollectionId.ToLower() == collection.ToLower()).Count();
         }
 
-        public IEnumerable<CollectionCard> GetCards(string name, string? set = null)
+        public CollectionCard? GetCard(string collectionName, string id)
         {
-            var cards = _mtgdb.SearchCards(new SearchOptions { Name = name, SetCode = set });
-            var cardsInCollection = _db.GetCards(cards.Select(c => c.Id!).ToList());
+            var cardInCollection = _db.GetCards(new List<string> { id }).Where(c => c.CollectionId == collectionName).FirstOrDefault();
             // cardsInCollection.Join(cards, c => c.Id, cdb => cdb.Id, (c, cdb) => new { c.Id, Scryfall = cdb.ScryfallId }).ToList();
-            return cardsInCollection;
+            return cardInCollection;
         }
 
         public CollectionCardWithDetails GetCardByID(string id)
