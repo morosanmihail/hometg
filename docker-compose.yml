@@ -18,7 +18,7 @@ services:
   hometg-react:
     build:
       context: .
-      dockerfile: reactapp/Dockerfile
+      dockerfile: HomeTG.React/Dockerfile
     environment:
       REACT_APP_PROXY_HOST: "http://hometg"
     pull_policy: build
