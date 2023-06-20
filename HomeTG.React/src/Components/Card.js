@@ -9,7 +9,7 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
             fetch('/mtg/cards?ids=' + id).then(response => {
                 if (response.status === 200) {
                     response.json().then(data => {
-                        setCard(data[0]);
+                        setCard(data[id]);
                     })
                 }
             });
