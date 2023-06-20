@@ -1,9 +1,7 @@
-﻿using HomeTG.API.Models;
-using HomeTG.API.Models.Contexts;
-using HomeTG.API.Models.Contexts.Options;
+﻿using HomeTG.API.Models.Contexts.Options;
 using HomeTG.Tests.Helpers;
 
-namespace HomeTG.Models.Contexts.Tests
+namespace HomeTG.API.Models.Contexts.Tests
 {
     [TestFixture]
     public class MTGDBTest

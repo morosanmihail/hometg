@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeTG.API.Models.Contexts
 {
@@ -28,15 +29,15 @@ namespace HomeTG.API.Models.Contexts
 
         public Collection? RemoveCollection(string collectionName, string keepCardsInCollection = "")
         {
-            var from = Collection.Find(collectionName);
+            var from = GetCollection(collectionName);
             if (from == null)
             {
                 return null;
             }
-            var to = keepCardsInCollection != "" ? Collection.Find(keepCardsInCollection) : null;
+            var to = keepCardsInCollection != "" ? GetCollection(keepCardsInCollection) : null;
             if (to != null)
             {
-                foreach (var c in Cards.Where(c => c.CollectionId == from.Id))
+                foreach (var c in Cards.Where(c => c.CollectionId.ToLower() == from.Id))
                 {
                     c.CollectionId = to.Id;
                 }
@@ -54,6 +55,11 @@ namespace HomeTG.API.Models.Contexts
         public IEnumerable<CollectionCard> GetCards(List<string> ids)
         {
             return Cards.Where(c => ids.Contains(c.Id!));
+        }
+
+        public IEnumerable<CollectionCard> GetCardsFromCollection(string collectionName, List<string> ids)
+        {
+            return GetCards(ids).Where(c => c.CollectionId.ToLower() == collectionName.ToLower());
         }
 
         public IEnumerable<CollectionCard> ListCards(string collection, int offset, int pagesize = 12)
@@ -109,6 +115,20 @@ namespace HomeTG.API.Models.Contexts
                 SaveChanges();
             }
             return existingCard;
+        }
+
+        public IEnumerable<CollectionCard> MoveCardsToCollection(string to, List<CollectionCard> cards)
+        {
+            var toAdd = new List<CollectionCard>();
+            foreach (var card in cards)
+            {
+                if (card != null)
+                {
+                    RemoveCard(card);
+                    toAdd.Add(card);
+                }
+            }
+            return AddCards(to, toAdd);
         }
     }
 }

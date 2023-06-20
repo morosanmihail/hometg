@@ -1,19 +1,17 @@
-﻿using HomeTG.API.Models;
-using HomeTG.API.Models.Contexts;
-using HomeTG.Tests.Helpers;
+﻿using HomeTG.Tests.Helpers;
 
-namespace HomeTG.Models.Contexts.Tests
+namespace HomeTG.API.Models.Contexts.Tests
 {
     [TestFixture]
     public class CollectionDBTest
     {
         CollectionDB dbContext;
-        List<CollectionCard> cards = new List<CollectionCard>
+        Dictionary<string, CollectionCard> cards = new Dictionary<string, CollectionCard>
         {
-            new CollectionCard("1", 2, 0, "Main", null),
-            new CollectionCard("2", 1, 0, "Main", null),
-            new CollectionCard("1", 1, 0, "Incoming", null),
-            new CollectionCard("3", 2, 0, "SpecialList", null),
+            {"Main1", new CollectionCard("1", 2, 0, "Main", null) },
+            {"Main2", new CollectionCard("2", 1, 0, "Main", null) },
+            {"Incoming1", new CollectionCard("1", 1, 0, "Incoming", null) },
+            {"SpecialList3", new CollectionCard("3", 2, 0, "SpecialList", null) },
         };
 
         List<Collection> collections = new List<Collection>
@@ -25,7 +23,7 @@ namespace HomeTG.Models.Contexts.Tests
         public void Setup()
         {
             dbContext = TestHelpers.GetTestCollectionDB();
-            dbContext.AddRange(cards);
+            dbContext.AddRange(cards.Values);
             dbContext.AddRange(collections);
             dbContext.SaveChanges();
         }
@@ -182,6 +180,84 @@ namespace HomeTG.Models.Contexts.Tests
             results = dbContext.ListCollections();
             Assert.NotNull(results);
             Assert.That(results.Count, Is.EqualTo(2));
+        }
+
+        [Test()]
+        public void MoveCardToCollectionTest()
+        {
+            var results = dbContext.ListCards("Main", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(2));
+
+            dbContext.GetOrCreateCollection("New");
+
+            results = dbContext.ListCards("New", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(0));
+
+            var moveResults = dbContext.MoveCardsToCollection("New", new List<CollectionCard>
+            {
+                new CollectionCard("2", 1, 0, "Main", null),
+            });
+            Assert.NotNull(moveResults);
+            Assert.That(moveResults.Count(), Is.EqualTo(1));
+            Assert.That(moveResults.First().CollectionId, Is.EqualTo("New"));
+            Assert.That(moveResults.First().Id, Is.EqualTo("2"));
+            Assert.That(moveResults.First().Quantity, Is.EqualTo(1));
+            Assert.That(moveResults.First().FoilQuantity, Is.EqualTo(0));
+
+            results = dbContext.ListCards("Main", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.First().CollectionId, Is.EqualTo("Main"));
+            Assert.That(results.First().Id, Is.EqualTo("1"));
+            Assert.That(results.First().Quantity, Is.EqualTo(2));
+            Assert.That(results.First().FoilQuantity, Is.EqualTo(0));
+
+            results = dbContext.ListCards("New", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.First().CollectionId, Is.EqualTo("New"));
+            Assert.That(results.First().Id, Is.EqualTo("2"));
+            Assert.That(results.First().Quantity, Is.EqualTo(1));
+            Assert.That(results.First().FoilQuantity, Is.EqualTo(0));
+        }
+
+        [Test()]
+        public void MoveCardsToCollectionTest()
+        {
+            var results = dbContext.ListCards("Main", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(2));
+
+            dbContext.GetOrCreateCollection("New");
+
+            results = dbContext.ListCards("New", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(0));
+
+            var moveResults = dbContext.MoveCardsToCollection("New", new List<CollectionCard>
+            {
+                new CollectionCard("1", 1, 0, "Main", null),
+            });
+            Assert.NotNull(moveResults);
+            Assert.That(moveResults.Count(), Is.EqualTo(1));
+            Assert.That(moveResults.First().CollectionId, Is.EqualTo("New"));
+            Assert.That(moveResults.First().Id, Is.EqualTo("1"));
+            Assert.That(moveResults.First().Quantity, Is.EqualTo(1));
+            Assert.That(moveResults.First().FoilQuantity, Is.EqualTo(0));
+
+            results = dbContext.ListCards("Main", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(2));
+
+            results = dbContext.ListCards("New", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.First().CollectionId, Is.EqualTo("New"));
+            Assert.That(results.First().Id, Is.EqualTo("1"));
+            Assert.That(results.First().Quantity, Is.EqualTo(1));
+            Assert.That(results.First().FoilQuantity, Is.EqualTo(0));
         }
     }
 }

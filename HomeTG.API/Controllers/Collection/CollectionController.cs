@@ -24,34 +24,33 @@ namespace HomeTG.API.Controllers.Collection
         }
 
         [HttpGet("list")]
-        public IEnumerable<HomeTG.API.Models.Collection> ListCollections()
+        public IEnumerable<Models.Collection> ListCollections()
         {
             return _db.ListCollections();
         }
 
         [HttpPost("add")]
-        public HomeTG.API.Models.Collection AddCollection(HomeTG.API.Models.Collection collection)
+        public Models.Collection AddCollection(Models.Collection collection)
         {
             return _db.GetOrCreateCollection(collection.Id);
         }
 
         [HttpPost("remove/{collection}")]
-        public HomeTG.API.Models.Collection? RemoveCollection(string collection, string keepCardsInCollection = "")
+        public Models.Collection? RemoveCollection(string collection, string keepCardsInCollection = "")
         {
             return _db.RemoveCollection(collection, keepCardsInCollection);
         }
 
-        [HttpPost("move/{from}/{to}")]
-        public IEnumerable<Models.CollectionCard> MoveCardsToCollection(string from, string to, [FromQuery] List<CollectionCard> cards)
+        [HttpPost("move/{to}")]
+        public IEnumerable<CollectionCard> MoveCardsToCollection(string to, List<CollectionCard> cards)
         {
-            // TODO
-            return cards;
+            return _db.MoveCardsToCollection(to, cards);
         }
 
-        [HttpGet("cards/{collection}/{id}")]
-        public CollectionCard? GetCard(string collection, string id)
+        [HttpGet("cards/{collection}/get")]
+        public IEnumerable<CollectionCard> GetCards(string collection, [FromQuery] List<string> ids)
         {
-            return _ops.GetCard(collection, id);
+            return _db.GetCardsFromCollection(collection, ids);
         }
 
         [HttpPut("cards/{collection}/add")]

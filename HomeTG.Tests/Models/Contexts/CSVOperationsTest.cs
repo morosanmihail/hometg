@@ -1,6 +1,4 @@
-﻿using HomeTG.API.Models.Contexts;
-
-namespace HomeTG.Models.Contexts.Tests
+﻿namespace HomeTG.API.Models.Contexts.Tests
 {
     [TestFixture]
     public class CSVOperationsTest
