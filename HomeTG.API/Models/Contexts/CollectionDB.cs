@@ -37,10 +37,7 @@ namespace HomeTG.API.Models.Contexts
             var to = keepCardsInCollection != "" ? GetCollection(keepCardsInCollection) : null;
             if (to != null)
             {
-                foreach (var c in Cards.Where(c => c.CollectionId.ToLower() == from.Id))
-                {
-                    c.CollectionId = to.Id;
-                }
+                MoveCardsToCollection(keepCardsInCollection, Cards.Where(c => c.CollectionId.ToLower() == from.Id.ToLower()).ToList());
             }
             Collection.Remove(from);
             SaveChanges();
@@ -81,7 +78,6 @@ namespace HomeTG.API.Models.Contexts
                 ).ToDictionary(c => c.Id);
             foreach (var newCard in newCards)
             {
-                newCard.LastUpdated = DateTime.Now;
                 CollectionCard? card = null;
                 if (existingCards.ContainsKey(newCard.Id))
                 {
@@ -91,9 +87,14 @@ namespace HomeTG.API.Models.Contexts
                 }
                 if (card == null)
                 {
-                    newCard.CollectionId = collectionName;
-                    card = newCard;
-                    Cards.Add(newCard);
+                    card = new CollectionCard { 
+                        Id = newCard.Id, 
+                        CollectionId = collectionName,
+                        Quantity = newCard.Quantity,
+                        FoilQuantity = newCard.FoilQuantity,
+                        LastUpdated = DateTime.Now,
+                    };
+                    Cards.Add(card);
                     existingCards[newCard.Id] = card;
                 }
                 SaveChanges();
@@ -118,18 +119,29 @@ namespace HomeTG.API.Models.Contexts
             return existingCard;
         }
 
+        public IEnumerable<CollectionCard> RemoveCardsEntirely(IEnumerable<CollectionCard> cards)
+        {
+            if (cards == null || cards.Count() == 0)
+            {
+                return new List<CollectionCard>();
+            }
+            var toRemove = GetCardsFromCollection(cards.First().CollectionId, cards.Select(c => c.Id).ToList()).Values;
+            Cards.RemoveRange(toRemove);
+            SaveChanges();
+            return toRemove;
+        }
+
         public IEnumerable<CollectionCard> MoveCardsToCollection(string to, List<CollectionCard> cards)
         {
-            var toAdd = new List<CollectionCard>();
+            var added = AddCards(to, cards);
             foreach (var card in cards)
             {
                 if (card != null)
                 {
                     RemoveCard(card);
-                    toAdd.Add(card);
                 }
             }
-            return AddCards(to, toAdd);
+            return added;
         }
     }
 }

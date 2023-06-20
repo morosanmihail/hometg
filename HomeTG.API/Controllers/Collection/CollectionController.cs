@@ -69,6 +69,12 @@ namespace HomeTG.API.Controllers.Collection
             return _db.RemoveCard(card);
         }
 
+        [HttpPost("cards/{collection}/remove")]
+        public IEnumerable<CollectionCard> FullyRemoveCards(List<CollectionCard> cards)
+        {
+            return _db.RemoveCardsEntirely(cards);
+        }
+
         [HttpGet("cards/{collection}/list")]
         public IEnumerable<CollectionCard> ListCards(string collection, int offset = 0)
         {

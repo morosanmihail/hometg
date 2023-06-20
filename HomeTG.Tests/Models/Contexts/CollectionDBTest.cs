@@ -1,4 +1,6 @@
-﻿using HomeTG.Tests.Helpers;
+﻿using NUnit.Framework;
+using HomeTG.API.Models.Contexts;
+using HomeTG.Tests.Helpers;
 
 namespace HomeTG.API.Models.Contexts.Tests
 {
@@ -259,6 +261,21 @@ namespace HomeTG.API.Models.Contexts.Tests
             Assert.That(results.First().Id, Is.EqualTo("1"));
             Assert.That(results.First().Quantity, Is.EqualTo(1));
             Assert.That(results.First().FoilQuantity, Is.EqualTo(0));
+        }
+
+        [Test()]
+        public void RemoveCardsEntirelyTest()
+        {
+            var removeResult = dbContext.RemoveCardsEntirely(new List<CollectionCard>
+            {
+                new CollectionCard("1", 0, 0, "Main", null)
+            });
+            Assert.NotNull(removeResult);
+            Assert.That(removeResult.Count(), Is.EqualTo(1));
+
+            var results = dbContext.ListCards("Main", 0);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
         }
     }
 }
