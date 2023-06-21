@@ -22,9 +22,7 @@ var MtGDBPath = Path.Combine(
         "DB/AllPrintings.db"
     );
 
-DBFiles.CreateDBIfNotExists(
-    DBPath, "DB/CollectionDB.sql"
-);
+DBFiles.CreateDBIfNotExists(DBPath);
 
 await DBFiles.DownloadPrintingsDBIfNotExists(
     @"https://mtgjson.com/api/v5/AllPrintings.sqlite",
@@ -43,6 +41,14 @@ builder.Services.AddDbContext<CollectionDB>(
 );
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<CollectionDB>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())

@@ -5,18 +5,15 @@ namespace HomeTG.API.Utils
 {
     public static class DBFiles
     {
-        public static void CreateDBIfNotExists(string Filename, string SQLMigrations)
+        public static void CreateDBIfNotExists(string Filename)
         {
             var dir = Path.GetDirectoryName(Filename);
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
             if (!System.IO.File.Exists(Filename))
             {
-                var sql = File.ReadAllText(SQLMigrations);
                 using (var sqlite = new SqliteConnection(@"Data Source=" + Filename))
                 {
                     sqlite.Open();
-                    SqliteCommand command = new SqliteCommand(sql, sqlite);
-                    command.ExecuteNonQuery();
                 }
             }
         }
