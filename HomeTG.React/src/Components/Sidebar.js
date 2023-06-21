@@ -1,23 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams } from "react-router-dom";
+import React from 'react';
+import { Link } from "react-router-dom";
 import AddCollectionForm from './AddCollectionForm';
 
-function Sidebar() {
-    const { collection = "Main" } = useParams();
-    const [collections, setCollections] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetch('/collection/list').then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    setCollections(data);
-                    setLoading(false);
-                })
-            }
-        });
-    }, [collection])
-
+function Sidebar({ collection = "Main", collections, setCollections, loading }) {
     const renderCollections = (collections) => {
         return (
             collections.map(c =>

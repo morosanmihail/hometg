@@ -1,17 +1,14 @@
 ﻿import React, { useState, useEffect } from 'react';
 import Card from './Card';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Search from "./Search";
-import { confirm } from "./ConfirmCollectionDelete";
+import MoveCardsNav from "./MoveCardsNav";
 
-function CardList({ collection, offset }) {
-    const navigate = useNavigate();
+function CardList({ collection, offset, collections, setCollections }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [selected, setSelected] = useState([]);
-    const [destinationCollection, setDestinationCollection] = useState(collection);
-    const [validCollections, setValidCollections] = useState([]);
 
     let pageSize = 12;
 
@@ -26,83 +23,8 @@ function CardList({ collection, offset }) {
                 })
             }
         });
-        fetch('/collection/list').then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    setValidCollections(data);
-                })
-            }
-        });
     }, [collection, offset, refresh])
 
-    const moveCards = () => {
-        fetch('/collection/move/' + destinationCollection, {
-            method: "post",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(selected),
-        }).then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    setRefresh(true);
-                    setSelected([]);
-                })
-            }
-        });
-    }
-
-    const deleteCards = () => {
-        confirm({ confirmType: "cards", selectedCount: selected.length }).then(
-            ({ input }) => {
-                fetch('/collection/cards/' + collection + '/remove', {
-                    method: "post",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(selected),
-                }).then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            setRefresh(true);
-                            setSelected([]);
-                        })
-                    }
-                });
-            },
-            () => {
-
-            }
-        );
-    }
-
-    const deleteCollection = () => {
-        let moveToCollections = validCollections.filter(s => s.id !== collection);
-        moveToCollections.push("");
-        confirm({ confirmType: "collection", collection: collection, collections: moveToCollections }).then(
-            ({ input }) => {
-                fetch('/collection/remove/' + collection + '?keepCardsInCollection=' + input, {
-                    method: "post",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(selected),
-                }).then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            navigate('/');
-                        })
-                    }
-                });
-            },
-            () => {
-                
-            }
-        );
-    }
 
     const onSelectCard = (card, isSelected) => {
         if (card == null) return;
@@ -134,47 +56,19 @@ function CardList({ collection, offset }) {
         }
     }
 
-    const renderCards = (cards) => {
-        return (
-            <React.Fragment>
-                {cards.map(card =>
-                    <Card id={card.id} details={card} key={card.collectionId + "-" + card.id} onSelectCard={onSelectCard} />
-                )}
-            </React.Fragment>
-        );
-    }
-
-    let contents = (loading || refresh) ? <p>Loading...</p> : renderCards(cards);
-
     return (
         <React.Fragment>
             <Search collection={collection} onAdd={onAdd} />
-
-            <nav className="navbar navbar-dark bg-dark">
-                <div className="form-row align-items-center">
-                    <div className="col-auto">
-                        <span className="badge badge-primary">{selected.length} selected</span>
-                    </div>
-                    <div className="col-auto">
-                        <button onClick={deleteCards} type="button" className="btn btn-danger">🗑️</button>
-                    </div>
-                    <div className="col-auto">
-                        <button onClick={moveCards} type="button" className="btn btn-info" alt="Move to collection">Move to</button>
-                    </div>
-                    <div className="col-auto">
-                        <select onChange={(e) => setDestinationCollection(e.target.value)} className="form-control" id="exampleFormControlSelect1">
-                            {validCollections.map(c => 
-                                <option key={c.id} dropdown={c.id} value={c.id}>{c.id}</option>
-                            )}
-                        </select>
-                    </div>
-                    <div className="col-auto">
-                        <button onClick={deleteCollection} type="button" className="btn btn-danger">🗑️ collection</button>
-                    </div>
-                </div>
-            </nav>
+            <MoveCardsNav collection={collection} collections={collections} selected={selected} setSelected={setSelected} setRefresh={setRefresh} />
             <div className="card-grid list">
-                {contents}
+                {
+                    (loading || refresh) ? <p>Loading...</p> :
+                        <React.Fragment>
+                            {cards.map(card =>
+                                <Card id={card.id} details={card} key={card.collectionId + "-" + card.id} onSelectCard={onSelectCard} />
+                            )}
+                        </React.Fragment>
+                }
             </div>
             <nav aria-label="Page navigation">
                 <ul className="pagination center">
