@@ -1,16 +1,19 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useContext } from 'react';
 import uuid from 'react-native-uuid';
 import { useCardCache } from './CardCacheContext';
+import { CollectionContext } from './CollectionContext';
+import { OperationsContext } from '../OperationsContext';
 
 function MtGCard({ id, card = null, details = null,
-    currentCollection = null, onAdd = null, onSelectCard = null,
-    addOperation, removeOperation
+    onAdd = null, onSelectCard = null
 }) {
     const [_card, setCard] = useState(card);
     const [_details, setDetails] = useState(details);
     const [selected, setSelected] = useState(false);
 
     const [cache, dispatch] = useCardCache();
+    const currentCollection = useContext(CollectionContext);
+    const ops = useContext(OperationsContext);
 
     const retrieveCardInfo = (id) => {
         return fetch('/mtg/cards?ids=' + id).then(response => {
@@ -26,15 +29,15 @@ function MtGCard({ id, card = null, details = null,
                 setCard(cache[id]);
             } else {
                 let opId = uuid.v4();
-                addOperation(opId, { message: "Updating details for card " + id })
+                ops.addOperation(opId, { message: "Updating details for card " + id })
                 retrieveCardInfo(id).then(data => {
                     setCard(data[id]);
                     dispatch({ type: 'ADD-TO-CACHE', id: id, data: data[id] });
-                    removeOperation(opId);
+                    ops.removeOperation(opId);
                 });
             }
         }
-    }, [id, _card, details, cache, dispatch])
+    }, [id, _card, details])
 
     const toggleSelected = () => {
         setSelected(s => !s);
@@ -48,7 +51,7 @@ function MtGCard({ id, card = null, details = null,
         url = url + '?Id=' + _card.id + '&CollectionID=' + collection + '&Quantity=' + Math.abs(parseInt(delta));
         url = url + '&FoilQuantity=' + Math.abs(parseInt(deltaFoil));
         let opId = uuid.v4();
-        addOperation(opId, { message: "Updating quantities for card " + id });
+        ops.addOperation(opId, { message: "Updating quantities for card " + id });
         fetch(url, {
             method: add ? "put" : "post",
             headers: {
@@ -67,7 +70,7 @@ function MtGCard({ id, card = null, details = null,
                     }
                 })
             }
-            removeOperation(opId);
+            ops.removeOperation(opId);
         })
     }
 

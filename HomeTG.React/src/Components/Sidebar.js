@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
 import AddCollectionForm from './AddCollectionForm';
+import { CollectionContext } from './CollectionContext';
 
-function Sidebar({ collection = "Main", collections, setCollections, loading }) {
+function Sidebar({ collections, setCollections, loading }) {
+    const collection = useContext(CollectionContext);
+
     const renderCollections = (collections) => {
         return (
             collections.map(c =>

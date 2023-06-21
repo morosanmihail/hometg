@@ -1,8 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import Sidebar from "./Components/Sidebar";
 import CardList from "./Components/CardList";
 import uuid from 'react-native-uuid';
+import { CollectionContext } from './Components/CollectionContext';
+import { OperationsContext } from './OperationsContext';
 
 function BaseApp() {
     const { collection = "Main", offset = 0 } = useParams();
@@ -37,23 +39,24 @@ function BaseApp() {
     }, [collection])
 
     return (
-        <Fragment>
-            <header>
-                <Sidebar collections={collections} setCollections={setCollections} collection={collection} loading={collectionsLoading} />
+        <OperationsContext.Provider value={{ operations: operations, addOperation: addOperation, removeOperation: removeOperation }}>
+            <CollectionContext.Provider value={collection}>
+                <header>
+                    <Sidebar collections={collections} setCollections={setCollections} loading={collectionsLoading} />
 
-                <nav id="main-navbar" className="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-                    <div className="container-fluid">
-                        <a className="navbar-brand" href="/">
-                            HomeTG
-                        </a>
-                    </div>
-                </nav>
-            </header>
-            <main>
-                <CardList collections={collections} collection={collection} offset={offset}
-                    operations={operations} addOperation={addOperation} removeOperation={removeOperation} />
-            </main>
-        </Fragment>
+                    <nav id="main-navbar" className="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+                        <div className="container-fluid">
+                            <a className="navbar-brand" href="/">
+                                HomeTG
+                            </a>
+                        </div>
+                    </nav>
+                </header>
+                <main>
+                    <CardList collections={collections} offset={offset} />
+                </main>
+            </CollectionContext.Provider>
+        </OperationsContext.Provider>
     );
 }
 

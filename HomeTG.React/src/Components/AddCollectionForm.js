@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { OperationsContext } from '../OperationsContext';
+import uuid from 'react-native-uuid';
 
 function AddCollectionForm({ onAdd }) {
     const [showForm, setShowForm] = useState(false);
     const [newItem, setNewItem] = useState('');
+
+    const ops = useContext(OperationsContext);
 
     const handleToggleForm = () => setShowForm(!showForm);
     const handleHideForm = () => setShowForm(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        let opId = uuid.v4();
+        ops.addOperation(opId, { message: "Adding new collection" });
         fetch('/collection/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: newItem }),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                ops.removeOperation(opId);
+                return response.json();
+            })
             .then((data) => onAdd({id:newItem}))
             .catch((error) => console.error(error));
     };

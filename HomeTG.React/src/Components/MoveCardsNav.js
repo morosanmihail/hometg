@@ -1,17 +1,22 @@
-﻿import React, { Fragment, useState } from 'react';
+﻿import React, { Fragment, useState, useContext } from 'react';
 import { confirm } from "./ConfirmCollectionDelete";
 import { useNavigate } from "react-router-dom";
 import uuid from 'react-native-uuid';
+import { OperationsContext } from '../OperationsContext';
+import { CollectionContext } from './CollectionContext';
 
-function MoveCardsNav({ collection, collections, selected, setSelected, setRefresh, operations, addOperation, removeOperation  }) {
+function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
     const navigate = useNavigate();
+    const collection = useContext(CollectionContext);
     const [destinationCollection, setDestinationCollection] = useState(collection);
+
+    const ops = useContext(OperationsContext);
 
     const deleteCards = () => {
         confirm({ confirmType: "cards", selectedCount: selected.length }).then(
             ({ input }) => {
                 let opId = uuid.v4();
-                addOperation(opId, { message: "Removing items from " + collection });
+                ops.addOperation(opId, { message: "Removing items from " + collection });
                 fetch('/collection/cards/' + collection + '/remove', {
                     method: "post",
                     headers: {
@@ -26,7 +31,7 @@ function MoveCardsNav({ collection, collections, selected, setSelected, setRefre
                             setSelected([]);
                         })
                     }
-                    removeOperation(opId);
+                    ops.removeOperation(opId);
                 });
             },
             () => {
@@ -37,7 +42,7 @@ function MoveCardsNav({ collection, collections, selected, setSelected, setRefre
 
     const moveCards = () => {
         let opId = uuid.v4();
-        addOperation(opId, { message: "Moving items between " + collection + " and " + destinationCollection })
+        ops.addOperation(opId, { message: "Moving items between " + collection + " and " + destinationCollection })
         fetch('/collection/move/' + destinationCollection, {
             method: "post",
             headers: {
@@ -52,7 +57,7 @@ function MoveCardsNav({ collection, collections, selected, setSelected, setRefre
                     setSelected([]);
                 })
             }
-            removeOperation(opId);
+            ops.removeOperation(opId);
         });
     }
 
@@ -62,7 +67,7 @@ function MoveCardsNav({ collection, collections, selected, setSelected, setRefre
         confirm({ confirmType: "collection", collection: collection, collections: moveToCollections }).then(
             ({ input }) => {
                 let opId = uuid.v4();
-                addOperation(opId, { message: "Deleting collection " + collection })
+                ops.addOperation(opId, { message: "Deleting collection " + collection })
                 fetch('/collection/remove/' + collection + '?keepCardsInCollection=' + input, {
                     method: "post",
                     headers: {
@@ -77,7 +82,7 @@ function MoveCardsNav({ collection, collections, selected, setSelected, setRefre
                         })
                     }
                 });
-                removeOperation(opId);
+                ops.removeOperation(opId);
             },
             () => {
 
@@ -109,9 +114,9 @@ function MoveCardsNav({ collection, collections, selected, setSelected, setRefre
                         <button onClick={deleteCollection} type="button" className="btn btn-danger">🗑️ collection</button>
                     </div>
                     <div className="col-auto">
-                        <span className="badge badge-primary">{Object.keys(operations).length} operations active</span>
+                        <span className="badge badge-primary">{Object.keys(ops.operations).length} operations active</span>
                     </div>
-                    {Object.entries(operations).map( ([key, o]) =>
+                    {Object.entries(ops.operations).map( ([key, o]) =>
                         <div key={key} className="col-auto">
                             <span className="badge badge-primary">{o.message}</span>
                         </div>
