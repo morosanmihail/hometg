@@ -73,21 +73,16 @@ namespace HomeTG.API.Models.Contexts
             var collection = GetOrCreateCollection(collectionName);
             var existingCards = Cards.Where(c => c.CollectionId.ToLower() == collectionName.ToLower()).
                 Where(
-                    c => newCards.Select(n => n.Id).
-                    Contains(c.Id)
+                    c => newCards.Select(n => n.Id).Contains(c.Id)
                 ).ToDictionary(c => c.Id);
             foreach (var newCard in newCards)
             {
-                CollectionCard? card = null;
                 if (existingCards.ContainsKey(newCard.Id))
                 {
-                    card = existingCards[newCard.Id];
-                    card.Quantity += newCard.Quantity;
-                    card.FoilQuantity += newCard.FoilQuantity;
-                }
-                if (card == null)
-                {
-                    card = new CollectionCard { 
+                    existingCards[newCard.Id].Quantity += newCard.Quantity;
+                    existingCards[newCard.Id].FoilQuantity += newCard.FoilQuantity;
+                } else {
+                    var card = new CollectionCard { 
                         Id = newCard.Id, 
                         CollectionId = collectionName,
                         Quantity = newCard.Quantity,
@@ -97,8 +92,8 @@ namespace HomeTG.API.Models.Contexts
                     Cards.Add(card);
                     existingCards[newCard.Id] = card;
                 }
-                SaveChanges();
             }
+            SaveChanges();
             return existingCards.Values.ToList();
         }
 

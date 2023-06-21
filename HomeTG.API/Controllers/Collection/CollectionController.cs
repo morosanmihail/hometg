@@ -53,14 +53,14 @@ namespace HomeTG.API.Controllers.Collection
             return _db.GetCardsFromCollection(collection, ids);
         }
 
-        [HttpPut("cards/{collection}/add")]
-        public IEnumerable<CollectionCard> AddCards(string collection, [FromQuery] CollectionCard card)
+        [HttpPost("cards/{collection}/add")]
+        public IEnumerable<CollectionCard> AddCard(string collection, CollectionCard card)
         {
             return _db.AddCards(collection, new List<CollectionCard> { card });
         }
 
         [HttpPost("cards/{collection}/delete")]
-        public CollectionCard? RemoveCards(string collection, [FromQuery] CollectionCard card)
+        public CollectionCard? RemoveCard(string collection, CollectionCard card)
         {
             if (collection.ToLower() != card.CollectionId.ToLower())
             {

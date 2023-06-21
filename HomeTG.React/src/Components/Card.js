@@ -44,15 +44,20 @@ function MtGCard({ id, card = null, details = null,
         let collection = currentCollection != null ? currentCollection : _details.collectionId;
         let add = parseInt(delta) >= 0 && parseInt(deltaFoil) >= 0;
         let url = '/collection/cards/' + collection + '/' + (add ? 'add' : 'delete');
-        url = url + '?Id=' + _card.id + '&CollectionID=' + collection + '&Quantity=' + Math.abs(parseInt(delta));
-        url = url + '&FoilQuantity=' + Math.abs(parseInt(deltaFoil));
+        let body = {
+            id: _card.id,
+            collectionId: collection,
+            quantity: Math.abs(parseInt(delta)),
+            foilQuantity: Math.abs(parseInt(deltaFoil))
+        }
 
         ops.fetch("Updating quantities for card " + id, url, {
-            method: add ? "put" : "post",
+            method: "post",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify(body),
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(data => {
