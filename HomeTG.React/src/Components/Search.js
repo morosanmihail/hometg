@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Card from './Card';
+import uuid from 'react-native-uuid';
 
-function Search({ collection, onAdd }) {
+function Search({ collection, onAdd, addOperation, removeOperation }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchOptions, setSearchOptions] = useState({});
@@ -10,13 +11,18 @@ function Search({ collection, onAdd }) {
         return (
             <div className="card-grid list">
                 {cards.map(card =>
-                    <Card key={card.id} id={card.id} card={card} currentCollection={collection} onAdd={onAdd} />
+                    <Card key={card.id} id={card.id} card={card}
+                        currentCollection={collection} onAdd={onAdd}
+                        addOperation={addOperation} removeOperation={removeOperation}
+                    />
                 )}
             </div>
         );
     }
 
     const populateSearch = () => {
+        let opId = uuid.v4();
+        addOperation(opId, { message: "Searching the MtG database" });
         setLoading(true);
         fetch('/mtg/cards/search', {
             method: "post",
@@ -32,6 +38,7 @@ function Search({ collection, onAdd }) {
                     setLoading(false);
                 })
             }
+            removeOperation(opId);
         })
     }
 

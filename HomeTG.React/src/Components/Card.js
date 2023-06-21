@@ -1,9 +1,16 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
+import uuid from 'react-native-uuid';
+import { useCardCache } from './CardCacheContext';
 
-function MtGCard({ id, card = null, details = null, currentCollection = null, onAdd = null, onSelectCard = null }) {
+function MtGCard({ id, card = null, details = null,
+    currentCollection = null, onAdd = null, onSelectCard = null,
+    addOperation, removeOperation
+}) {
     const [_card, setCard] = useState(card);
     const [_details, setDetails] = useState(details);
     const [selected, setSelected] = useState(false);
+
+    const [cache, dispatch] = useCardCache();
 
     const retrieveCardInfo = (id) => {
         return fetch('/mtg/cards?ids=' + id).then(response => {
@@ -15,9 +22,19 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
 
     useEffect(() => {
         if (_card == null) {
-            retrieveCardInfo(id).then(data => setCard(data[id]));
+            if (cache[id]) {
+                setCard(cache[id]);
+            } else {
+                let opId = uuid.v4();
+                addOperation(opId, { message: "Updating details for card " + id })
+                retrieveCardInfo(id).then(data => {
+                    setCard(data[id]);
+                    dispatch({ type: 'ADD-TO-CACHE', id: id, data: data[id] });
+                    removeOperation(opId);
+                });
+            }
         }
-    }, [id, _card])
+    }, [id, _card, details, cache, dispatch])
 
     const toggleSelected = () => {
         setSelected(s => !s);
@@ -30,6 +47,8 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
         let url = '/collection/cards/' + collection + '/' + (add ? 'add' : 'delete');
         url = url + '?Id=' + _card.id + '&CollectionID=' + collection + '&Quantity=' + Math.abs(parseInt(delta));
         url = url + '&FoilQuantity=' + Math.abs(parseInt(deltaFoil));
+        let opId = uuid.v4();
+        addOperation(opId, { message: "Updating quantities for card " + id });
         fetch(url, {
             method: add ? "put" : "post",
             headers: {
@@ -48,10 +67,11 @@ function MtGCard({ id, card = null, details = null, currentCollection = null, on
                     }
                 })
             }
+            removeOperation(opId);
         })
     }
 
-    let imagePath = (_card != null) ? "https://api.scryfall.com/cards/" + _card.cardIdentifiers.scryfallId + "?format=image" : "";
+    let imagePath = (_card != null && _card.cardIdentifiers != null) ? "https://api.scryfall.com/cards/" + _card.cardIdentifiers.scryfallId + "?format=image" : "";
 
     return (
         <React.Fragment>

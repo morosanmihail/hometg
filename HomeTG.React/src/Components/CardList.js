@@ -3,8 +3,10 @@ import Card from './Card';
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import MoveCardsNav from "./MoveCardsNav";
+import uuid from 'react-native-uuid';
+import { CardCacheProvider } from './CardCacheContext';
 
-function CardList({ collection, offset, collections, setCollections }) {
+function CardList({ collection, offset, collections, operations, addOperation, removeOperation }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
@@ -13,6 +15,8 @@ function CardList({ collection, offset, collections, setCollections }) {
     let pageSize = 12;
 
     useEffect(() => {
+        let opId = uuid.v4();
+        addOperation(opId, { message: "Listing items in " + collection });
         fetch('/collection/cards/' + collection + '/list?offset=' + offset).then(response => {
             if (response.status === 200) {
                 response.json().then(data => {
@@ -22,6 +26,7 @@ function CardList({ collection, offset, collections, setCollections }) {
                     setSelected([]);
                 })
             }
+            removeOperation(opId);
         });
     }, [collection, offset, refresh])
 
@@ -57,15 +62,20 @@ function CardList({ collection, offset, collections, setCollections }) {
     }
 
     return (
-        <React.Fragment>
-            <Search collection={collection} onAdd={onAdd} />
-            <MoveCardsNav collection={collection} collections={collections} selected={selected} setSelected={setSelected} setRefresh={setRefresh} />
+        <CardCacheProvider>
+            <Search collection={collection} onAdd={onAdd} addOperation={addOperation} removeOperation={removeOperation} />
+            <MoveCardsNav
+                collection={collection} collections={collections}
+                selected={selected} setSelected={setSelected} setRefresh={setRefresh}
+                operations={operations} addOperation={addOperation} removeOperation={removeOperation} />
             <div className="card-grid list">
                 {
                     (loading || refresh) ? <p>Loading...</p> :
                         <React.Fragment>
                             {cards.map(card =>
-                                <Card id={card.id} details={card} key={card.collectionId + "-" + card.id} onSelectCard={onSelectCard} />
+                                <Card id={card.id} details={card} key={card.collectionId + "-" + card.id}
+                                    onSelectCard={onSelectCard}
+                                    addOperation={addOperation} removeOperation={removeOperation} />
                             )}
                         </React.Fragment>
                 }
@@ -87,7 +97,7 @@ function CardList({ collection, offset, collections, setCollections }) {
                     </li>
                 </ul>
             </nav>
-        </React.Fragment>
+        </CardCacheProvider>
     );
 }
 
