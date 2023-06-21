@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import Card from './Card';
-import uuid from 'react-native-uuid';
 import { OperationsContext } from '../OperationsContext';
 
 function Search({ onAdd }) {
@@ -21,10 +20,8 @@ function Search({ onAdd }) {
     }
 
     const populateSearch = () => {
-        let opId = uuid.v4();
-        ops.addOperation(opId, { message: "Searching the MtG database" });
         setLoading(true);
-        fetch('/mtg/cards/search', {
+        ops.fetch("Searching the MtG database", '/mtg/cards/search', {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -38,7 +35,6 @@ function Search({ onAdd }) {
                     setLoading(false);
                 })
             }
-            ops.removeOperation(opId);
         })
     }
 

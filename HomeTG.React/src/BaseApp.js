@@ -6,7 +6,7 @@ import uuid from 'react-native-uuid';
 import { CollectionContext } from './Components/CollectionContext';
 import { OperationsContext } from './OperationsContext';
 
-function BaseApp() {
+export default function BaseApp() {
     const { collection = "Main", offset = 0 } = useParams();
     const [collections, setCollections] = useState([]);
     const [collectionsLoading, setCollectionsLoading] = useState(true);
@@ -24,22 +24,29 @@ function BaseApp() {
         });
     }
 
-    useEffect(() => {
+    const opsFetch = async (message, ...args) => {
         let opId = uuid.v4();
-        addOperation(opId, { message: "Listing collections" });
-        fetch('/collection/list').then(response => {
+        addOperation(opId, { message: message });
+        const result = await fetch(...args);
+        removeOperation(opId);
+        return result;
+    }
+
+    useEffect(() => {
+        opsFetch("Listing collections", '/collection/list').then(response => {
             if (response.status === 200) {
                 response.json().then(data => {
                     setCollections(data);
                     setCollectionsLoading(false);
-                    removeOperation(opId);
                 })
             }
         });
     }, [collection])
 
     return (
-        <OperationsContext.Provider value={{ operations: operations, addOperation: addOperation, removeOperation: removeOperation }}>
+        <OperationsContext.Provider value={
+            { operations: operations, fetch: opsFetch }
+        }>
             <CollectionContext.Provider value={collection}>
                 <header>
                     <Sidebar collections={collections} setCollections={setCollections} loading={collectionsLoading} />
@@ -59,5 +66,3 @@ function BaseApp() {
         </OperationsContext.Provider>
     );
 }
-
-export default BaseApp;

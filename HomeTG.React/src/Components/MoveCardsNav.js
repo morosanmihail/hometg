@@ -1,7 +1,6 @@
 ﻿import React, { Fragment, useState, useContext } from 'react';
 import { confirm } from "./ConfirmCollectionDelete";
 import { useNavigate } from "react-router-dom";
-import uuid from 'react-native-uuid';
 import { OperationsContext } from '../OperationsContext';
 import { CollectionContext } from './CollectionContext';
 
@@ -15,9 +14,7 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
     const deleteCards = () => {
         confirm({ confirmType: "cards", selectedCount: selected.length }).then(
             ({ input }) => {
-                let opId = uuid.v4();
-                ops.addOperation(opId, { message: "Removing items from " + collection });
-                fetch('/collection/cards/' + collection + '/remove', {
+                ops.fetch("Removing items from " + collection, '/collection/cards/' + collection + '/remove', {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
@@ -31,7 +28,6 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                             setSelected([]);
                         })
                     }
-                    ops.removeOperation(opId);
                 });
             },
             () => {
@@ -41,9 +37,7 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
     }
 
     const moveCards = () => {
-        let opId = uuid.v4();
-        ops.addOperation(opId, { message: "Moving items between " + collection + " and " + destinationCollection })
-        fetch('/collection/move/' + destinationCollection, {
+        ops.fetch("Moving items between " + collection + " and " + destinationCollection, '/collection/move/' + destinationCollection, {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -57,7 +51,6 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                     setSelected([]);
                 })
             }
-            ops.removeOperation(opId);
         });
     }
 
@@ -66,9 +59,7 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
         moveToCollections.push("");
         confirm({ confirmType: "collection", collection: collection, collections: moveToCollections }).then(
             ({ input }) => {
-                let opId = uuid.v4();
-                ops.addOperation(opId, { message: "Deleting collection " + collection })
-                fetch('/collection/remove/' + collection + '?keepCardsInCollection=' + input, {
+                ops.fetch("Deleting collection " + collection, '/collection/remove/' + collection + '?keepCardsInCollection=' + input, {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
@@ -82,7 +73,6 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                         })
                     }
                 });
-                ops.removeOperation(opId);
             },
             () => {
 

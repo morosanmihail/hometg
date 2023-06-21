@@ -1,5 +1,4 @@
 ﻿import React, { useState, useEffect, useContext } from 'react';
-import uuid from 'react-native-uuid';
 import { useCardCache } from './CardCacheContext';
 import { CollectionContext } from './CollectionContext';
 import { OperationsContext } from '../OperationsContext';
@@ -16,7 +15,7 @@ function MtGCard({ id, card = null, details = null,
     const ops = useContext(OperationsContext);
 
     const retrieveCardInfo = (id) => {
-        return fetch('/mtg/cards?ids=' + id).then(response => {
+        return ops.fetch("Updating details for card " + id, '/mtg/cards?ids=' + id).then(response => {
             if (response.status === 200) {
                 return response.json()
             }
@@ -28,12 +27,9 @@ function MtGCard({ id, card = null, details = null,
             if (cache[id]) {
                 setCard(cache[id]);
             } else {
-                let opId = uuid.v4();
-                ops.addOperation(opId, { message: "Updating details for card " + id })
                 retrieveCardInfo(id).then(data => {
                     setCard(data[id]);
                     dispatch({ type: 'ADD-TO-CACHE', id: id, data: data[id] });
-                    ops.removeOperation(opId);
                 });
             }
         }
@@ -50,9 +46,8 @@ function MtGCard({ id, card = null, details = null,
         let url = '/collection/cards/' + collection + '/' + (add ? 'add' : 'delete');
         url = url + '?Id=' + _card.id + '&CollectionID=' + collection + '&Quantity=' + Math.abs(parseInt(delta));
         url = url + '&FoilQuantity=' + Math.abs(parseInt(deltaFoil));
-        let opId = uuid.v4();
-        ops.addOperation(opId, { message: "Updating quantities for card " + id });
-        fetch(url, {
+
+        ops.fetch("Updating quantities for card " + id, url, {
             method: add ? "put" : "post",
             headers: {
                 'Accept': 'application/json',
@@ -70,7 +65,6 @@ function MtGCard({ id, card = null, details = null,
                     }
                 })
             }
-            ops.removeOperation(opId);
         })
     }
 

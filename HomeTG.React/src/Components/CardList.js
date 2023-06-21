@@ -3,7 +3,6 @@ import Card from './Card';
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import MoveCardsNav from "./MoveCardsNav";
-import uuid from 'react-native-uuid';
 import { CardCacheProvider } from './CardCacheContext';
 import { CollectionContext } from './CollectionContext';
 import { OperationsContext } from '../OperationsContext';
@@ -19,9 +18,7 @@ function CardList({ offset, collections }) {
     let pageSize = 12;
 
     useEffect(() => {
-        let opId = uuid.v4();
-        ops.addOperation(opId, { message: "Listing items in " + collection });
-        fetch('/collection/cards/' + collection + '/list?offset=' + offset).then(response => {
+        ops.fetch("Listing items in " + collection, '/collection/cards/' + collection + '/list?offset=' + offset).then(response => {
             if (response.status === 200) {
                 response.json().then(data => {
                     setCards(data);
@@ -30,7 +27,6 @@ function CardList({ offset, collections }) {
                     setSelected([]);
                 })
             }
-            ops.removeOperation(opId);
         });
     }, [collection, offset, refresh])
 

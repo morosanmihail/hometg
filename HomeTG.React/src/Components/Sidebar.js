@@ -36,6 +36,7 @@ function Sidebar({ collections, setCollections, loading }) {
                     <hr/>
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
                         {contents}
+                        <hr/>
                         <AddCollectionForm onAdd={addCollection} />
                     </div>
                 </div>
