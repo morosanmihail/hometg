@@ -31,7 +31,7 @@ export default function BaseApp() {
             if(response.status === 200) {
                 return response.json();
             } else {
-                console.log("Halp");
+                console.log("Halp. Failed to get successful response from " + response.url);
                 return defaultValue;
             }
         });

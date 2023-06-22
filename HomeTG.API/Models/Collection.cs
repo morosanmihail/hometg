@@ -6,6 +6,7 @@ namespace HomeTG.API.Models
 {
     [Table("cards")]
     [PrimaryKey("Id", "CollectionId")]
+    [Index(nameof(Id), nameof(CollectionId))]
     public class CollectionCard
     {
         [Key]

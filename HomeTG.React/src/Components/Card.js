@@ -47,7 +47,7 @@ export default function MtGCard({ id, card = null, details = null,
                                 </div>
                             </div>
                         <div className="card-info">
-                            <div className="row mb-3 align-items-center">
+                            <div className="row align-items-center">
                                 <span className="name col-sm-11">{_card.name}</span>
                                 <span className="setCode col-sm-11">{_card.setCode}</span>
                             </div>

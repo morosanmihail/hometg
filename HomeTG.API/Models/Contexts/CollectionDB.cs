@@ -70,23 +70,13 @@ namespace HomeTG.API.Models.Contexts
         // TODO: mix Add/Remove cards together maybe? One clean function?
         public List<CollectionCard> AddCards(string collectionName, List<CollectionCard> newCards)
         {
-            long totalOperation = 0;
-            var watch = System.Diagnostics.Stopwatch.StartNew();
             var collection = GetOrCreateCollection(collectionName);
-            watch.Stop();
-            Console.WriteLine("--- DIAGNOSTIC: GetOrCreateCollection: " + watch.ElapsedMilliseconds + " ms");
-            totalOperation += watch.ElapsedMilliseconds;
 
-            watch.Restart();
             var existingCards = Cards.Where(c => c.CollectionId.ToLower() == collectionName.ToLower()).
                 Where(
                     c => newCards.Select(n => n.Id).Contains(c.Id)
                 ).ToDictionary(c => c.Id);
-            watch.Stop();
-            Console.WriteLine("--- DIAGNOSTIC: GetExistingCards: " + watch.ElapsedMilliseconds + " ms");
-            totalOperation += watch.ElapsedMilliseconds;
 
-            watch.Restart();
             foreach (var newCard in newCards)
             {
                 if (existingCards.ContainsKey(newCard.Id))
@@ -105,16 +95,11 @@ namespace HomeTG.API.Models.Contexts
                     existingCards[newCard.Id] = card;
                 }
             }
-            watch.Stop();
-            Console.WriteLine("--- DIAGNOSTIC: UpdateCards: " + watch.ElapsedMilliseconds + " ms");
-            totalOperation += watch.ElapsedMilliseconds;
 
-            watch.Restart();
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             SaveChanges();
             watch.Stop();
             Console.WriteLine("--- DIAGNOSTIC: SaveChanges: " + watch.ElapsedMilliseconds + " ms");
-            totalOperation += watch.ElapsedMilliseconds;
-            Console.WriteLine("--- DIAGNOSTIC: TOTAL: " + totalOperation + " ms");
             return existingCards.Values.ToList();
         }
 
