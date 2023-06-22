@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import AddCollectionForm from './AddCollectionForm';
 import { CollectionContext } from './CollectionContext';
 
-function Sidebar({ collections, setCollections, loading }) {
+export default function Sidebar({ collections, setCollections, loading }) {
     const collection = useContext(CollectionContext);
 
     const renderCollections = (collections) => {
@@ -51,5 +51,3 @@ function Sidebar({ collections, setCollections, loading }) {
         </header>
     );
 }
-
-export default Sidebar;

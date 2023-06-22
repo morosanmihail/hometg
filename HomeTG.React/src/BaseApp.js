@@ -24,7 +24,7 @@ export default function BaseApp() {
         });
     }
 
-    const opsFetch = async (message, ...args) => {
+    const opsFetch = async (message, defaultValue, ...args) => {
         let opId = uuid.v4();
         addOperation(opId, { message: message });
         const result = await fetch(...args).then(response => {
@@ -32,6 +32,7 @@ export default function BaseApp() {
                 return response.json();
             } else {
                 console.log("Halp");
+                return defaultValue;
             }
         });
         removeOperation(opId);
@@ -39,7 +40,7 @@ export default function BaseApp() {
     }
 
     useEffect(() => {
-        opsFetch("Listing collections", '/collection/list').then(data => {
+        opsFetch("Listing collections", [], '/collection/list').then(data => {
             setCollections(data);
             setCollectionsLoading(false);
         });

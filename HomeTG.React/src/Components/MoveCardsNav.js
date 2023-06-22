@@ -14,7 +14,7 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
     const deleteCards = () => {
         confirm({ confirmType: "cards", selectedCount: selected.length }).then(
             ({ input }) => {
-                ops.fetch("Removing items from " + collection, '/collection/cards/' + collection + '/remove', {
+                ops.fetch("Removing items from " + collection, [], '/collection/cards/' + collection + '/remove', {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
@@ -33,7 +33,7 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
     }
 
     const moveCards = () => {
-        ops.fetch("Moving items between " + collection + " and " + destinationCollection, '/collection/move/' + destinationCollection, {
+        ops.fetch("Moving items between " + collection + " and " + destinationCollection, [], '/collection/move/' + destinationCollection, {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -51,7 +51,7 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
         moveToCollections.push("");
         confirm({ confirmType: "collection", collection: collection, collections: moveToCollections }).then(
             ({ input }) => {
-                ops.fetch("Deleting collection " + collection, '/collection/remove/' + collection + '?keepCardsInCollection=' + input, {
+                ops.fetch("Deleting collection " + collection, {}, '/collection/remove/' + collection + '?keepCardsInCollection=' + input, {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',

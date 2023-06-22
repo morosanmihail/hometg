@@ -13,7 +13,7 @@ function AddCollectionForm({ onAdd }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        ops.fetch("Adding new collection", '/collection/add', {
+        ops.fetch("Adding new collection", {}, '/collection/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: newItem }),

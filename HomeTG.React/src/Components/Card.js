@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect, useContext } from 'react';
 import { useCardCache } from './CardCacheContext';
-import { CardDetails } from './CardDetails';
+import CardDetails from './CardDetails';
 import { OperationsContext } from '../OperationsContext';
 
 export default function MtGCard({ id, card = null, details = null,
@@ -17,7 +17,7 @@ export default function MtGCard({ id, card = null, details = null,
             if (cache[id]) {
                 setCard(cache[id]);
             } else {
-                ops.fetch("Updating details for card " + id, '/mtg/cards?ids=' + id).then(data => {
+                ops.fetch("Updating details for card " + id, {}, '/mtg/cards?ids=' + id).then(data => {
                     setCard(data[id]);
                     dispatch({ type: 'ADD-TO-CACHE', id: id, data: data[id] });
                 });

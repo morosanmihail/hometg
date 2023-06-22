@@ -18,7 +18,7 @@ export default function CardDetails({id, details = null, onAdd, selected, toggle
         }
 
         ops.fetch(
-            "Updating quantities for card " + id, url,
+            "Updating quantities for card " + id, {}, url,
             {
                 method: "post",
                 headers: {

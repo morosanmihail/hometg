@@ -21,7 +21,7 @@ function Search({ onAdd }) {
 
     const populateSearch = () => {
         setLoading(true);
-        ops.fetch("Searching the MtG database", '/mtg/cards/search', {
+        ops.fetch("Searching the MtG database", [], '/mtg/cards/search', {
             method: "post",
             headers: {
                 'Accept': 'application/json',
