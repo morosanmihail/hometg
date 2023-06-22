@@ -354,3 +354,5 @@ MigrationBackup/
 /HomeTGCollection/DB/Collection.db
 /HomeTGCollection/DB/AllPrintings.db.sha256
 /reactapp/.env.development.local
+
+.vscode/
