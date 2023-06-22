@@ -7,7 +7,7 @@ import { CardCacheProvider } from './CardCacheContext';
 import { CollectionContext } from './CollectionContext';
 import { OperationsContext } from '../OperationsContext';
 
-function CardList({ offset, collections }) {
+export default function CardList({ offset, collections }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
@@ -39,7 +39,6 @@ function CardList({ offset, collections }) {
     }
 
     const onAdd = (newCard) => {
-        // TODO: this does not trigger a rerender of any updated cards, only new ones
         let updated = false;
         const newCards = cards.map(c => {
             if (c.id === newCard.id) {
@@ -71,7 +70,7 @@ function CardList({ offset, collections }) {
                         <React.Fragment>
                             {cards.map(card =>
                                 <Card id={card.id} details={card} key={card.collectionId + "-" + card.id}
-                                    onSelectCard={onSelectCard} />
+                                    onSelectCard={onSelectCard} onAdd={onAdd} />
                             )}
                         </React.Fragment>
                 }
@@ -96,5 +95,3 @@ function CardList({ offset, collections }) {
         </CardCacheProvider>
     );
 }
-
-export default CardList;
