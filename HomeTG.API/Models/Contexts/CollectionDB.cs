@@ -77,29 +77,54 @@ namespace HomeTG.API.Models.Contexts
                     c => newCards.Select(n => n.Id).Contains(c.Id)
                 ).ToDictionary(c => c.Id);
 
+            var cardsToAdd = new Dictionary<string, CollectionCard>();
             foreach (var newCard in newCards)
             {
-                if (existingCards.ContainsKey(newCard.Id))
+                if (!existingCards.ContainsKey(newCard.Id))
                 {
-                    existingCards[newCard.Id].Quantity += newCard.Quantity;
-                    existingCards[newCard.Id].FoilQuantity += newCard.FoilQuantity;
-                } else {
-                    var card = new CollectionCard {
-                        Id = newCard.Id,
-                        CollectionId = collectionName,
-                        Quantity = newCard.Quantity,
-                        FoilQuantity = newCard.FoilQuantity,
-                        LastUpdated = DateTime.Now,
-                    };
-                    Cards.Add(card);
-                    existingCards[newCard.Id] = card;
+                    if (cardsToAdd.ContainsKey(newCard.Id)){
+                        cardsToAdd[newCard.Id].Quantity += newCard.Quantity;
+                        cardsToAdd[newCard.Id].FoilQuantity += newCard.FoilQuantity;
+                    } else {
+                        var card = new CollectionCard {
+                            Id = newCard.Id,
+                            CollectionId = collectionName,
+                            Quantity = newCard.Quantity,
+                            FoilQuantity = newCard.FoilQuantity,
+                            LastUpdated = DateTime.Now,
+                        };
+                        cardsToAdd[card.Id] = card;
+                    }
                 }
             }
+            Cards.AddRange(cardsToAdd.Values);
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
             SaveChanges();
             watch.Stop();
             Console.WriteLine("--- DIAGNOSTIC: SaveChanges: " + watch.ElapsedMilliseconds + " ms");
+
+            watch.Restart();
+            foreach (var newCard in newCards)
+            {
+                if (existingCards.ContainsKey(newCard.Id))
+                {
+                    Cards.Where(c => c.CollectionId == collectionName && c.Id == newCard.Id).
+                        ExecuteUpdate(c =>
+                            c.SetProperty(e => e.Quantity, e => e.Quantity + newCard.Quantity)
+                              .SetProperty(e => e.FoilQuantity, e => e.FoilQuantity+ newCard.FoilQuantity)
+                        );
+                    existingCards[newCard.Id].Quantity += newCard.Quantity;
+                    existingCards[newCard.Id].FoilQuantity += newCard.FoilQuantity;
+                }
+            }
+            watch.Stop();
+            Console.WriteLine("--- DIAGNOSTIC: ExecuteUpdates: " + watch.ElapsedMilliseconds + " ms");
+
+            foreach (var card in cardsToAdd.Values) {
+                existingCards[card.Id] = card;
+            }
+
             return existingCards.Values.ToList();
         }
 
