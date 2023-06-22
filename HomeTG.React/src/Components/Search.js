@@ -28,13 +28,9 @@ function Search({ onAdd }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(searchOptions)
-        }).then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    setCards(data);
-                    setLoading(false);
-                })
-            }
+        }).then(data => {
+            setCards(data);
+            setLoading(false);
         })
     }
 

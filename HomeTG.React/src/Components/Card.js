@@ -14,20 +14,12 @@ function MtGCard({ id, card = null, details = null,
     const currentCollection = useContext(CollectionContext);
     const ops = useContext(OperationsContext);
 
-    const retrieveCardInfo = (id) => {
-        return ops.fetch("Updating details for card " + id, '/mtg/cards?ids=' + id).then(response => {
-            if (response.status === 200) {
-                return response.json()
-            }
-        });
-    }
-
     useEffect(() => {
         if (_card == null) {
             if (cache[id]) {
                 setCard(cache[id]);
             } else {
-                retrieveCardInfo(id).then(data => {
+                ops.fetch("Updating details for card " + id, '/mtg/cards?ids=' + id).then(data => {
                     setCard(data[id]);
                     dispatch({ type: 'ADD-TO-CACHE', id: id, data: data[id] });
                 });
@@ -51,24 +43,23 @@ function MtGCard({ id, card = null, details = null,
             foilQuantity: Math.abs(parseInt(deltaFoil))
         }
 
-        ops.fetch("Updating quantities for card " + id, url, {
-            method: "post",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body),
-        }).then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    if (_details != null) {
-                        setDetails(add ? data[0] : data);
-                    } else {
-                        if (onAdd != null) {
-                            onAdd(data[0]);
-                        }
-                    }
-                })
+        ops.fetch(
+            "Updating quantities for card " + id, url,
+            {
+                method: "post",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body),
+            }
+        ).then(data => {
+            if (_details != null) {
+                setDetails(add ? data[0] : data);
+            } else {
+                if (onAdd != null) {
+                    onAdd(data[0]);
+                }
             }
         })
     }
@@ -78,7 +69,7 @@ function MtGCard({ id, card = null, details = null,
     return (
         <React.Fragment>
             {
-                (_card == null) ? <p>Loading...</p> : 
+                (_card == null) ? <p>Loading...</p> :
                     <div className={"card" + (selected ? " border border-primary" : "")}>
                         <img className="lazyload" src={imagePath} alt={_card.name} lazyload="on" />
 

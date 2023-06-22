@@ -18,11 +18,7 @@ function AddCollectionForm({ onAdd }) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: newItem }),
         })
-            .then((response) => {
-                return response.json();
-            })
             .then((data) => onAdd({id:newItem}))
-            .catch((error) => console.error(error));
     };
 
     return (

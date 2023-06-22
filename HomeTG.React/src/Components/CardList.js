@@ -18,18 +18,16 @@ function CardList({ offset, collections }) {
     let pageSize = 12;
 
     useEffect(() => {
-        ops.fetch("Listing items in " + collection, '/collection/cards/' + collection + '/list?offset=' + offset).then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    setCards(data);
-                    setLoading(false);
-                    setRefresh(false);
-                    setSelected([]);
-                })
-            }
-        });
+        ops.fetch(
+            "Listing items in " + collection,
+            '/collection/cards/' + collection + '/list?offset=' + offset
+            ).then(data => {
+                setCards(data);
+                setLoading(false);
+                setRefresh(false);
+                setSelected([]);
+            });
     }, [collection, offset, refresh])
-
 
     const onSelectCard = (card, isSelected) => {
         if (card == null) return;
@@ -77,24 +75,24 @@ function CardList({ offset, collections }) {
                             )}
                         </React.Fragment>
                 }
-            </div>
-            <nav aria-label="Page navigation">
-                <ul className="pagination center">
-                    <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
-                        <Link to={"/" + collection + "/" + (parseInt(offset) - pageSize)}>
-                            <button className="page-link">Previous</button>
-                        </Link>
-                    </li>
-                    <li className="page-item disabled">
-                        <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
-                    </li>
-                    <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
-                        <Link to={"/" + collection + "/" + (parseInt(offset) + pageSize)}>
-                            <button className="page-link">Next</button>
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul className="pagination center">
+                        <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
+                            <Link to={"/" + collection + "/" + (parseInt(offset) - pageSize)}>
+                                <button className="page-link">Previous</button>
+                            </Link>
+                        </li>
+                        <li className="page-item disabled">
+                            <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
+                        </li>
+                        <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
+                            <Link to={"/" + collection + "/" + (parseInt(offset) + pageSize)}>
+                                <button className="page-link">Next</button>
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
         </CardCacheProvider>
     );
 }

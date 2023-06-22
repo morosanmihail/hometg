@@ -27,19 +27,21 @@ export default function BaseApp() {
     const opsFetch = async (message, ...args) => {
         let opId = uuid.v4();
         addOperation(opId, { message: message });
-        const result = await fetch(...args);
+        const result = await fetch(...args).then(response => {
+            if(response.status === 200) {
+                return response.json();
+            } else {
+                console.log("Halp");
+            }
+        });
         removeOperation(opId);
         return result;
     }
 
     useEffect(() => {
-        opsFetch("Listing collections", '/collection/list').then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    setCollections(data);
-                    setCollectionsLoading(false);
-                })
-            }
+        opsFetch("Listing collections", '/collection/list').then(data => {
+            setCollections(data);
+            setCollectionsLoading(false);
         });
     }, [collection])
 

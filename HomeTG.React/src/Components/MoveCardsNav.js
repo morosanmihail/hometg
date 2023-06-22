@@ -21,13 +21,9 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(selected),
-                }).then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            setRefresh(true);
-                            setSelected([]);
-                        })
-                    }
+                }).then(data => {
+                    setRefresh(true);
+                    setSelected([]);
                 });
             },
             () => {
@@ -44,13 +40,9 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(selected),
-        }).then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                    setRefresh(true);
-                    setSelected([]);
-                })
-            }
+        }).then(data => {
+            setRefresh(true);
+            setSelected([]);
         });
     }
 
@@ -66,12 +58,8 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(selected),
-                }).then(response => {
-                    if (response.status === 200) {
-                        response.json().then(data => {
-                            navigate('/');
-                        })
-                    }
+                }).then(data => {
+                    navigate('/' + collection);
                 });
             },
             () => {
