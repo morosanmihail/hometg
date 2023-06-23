@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.7" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.7">
@@ -20,6 +19,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HomeTG.Models\HomeTG.Models.csproj" />
+    <ProjectReference Include="..\Migrations\HomeTG.Postgres\HomeTG.Postgres.csproj" />
+    <ProjectReference Include="..\Migrations\HomeTG.Sqlite\HomeTG.Sqlite.csproj" />
   </ItemGroup>
 
 </Project>

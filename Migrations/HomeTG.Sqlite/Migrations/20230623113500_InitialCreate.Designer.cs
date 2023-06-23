@@ -3,16 +3,19 @@ using System;
 using HomeTG.API.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HomeTG.API.Migrations
+namespace HomeTG.Sqlite.Migrations
 {
     [DbContext(typeof(CollectionDB))]
-    partial class CollectionDBModelSnapshot : ModelSnapshot
+    [Migration("20230623113500_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.7");
@@ -46,8 +49,8 @@ namespace HomeTG.API.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("quantity");
 
-                    b.Property<long?>("TimeAdded")
-                        .HasColumnType("INTEGER")
+                    b.Property<DateTime?>("TimeAdded")
+                        .HasColumnType("TEXT")
                         .HasColumnName("timeadded");
 
                     b.HasKey("Id", "CollectionId");

@@ -24,9 +24,9 @@ namespace HomeTG.API.Models
         public string CollectionId { get; set; }
 
         [Column("timeadded")]
-        public long? TimeAdded { get; set; }
+        public DateTime? TimeAdded { get; set; }
 
-        public CollectionCard(string id, int quantity, int foilQuantity, string collection, long? timeAdded)
+        public CollectionCard(string id, int quantity, int foilQuantity, string collection, DateTime? timeAdded)
         {
             Id = id;
             Quantity = quantity;

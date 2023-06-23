@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HomeTG.API.Migrations
+namespace HomeTG.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -15,11 +15,11 @@ namespace HomeTG.API.Migrations
                 name: "cards",
                 columns: table => new
                 {
-                    uuid = table.Column<string>(type: "TEXT", nullable: false),
-                    collection = table.Column<string>(type: "TEXT", nullable: false),
-                    quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    foilquantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    lastupdated = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    uuid = table.Column<string>(type: "text", nullable: false),
+                    collection = table.Column<string>(type: "text", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    foilquantity = table.Column<int>(type: "integer", nullable: false),
+                    timeadded = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,12 +30,17 @@ namespace HomeTG.API.Migrations
                 name: "collection",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "TEXT", nullable: false)
+                    id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_collection", x => x.id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cards_uuid_collection",
+                table: "cards",
+                columns: new[] { "uuid", "collection" });
         }
 
         /// <inheritdoc />

@@ -61,7 +61,7 @@ namespace HomeTG.API.Models.Contexts
             var matchingCards = _mtgdb.BulkSearchCards(items.Select(c => new StrictSearchOptions(c.CollectorNumber, c.Set)).ToList());
             var cardsToAdd = items.Where(c => matchingCards.ContainsKey((c.CollectorNumber, c.Set))).Select(
                 c => new CollectionCard(
-                    matchingCards[(c.CollectorNumber, c.Set)].Id, c.Quantity, c.FoilQuantity, collection, DateTime.UtcNow.Ticks
+                    matchingCards[(c.CollectorNumber, c.Set)].Id, c.Quantity, c.FoilQuantity, collection, DateTime.UtcNow
                 )
             ).GroupBy(c => c.Id).
             Select(l => new CollectionCard(

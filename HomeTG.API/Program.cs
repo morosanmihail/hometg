@@ -1,7 +1,7 @@
 using HomeTG.API.Models.Contexts;
 using HomeTG.API.Utils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using static HomeTG.API.Provider;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,19 +31,26 @@ builder.Services.AddDbContext<MTGDB>(
     )
 );
 
-if (builder.Configuration["DB_TECH"] == "postgres") {
-    builder.Services.AddDbContext<CollectionDB>(
-        options => options.UseNpgsql(
-            builder.Configuration.GetConnectionString("DefaultConnection")
-        )
-    );
-} else {
-    builder.Services.AddDbContext<CollectionDB>(
-        options => options.UseSqlite(
-            builder.Configuration.GetConnectionString("DefaultConnection")
-        )
-    );
-}
+builder.Services.AddDbContext<CollectionDB>(options =>
+{
+    var provider = builder.Configuration.GetValue("provider", Sqlite.Name);
+
+    if (provider == Postgres.Name)
+    {
+        options.UseNpgsql(
+               builder.Configuration.GetConnectionString("Postgres")!,
+               x => x.MigrationsAssembly("HomeTG.Postgres")
+        );
+    }
+
+    if (provider == Sqlite.Name)
+    {
+        options.UseSqlite(
+                builder.Configuration.GetConnectionString("Sqlite")!,
+               x => x.MigrationsAssembly("HomeTG.Sqlite")
+        );
+    }
+});
 
 var app = builder.Build();
 

@@ -9,9 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTG.Benchmarks", "HomeTG
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTG.API", "HomeTG.API\HomeTG.API.csproj", "{7C8DDB87-D8B4-4341-ABF8-E4E334E0E8C9}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C6DEBA07-9096-495C-AC28-DEA49B404B04}"
-EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "HomeTG.React", "HomeTG.React\HomeTG.React.esproj", "{3E3DD99C-D8F6-4E33-9C81-4CA1AA956CA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{1F5D2502-0712-426F-A440-3A859387652F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeTG.Sqlite", "Migrations\HomeTG.Sqlite\HomeTG.Sqlite.csproj", "{8777CC94-908E-4C9F-AB16-E048256A24D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeTG.Postgres", "Migrations\HomeTG.Postgres\HomeTG.Postgres.csproj", "{A5AF3AC4-7CE7-489A-9768-8ABF7E4DB379}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeTG.Models", "HomeTG.Models\HomeTG.Models.csproj", "{80DBECF4-B66D-4188-8D8D-14831A072024}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,19 +37,31 @@ Global
 		{7C8DDB87-D8B4-4341-ABF8-E4E334E0E8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C8DDB87-D8B4-4341-ABF8-E4E334E0E8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C8DDB87-D8B4-4341-ABF8-E4E334E0E8C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6DEBA07-9096-495C-AC28-DEA49B404B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6DEBA07-9096-495C-AC28-DEA49B404B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6DEBA07-9096-495C-AC28-DEA49B404B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6DEBA07-9096-495C-AC28-DEA49B404B04}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E3DD99C-D8F6-4E33-9C81-4CA1AA956CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E3DD99C-D8F6-4E33-9C81-4CA1AA956CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E3DD99C-D8F6-4E33-9C81-4CA1AA956CA3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{3E3DD99C-D8F6-4E33-9C81-4CA1AA956CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E3DD99C-D8F6-4E33-9C81-4CA1AA956CA3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E3DD99C-D8F6-4E33-9C81-4CA1AA956CA3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8777CC94-908E-4C9F-AB16-E048256A24D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8777CC94-908E-4C9F-AB16-E048256A24D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8777CC94-908E-4C9F-AB16-E048256A24D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8777CC94-908E-4C9F-AB16-E048256A24D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5AF3AC4-7CE7-489A-9768-8ABF7E4DB379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5AF3AC4-7CE7-489A-9768-8ABF7E4DB379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5AF3AC4-7CE7-489A-9768-8ABF7E4DB379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5AF3AC4-7CE7-489A-9768-8ABF7E4DB379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80DBECF4-B66D-4188-8D8D-14831A072024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80DBECF4-B66D-4188-8D8D-14831A072024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80DBECF4-B66D-4188-8D8D-14831A072024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80DBECF4-B66D-4188-8D8D-14831A072024}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8777CC94-908E-4C9F-AB16-E048256A24D8} = {1F5D2502-0712-426F-A440-3A859387652F}
+		{A5AF3AC4-7CE7-489A-9768-8ABF7E4DB379} = {1F5D2502-0712-426F-A440-3A859387652F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CB50DF5E-D8DC-4E48-82F1-0B71299BA547}

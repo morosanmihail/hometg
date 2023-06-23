@@ -3,27 +3,29 @@ using System;
 using HomeTG.API.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HomeTG.API.Migrations
+namespace HomeTG.Postgres.Migrations
 {
     [DbContext(typeof(CollectionDB))]
-    [Migration("20230621213039_InitialCreate")]
-    partial class InitialCreate
+    partial class CollectionDBModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.7");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "7.0.7")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("HomeTG.API.Models.Collection", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("id");
 
                     b.HasKey("Id");
@@ -34,26 +36,28 @@ namespace HomeTG.API.Migrations
             modelBuilder.Entity("HomeTG.API.Models.CollectionCard", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("uuid");
 
                     b.Property<string>("CollectionId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("collection");
 
                     b.Property<int>("FoilQuantity")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("foilquantity");
 
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("lastupdated");
-
                     b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("quantity");
 
+                    b.Property<DateTime?>("TimeAdded")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("timeadded");
+
                     b.HasKey("Id", "CollectionId");
+
+                    b.HasIndex("Id", "CollectionId");
 
                     b.ToTable("cards");
                 });

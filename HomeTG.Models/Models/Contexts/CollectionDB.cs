@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace HomeTG.API.Models.Contexts
 {
@@ -91,7 +90,7 @@ namespace HomeTG.API.Models.Contexts
                             CollectionId = collectionName,
                             Quantity = newCard.Quantity,
                             FoilQuantity = newCard.FoilQuantity,
-                            TimeAdded = DateTime.UtcNow.Ticks,
+                            TimeAdded = DateTime.UtcNow,
                         };
                         cardsToAdd[card.Id] = card;
                     }
@@ -99,27 +98,24 @@ namespace HomeTG.API.Models.Contexts
             }
             Cards.AddRange(cardsToAdd.Values);
 
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            SaveChanges();
-            watch.Stop();
-            Console.WriteLine("--- DIAGNOSTIC: SaveChanges: " + watch.ElapsedMilliseconds + " ms");
-
-            watch.Restart();
             foreach (var newCard in newCards)
             {
                 if (existingCards.ContainsKey(newCard.Id))
                 {
-                    Cards.Where(c => c.CollectionId == collectionName && c.Id == newCard.Id).
-                        ExecuteUpdate(c =>
-                            c.SetProperty(e => e.Quantity, e => e.Quantity + newCard.Quantity)
-                              .SetProperty(e => e.FoilQuantity, e => e.FoilQuantity+ newCard.FoilQuantity)
-                        );
+                    //Cards.Where(c => c.CollectionId == collectionName && c.Id == newCard.Id).
+                    //    ExecuteUpdate(c =>
+                    //        c.SetProperty(e => e.Quantity, e => e.Quantity + newCard.Quantity)
+                    //          .SetProperty(e => e.FoilQuantity, e => e.FoilQuantity+ newCard.FoilQuantity)
+                    //    );
                     existingCards[newCard.Id].Quantity += newCard.Quantity;
                     existingCards[newCard.Id].FoilQuantity += newCard.FoilQuantity;
                 }
             }
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            SaveChanges();
             watch.Stop();
-            Console.WriteLine("--- DIAGNOSTIC: ExecuteUpdates: " + watch.ElapsedMilliseconds + " ms");
+            Console.WriteLine("--- DIAGNOSTIC: SaveChanges: " + watch.ElapsedMilliseconds + " ms");
 
             foreach (var card in cardsToAdd.Values) {
                 existingCards[card.Id] = card;
