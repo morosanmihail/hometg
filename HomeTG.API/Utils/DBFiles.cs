@@ -5,20 +5,6 @@ namespace HomeTG.API.Utils
 {
     public static class DBFiles
     {
-        public static void CreateDBIfNotExists(string Filename)
-        {
-            var dir = Path.GetDirectoryName(Filename);
-            if (dir != null && !Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-            if (!System.IO.File.Exists(Filename))
-            {
-                using (var sqlite = new SqliteConnection(@"Data Source=" + Filename))
-                {
-                    sqlite.Open();
-                }
-            }
-        }
-
         public async static Task<bool> DownloadPrintingsDBIfNotExists(string DBURL, string Filename)
         {
             bool download = false;

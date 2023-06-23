@@ -10,6 +10,10 @@ services:
       - "5234:80"
     volumes:
       - /config/hometg:/usr/share/hometg
+    environment:
+      "ASPNETCORE_ENVIRONMENT": "linux"
+      # Optional way to overwrite database connection
+      # "ConnectionStrings:DefaultConnection": "Data Source=/usr/share/hometg/Collection.db"
     networks:
       - public
       - private
@@ -28,7 +32,7 @@ services:
     networks:
       - public
     restart: unless-stopped
-    
+
 networks:
   public:
   private:

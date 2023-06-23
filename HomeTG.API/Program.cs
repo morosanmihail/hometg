@@ -1,28 +1,23 @@
 using HomeTG.API.Models.Contexts;
 using HomeTG.API.Utils;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.AddJsonFile("appsettings.json").
+    AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true);
 
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var DBPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-        "hometg",
-        "DB/Collection.db"
-    );
 var MtGDBPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
         "hometg",
         "DB/AllPrintings.db"
     );
-
-DBFiles.CreateDBIfNotExists(DBPath);
 
 await DBFiles.DownloadPrintingsDBIfNotExists(
     @"https://mtgjson.com/api/v5/AllPrintings.sqlite",
@@ -34,14 +29,14 @@ builder.Services.AddDbContext<MTGDB>(
         "Data Source=" + MtGDBPath + ";Mode=ReadOnly"
     )
 );
+
 builder.Services.AddDbContext<CollectionDB>(
     options => options.UseSqlite(
-        "Data Source=" + DBPath
+        builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
 var app = builder.Build();
-
 
 using (var scope = app.Services.CreateScope())
 {
@@ -50,12 +45,8 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-// }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
