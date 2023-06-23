@@ -53,8 +53,11 @@ services:
     networks:
       - private
     volumes:
-      - ./db-data/:/var/lib/postgresql/data/
+      - postgres-data:/var/lib/postgresql/data/
 
 networks:
   public:
   private:
+
+volumes:
+  postgres-data:
