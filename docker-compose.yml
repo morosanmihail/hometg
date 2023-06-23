@@ -12,11 +12,16 @@ services:
       - /config/hometg:/usr/share/hometg
     environment:
       "ASPNETCORE_ENVIRONMENT": "linux"
-      # Optional way to overwrite database connection
+      # Optional way to overwrite database connection.
       # "ConnectionStrings:DefaultConnection": "Data Source=/usr/share/hometg/Collection.db"
+      # "DB_TECH": "sqlite"
+      "ConnectionStrings__DefaultConnection": "Host=database;Username=hometg;Password=supersecretpassword;Database=hometg_db"
+      "DB_TECH": "postgres"
     networks:
       - public
       - private
+    depends_on:
+      - database
     restart: always
 
   hometg-react:
@@ -31,7 +36,24 @@ services:
       - "5235:3000"
     networks:
       - public
+    depends_on:
+      - hometg
     restart: unless-stopped
+
+  # Remove this section if you want to use Sqlite instead.
+  # Word of warning: Sqlite is much slower when it comes to manipulating the DB.
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: hometg
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: hometg_db
+    networks:
+      - private
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
 
 networks:
   public:

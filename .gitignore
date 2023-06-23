@@ -356,3 +356,4 @@ MigrationBackup/
 /reactapp/.env.development.local
 
 .vscode/
+db-data/

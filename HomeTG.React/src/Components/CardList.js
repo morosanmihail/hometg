@@ -51,7 +51,7 @@ export default function CardList({ offset, collections }) {
             setCards(newCards);
         } else {
             if (offset === 0) {
-                setCards([newCard, ...cards]);
+                setCards([newCard, ...cards.slice(0, pageSize - 1)]);
             } else {
                 setRefresh(true)
             }

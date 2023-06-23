@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json").
     AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true);
+builder.Configuration.AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -30,11 +31,19 @@ builder.Services.AddDbContext<MTGDB>(
     )
 );
 
-builder.Services.AddDbContext<CollectionDB>(
-    options => options.UseSqlite(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    )
-);
+if (builder.Configuration["DB_TECH"] == "postgres") {
+    builder.Services.AddDbContext<CollectionDB>(
+        options => options.UseNpgsql(
+            builder.Configuration.GetConnectionString("DefaultConnection")
+        )
+    );
+} else {
+    builder.Services.AddDbContext<CollectionDB>(
+        options => options.UseSqlite(
+            builder.Configuration.GetConnectionString("DefaultConnection")
+        )
+    );
+}
 
 var app = builder.Build();
 

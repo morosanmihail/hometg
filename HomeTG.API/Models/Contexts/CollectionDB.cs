@@ -64,7 +64,7 @@ namespace HomeTG.API.Models.Contexts
         {
             return Cards.Where(
                 c => c.CollectionId.ToLower() == collection.ToLower()
-            ).OrderByDescending(c => c.LastUpdated).Skip(offset).Take(pagesize);
+            ).OrderByDescending(c => c.TimeAdded).Skip(offset).Take(pagesize);
         }
 
         // TODO: mix Add/Remove cards together maybe? One clean function?
@@ -91,7 +91,7 @@ namespace HomeTG.API.Models.Contexts
                             CollectionId = collectionName,
                             Quantity = newCard.Quantity,
                             FoilQuantity = newCard.FoilQuantity,
-                            LastUpdated = DateTime.Now,
+                            TimeAdded = DateTime.UtcNow.Ticks,
                         };
                         cardsToAdd[card.Id] = card;
                     }

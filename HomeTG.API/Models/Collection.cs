@@ -23,16 +23,16 @@ namespace HomeTG.API.Models
         [Column("collection")]
         public string CollectionId { get; set; }
 
-        [Column("lastupdated")]
-        public DateTime? LastUpdated { get; set; }
+        [Column("timeadded")]
+        public long? TimeAdded { get; set; }
 
-        public CollectionCard(string id, int quantity, int foilQuantity, string collection, DateTime? lastUpdated)
+        public CollectionCard(string id, int quantity, int foilQuantity, string collection, long? timeAdded)
         {
             Id = id;
             Quantity = quantity;
             FoilQuantity = foilQuantity;
             CollectionId = collection;
-            LastUpdated = lastUpdated;
+            TimeAdded = timeAdded;
         }
 
         public CollectionCard()
