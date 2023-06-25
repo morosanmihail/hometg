@@ -33,10 +33,13 @@ namespace HomeTG.API.Models.Contexts
             {
                 return null;
             }
+            var cardsInCollection = Cards.Where(c => c.CollectionId.ToLower() == from.Id.ToLower()).ToList();
             var to = keepCardsInCollection != "" ? GetCollection(keepCardsInCollection) : null;
             if (to != null)
             {
-                MoveCardsToCollection(keepCardsInCollection, Cards.Where(c => c.CollectionId.ToLower() == from.Id.ToLower()).ToList());
+                MoveCardsToCollection(keepCardsInCollection, cardsInCollection);
+            } else {
+                RemoveCardsEntirely(cardsInCollection);
             }
             Collection.Remove(from);
             SaveChanges();

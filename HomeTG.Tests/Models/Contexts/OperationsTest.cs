@@ -90,7 +90,7 @@ namespace HomeTG.API.Models.Contexts.Tests
         [Test]
         public void GetCardsByIDTest()
         {
-            var results = ops.GetCardsByID("1");
+            var results = ops.GetCardsByID(new List<string>{"1"});
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(2));
             Assert.That(results.First().MtGCard, Is.EqualTo(cards["1"]));

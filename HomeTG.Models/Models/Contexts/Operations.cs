@@ -42,12 +42,12 @@ namespace HomeTG.API.Models.Contexts
             return null;
         }
 
-        public IEnumerable<CollectionCardWithDetails> GetCardsByID(string id)
+        public IEnumerable<CollectionCardWithDetails> GetCardsByID(List<string> ids)
         {
-            var cards = _db.GetCards(new List<string> { id })[id];
-            var cardDetails = _mtgdb.GetCards(new List<string> { id })[id];
-            return cards.Select(
-                c => new CollectionCardWithDetails(cardDetails, c)
+            var cards = _db.GetCards(ids);
+            var cardDetails = _mtgdb.GetCards(ids);
+            return cards.SelectMany(p => p.Value).Select(
+                c => new CollectionCardWithDetails(cardDetails[c.Id], c)
             );
         }
 
