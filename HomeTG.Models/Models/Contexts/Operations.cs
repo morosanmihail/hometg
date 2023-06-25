@@ -7,7 +7,6 @@ namespace HomeTG.API.Models.Contexts
         private CollectionDB _db;
         private MTGDB _mtgdb;
 
-        const int PAGE_SIZE = 12;
         public Operations(CollectionDB db, MTGDB mtgdb)
         {
             _db = db;
@@ -77,11 +76,27 @@ namespace HomeTG.API.Models.Contexts
             return cardsToAdd;
         }
 
-        public IEnumerable<CollectionCardWithDetails> ListCards(string collection, int offset = 0)
+        public IEnumerable<CollectionCardWithDetails> ListCards(string collection, int pageSize = 12, int offset = 0)
         {
-            var collectionCards = _db.ListCards(collection, offset, PAGE_SIZE);
+            var collectionCards = _db.ListCards(collection, offset, pageSize);
             var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).
                 Join(collectionCards, c => c.Value.Id, c => c.Id, (a, b) => new CollectionCardWithDetails(a.Value, b));
+            return cards;
+        }
+
+        public IEnumerable<CSVItem> ExportCollection(string collection)
+        {
+            var collectionCards = _db.Cards.Where(
+                c => c.CollectionId.ToLower() == collection.ToLower()
+            ).OrderByDescending(c => c.TimeAdded);
+            var cards = _mtgdb.GetCards(collectionCards.Select(c => c.Id).ToList()).
+                Join(collectionCards, c => c.Value.Id, c => c.Id, (a, b) => new CSVItem{
+                    CollectorNumber = a.Value.CollectorNumber,
+                    Set = a.Value.SetCode,
+                    Quantity = b.Quantity,
+                    FoilQuantity = b.FoilQuantity,
+                    Acquired = (b.TimeAdded != null) ? b.TimeAdded.ToString() : "",
+                });
             return cards;
         }
     }

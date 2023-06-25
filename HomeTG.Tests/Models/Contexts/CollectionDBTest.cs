@@ -37,6 +37,10 @@ namespace HomeTG.API.Models.Contexts.Tests
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(2));
 
+            results = dbContext.ListCards("Main", 0, 1);
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+
             results = dbContext.ListCards("Incoming", 0);
             Assert.NotNull(results);
             Assert.That(results.Count(), Is.EqualTo(1));

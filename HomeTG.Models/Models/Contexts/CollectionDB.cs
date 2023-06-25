@@ -62,14 +62,13 @@ namespace HomeTG.API.Models.Contexts
                 ToDictionary(c => c.Id, c => c);
         }
 
-        public IEnumerable<CollectionCard> ListCards(string collection, int offset, int pagesize = 12)
+        public IEnumerable<CollectionCard> ListCards(string collection, int offset, int pageSize = 12)
         {
             return Cards.Where(
                 c => c.CollectionId.ToLower() == collection.ToLower()
-            ).OrderByDescending(c => c.TimeAdded).Skip(offset).Take(pagesize);
+            ).OrderByDescending(c => c.TimeAdded).Skip(offset).Take(pageSize);
         }
 
-        // TODO: mix Add/Remove cards together maybe? One clean function?
         public List<CollectionCard> AddCards(string collectionName, List<CollectionCard> newCards)
         {
             var collection = GetOrCreateCollection(collectionName);
