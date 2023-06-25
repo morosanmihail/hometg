@@ -43,6 +43,22 @@ namespace HomeTG.API.Models.Contexts
 
             return allKeys;
         }
+
+        public static string ExportToCSV(List<CSVItem> cards)
+        {
+            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
+            {
+                HasHeaderRecord = true
+            };
+            var memoryStream = new MemoryStream();
+            using (var writer = new StreamWriter("export.csv"))
+            using (var csv = new CsvWriter(writer, csvConfig))
+            {
+                csv.WriteRecords(cards);
+                // writer.Flush();
+            }
+            return "export.csv";
+        }
     }
 
     public struct CSVItem

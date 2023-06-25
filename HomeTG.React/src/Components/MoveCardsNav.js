@@ -1,4 +1,4 @@
-﻿import React, { Fragment, useState, useContext } from 'react';
+﻿import React, { ChangeEvent, Fragment, useState, useContext } from 'react';
 import { confirm } from "./ConfirmCollectionDelete";
 import { useNavigate } from "react-router-dom";
 import { OperationsContext } from '../OperationsContext';
@@ -8,8 +8,34 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
     const navigate = useNavigate();
     const collection = useContext(CollectionContext);
     const [destinationCollection, setDestinationCollection] = useState(collection);
+    const [file, setFile] = useState();
 
     const ops = useContext(OperationsContext);
+
+    const handleFileChange = (e) => {
+        if (e.target.files) {
+          setFile(e.target.files[0]);
+        }
+    };
+
+    const handleUploadClick = () => {
+        if (!file) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        ops.fetch("Importing into " + collection, [], '/collection/cards/' + collection + '/import', {
+            method: "post",
+            headers: {
+                'Content-Type': file.type,
+                'Content-Length': `${file.size}`,
+            },
+            body: formData,
+            // body: file,
+        }).then(data => {});
+    }
 
     const deleteCards = () => {
         confirm({ confirmType: "cards", selectedCount: selected.length }).then(
@@ -87,6 +113,16 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                                 <option key={"cardlistcol-" + c.id} dropdown={c.id} value={c.id}>{c.id}</option>
                             )}
                         </select>
+                    </div>
+                    <div className="col-auto">
+                        <input type="file" onChange={handleFileChange} />
+                        <div>{file && `${file.name} - ${file.type}`}</div>
+                        <button type="button" className="btn btn-info" onClick={handleUploadClick}>Import</button>
+                    </div>
+                    <div className="col-auto">
+                        <a href={'/collection/export/' + collection}>
+                            <button type="button" className="btn btn-info">Export</button>
+                        </a>
                     </div>
                     <div className="col-auto">
                         <button onClick={deleteCollection} type="button" className="btn btn-danger">🗑️ collection</button>

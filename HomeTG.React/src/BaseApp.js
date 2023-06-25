@@ -6,7 +6,7 @@ import uuid from 'react-native-uuid';
 import { CollectionContext } from './Components/CollectionContext';
 import { OperationsContext } from './OperationsContext';
 
-export default function BaseApp() {
+export default function BaseApp({ showSearch = false }) {
     const { collection = "Main", offset = 0 } = useParams();
     const [collections, setCollections] = useState([]);
     const [collectionsLoading, setCollectionsLoading] = useState(true);
@@ -63,7 +63,7 @@ export default function BaseApp() {
                     </nav>
                 </header>
                 <main>
-                    <CardList collections={collections} offset={offset} />
+                    <CardList collections={collections} offset={offset} showSearch={showSearch} />
                 </main>
             </CollectionContext.Provider>
         </OperationsContext.Provider>

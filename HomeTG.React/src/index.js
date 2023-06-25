@@ -10,8 +10,9 @@ root.render(
     <BrowserRouter>
         <Routes>
             <Route exact path="/" element={<BaseApp />} />
-            <Route path="/:collection" element={<BaseApp />} />
-            <Route path="/:collection/:offset" element={<BaseApp />} />
+            <Route path="/search" element={<BaseApp showSearch={true} />} />
+            <Route path="/c/:collection" element={<BaseApp />} />
+            <Route path="/c/:collection/:offset" element={<BaseApp />} />
         </Routes>
     </BrowserRouter>
 );

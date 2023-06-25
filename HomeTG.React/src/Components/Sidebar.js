@@ -9,7 +9,7 @@ export default function Sidebar({ collections, setCollections, loading }) {
     const renderCollections = (collections) => {
         return (
             collections.map(c =>
-                <Link to={"/" + c.id} key={c.id} className={"nav-link" + (c.id === collection ? " active" : "")}>
+                <Link to={"/c/" + c.id} key={c.id} className={"nav-link" + (c.id === collection ? " active" : "")}>
                     {c.id}
                 </Link>
             )

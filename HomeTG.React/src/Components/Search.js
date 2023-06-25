@@ -1,18 +1,25 @@
-import React, { useState, useContext } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from 'react';
+import { useSearchParams  } from "react-router-dom";
 import Card from './Card';
 import { OperationsContext } from '../OperationsContext';
-import { CollectionContext } from './CollectionContext';
 
-function Search({ onAdd }) {
+function Search({ dedicatedPage = false, onAdd }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [searchOptions, setSearchOptions] = useState({});
     const [offset, setOffset] = useState(0);
+    const [shouldSearch, setShouldSearch] = useState(dedicatedPage);
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchOptions, setSearchOptions] = useState({
+        "name": searchParams.get("name") != null ? searchParams.get("name") : "",
+        "setCode": searchParams.get("setCode") != null ? searchParams.get("setCode") : "",
+        "artist": searchParams.get("artist") != null ? searchParams.get("artist") : "",
+        "collectorNumber": searchParams.get("collectorNumber") != null ? searchParams.get("collectorNumber") : "",
+        "text": searchParams.get("text") != null ? searchParams.get("text") : "",
+    });
 
     let pageSize = 24;
 
-    const collection = useContext(CollectionContext);
     const ops = useContext(OperationsContext);
 
     const renderCards = (cards) => {
@@ -25,11 +32,16 @@ function Search({ onAdd }) {
         );
     }
 
-    const populateSearch = (event, newOffset = 0) => {
-        setLoading(true);
-        setOffset(newOffset);
+    useEffect(() => {
+        if(shouldSearch) {
+            populateSearch(offset);
+        }
+    }, [offset, shouldSearch])
 
-        ops.fetch("Searching the MtG database", [], '/mtg/cards/search?pageSize=' + pageSize + '&offset=' + newOffset, {
+    const populateSearch = () => {
+        setLoading(true);
+
+        ops.fetch("Searching the MtG database", [], '/mtg/cards/search?pageSize=' + pageSize + '&offset=' + offset, {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -39,13 +51,20 @@ function Search({ onAdd }) {
         }).then(data => {
             setCards(data);
             setLoading(false);
+            setShouldSearch(false);
         })
+    }
+
+    const triggerSearch = (e, newOffset) => {
+        setShouldSearch(true);
+        setOffset(newOffset);
     }
 
     const handleSearchInput = (event, field) => {
         let newState = Object.assign({}, searchOptions);
         newState[field] = event.target.value;
         setSearchOptions(newState);
+        setSearchParams(newState);
     }
 
     let contents = loading
@@ -54,22 +73,22 @@ function Search({ onAdd }) {
 
     return (
         <React.Fragment>
-            <div className="collapse" id="search">
+            <div className={"collapse" + (dedicatedPage === true ? " show" : "")} id="search">
                 <h2>Search</h2>
                 <div className="list-group list-group-flush mx-3 mt-4">
                     <div className="input-group mb-3">
-                        <input onChange={event => handleSearchInput(event, "name")} type="text" className="form-control" id="search-bar-name" placeholder="Name" aria-describedby="button-addon2" />
-                        <input onChange={event => handleSearchInput(event, "setCode")} type="text" className="form-control" id="search-bar-set" placeholder="Set" aria-describedby="button-addon2" />
+                        <input onChange={event => handleSearchInput(event, "name")} type="text" className="form-control" id="search-bar-name" placeholder="Name" value={searchOptions["name"]} />
+                        <input onChange={event => handleSearchInput(event, "setCode")} type="text" className="form-control" id="search-bar-set" placeholder="Set" value={searchOptions["setCode"]} />
                     </div>
                     <div className="input-group mb-3">
-                        <input onChange={event => handleSearchInput(event, "artist")} type="text" className="form-control" id="search-bar-artist" placeholder="Artist" aria-describedby="button-addon2" />
-                        <input onChange={event => handleSearchInput(event, "collectorNumber")} type="text" className="form-control" id="search-bar-collector-number" placeholder="Collector Number" aria-describedby="button-addon2" />
+                        <input onChange={event => handleSearchInput(event, "artist")} type="text" className="form-control" id="search-bar-artist" placeholder="Artist" value={searchOptions["artist"]} />
+                        <input onChange={event => handleSearchInput(event, "collectorNumber")} type="text" className="form-control" id="search-bar-collector-number" placeholder="Collector Number" value={searchOptions["collectorNumber"]} />
                     </div>
                     <div className="input-group mb-3">
-                        <input onChange={event => handleSearchInput(event, "text")} type="text" className="form-control" id="search-bar-text" placeholder="Text" aria-describedby="button-addon2" />
+                        <input onChange={event => handleSearchInput(event, "text")} type="text" className="form-control" id="search-bar-text" placeholder="Text" value={searchOptions["text"]} />
                     </div>
                     <div className="input-group mb-3">
-                        <button onClick={populateSearch} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                        <button onClick={event => setShouldSearch(true)} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
                     </div>
                     <div className="search-results" id="search-results">
                         {contents}
@@ -80,7 +99,7 @@ function Search({ onAdd }) {
                     <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
                         {
                             parseInt(offset) > 0 ?
-                            <button onClick={e => populateSearch(e, parseInt(offset) - pageSize)} className="page-link">Previous</button>
+                            <button onClick={e => triggerSearch(e, parseInt(offset) - pageSize)} className="page-link">Previous</button>
                         : <button className="page-link">Previous</button>}
                     </li>
                     <li className="page-item disabled">
@@ -89,7 +108,7 @@ function Search({ onAdd }) {
                     <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
                         {
                             cards.length >= pageSize ?
-                            <button onClick={e => populateSearch(e, parseInt(offset) + pageSize)}  className="page-link">Next</button>
+                            <button onClick={e => triggerSearch(e, parseInt(offset) + pageSize)}  className="page-link">Next</button>
                         : <button className="page-link">Next</button>}
                     </li>
                 </ul>

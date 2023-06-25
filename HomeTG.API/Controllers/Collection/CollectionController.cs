@@ -82,7 +82,7 @@ namespace HomeTG.API.Controllers.Collection
         }
 
         [HttpPost("cards/{collection}/import")]
-        public async Task<IEnumerable<CollectionCard>> UploadCardsList(string collection, IFormFile file, Dictionary<string, string>? customMapping = null)
+        public async Task<IActionResult> UploadCardsList(string collection, [FromForm] IFormFile file)
         {
             // TODO: use long running tasks
             //var task = CreateTask("test", 10);
@@ -98,10 +98,21 @@ namespace HomeTG.API.Controllers.Collection
                 }
             }
 
-            var items = CSVOperations.ImportFromCSV(filePath, customMapping);
+            var items = CSVOperations.ImportFromCSV(filePath, null);
             System.IO.File.Delete(filePath);
 
-            return _ops.BulkAddCards(collection, items);
+            _ops.BulkAddCards(collection, items);
+            return Ok();
+        }
+
+        [HttpGet("export/{collection}")]
+        public FileContentResult ExportCollection(string collection) {
+            var filename = CSVOperations.ExportToCSV(_ops.ExportCollection(collection).ToList());
+            byte[] fileData = System.IO.File.ReadAllBytes(filename);
+            return new FileContentResult(fileData, "text/csv")
+            {
+                FileDownloadName = filename
+            };
         }
 
         [HttpGet("cards/{collection}/count")]

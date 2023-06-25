@@ -7,7 +7,7 @@ import { CardCacheProvider } from './CardCacheContext';
 import { CollectionContext } from './CollectionContext';
 import { OperationsContext } from '../OperationsContext';
 
-export default function CardList({ offset, collections }) {
+export default function CardList({ offset, collections, showSearch=false }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
@@ -60,7 +60,7 @@ export default function CardList({ offset, collections }) {
 
     return (
         <CardCacheProvider>
-            <Search onAdd={onAdd} />
+            <Search onAdd={onAdd} dedicatedPage={showSearch} />
             <MoveCardsNav
                 collections={collections}
                 selected={selected} setSelected={setSelected} setRefresh={setRefresh} />
@@ -80,7 +80,7 @@ export default function CardList({ offset, collections }) {
                     <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
                         {
                             parseInt(offset) > 0 ?
-                        <Link to={"/" + collection + "/" + (parseInt(offset) - pageSize)}>
+                        <Link to={"/c/" + collection + "/" + (parseInt(offset) - pageSize)}>
                             <button className="page-link">Previous</button>
                         </Link>
                         : <button className="page-link">Previous</button>}
@@ -91,7 +91,7 @@ export default function CardList({ offset, collections }) {
                     <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
                         {
                             cards.length >= pageSize ?
-                        <Link to={"/" + collection + "/" + (parseInt(offset) + pageSize)}>
+                        <Link to={"/c/" + collection + "/" + (parseInt(offset) + pageSize)}>
                             <button className="page-link">Next</button>
                         </Link>
                         : <button className="page-link">Next</button>}
