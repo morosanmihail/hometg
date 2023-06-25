@@ -19,7 +19,7 @@ namespace HomeTG.API.Models.Contexts
 
             if (searchOptions.SetCode != null && searchOptions.SetCode.Length > 0)
             {
-                cards = cards.Where(c => c.SetCode.ToLower().Equals(searchOptions.SetCode));
+                cards = cards.Where(c => c.SetCode.ToLower().Contains(searchOptions.SetCode));
             }
 
             if (searchOptions.CollectorNumber != null && searchOptions.CollectorNumber.Length > 0)

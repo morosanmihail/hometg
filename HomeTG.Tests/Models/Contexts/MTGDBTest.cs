@@ -11,7 +11,7 @@ namespace HomeTG.API.Models.Contexts.Tests
         {
             new Card("1", "TEST NAME", "SET", "123", "R", "Artist 1", "B,G", "Win the game."),
             new Card("2", "TESTS MANE", "SET", "124", "C", "Artist 2", "U", "Lose the game."),
-            new Card("3", "TESTS MANE", "SET2", "124", "C", "Artist 2", "U", "Lose the game."),
+            new Card("3", "TESTS MANE", "SET2", "123", "C", "Artist 2", "U", "Lose the game."),
             new Card("4", "Some Card", "BET", "12", "C", "Artist 3", "U", "2/2."),
             new Card("5", "Storm Crow", "ALL", "36a", "C", "Sandra Everingham", "U", "Lose the game.")
         };
@@ -44,8 +44,13 @@ namespace HomeTG.API.Models.Contexts.Tests
 
             results = dbContext.SearchCards(new SearchOptions { SetCode = "SET" });
             Assert.NotNull(results);
-            Assert.That(results.Count(), Is.EqualTo(2));
-            Assert.That(results.First().SetCode, Is.EqualTo("SET"));
+            Assert.That(results.Count(), Is.EqualTo(3));
+            Assert.That(results.Select(c => c.SetCode).ToList(), Is.EquivalentTo(new List<string>{"SET", "SET", "SET2"}));
+
+            results = dbContext.SearchCards(new SearchOptions { SetCode = "SET2" });
+            Assert.NotNull(results);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.First().SetCode, Is.EqualTo("SET2"));
 
             results = dbContext.SearchCards(new SearchOptions { CollectorNumber = "124" });
             Assert.NotNull(results);
