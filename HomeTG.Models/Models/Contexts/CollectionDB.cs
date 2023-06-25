@@ -94,28 +94,14 @@ namespace HomeTG.API.Models.Contexts
                         };
                         cardsToAdd[card.Id] = card;
                     }
-                }
-            }
-            Cards.AddRange(cardsToAdd.Values);
-
-            foreach (var newCard in newCards)
-            {
-                if (existingCards.ContainsKey(newCard.Id))
-                {
-                    //Cards.Where(c => c.CollectionId == collectionName && c.Id == newCard.Id).
-                    //    ExecuteUpdate(c =>
-                    //        c.SetProperty(e => e.Quantity, e => e.Quantity + newCard.Quantity)
-                    //          .SetProperty(e => e.FoilQuantity, e => e.FoilQuantity+ newCard.FoilQuantity)
-                    //    );
+                } else {
                     existingCards[newCard.Id].Quantity += newCard.Quantity;
                     existingCards[newCard.Id].FoilQuantity += newCard.FoilQuantity;
                 }
             }
+            Cards.AddRange(cardsToAdd.Values);
 
-            var watch = System.Diagnostics.Stopwatch.StartNew();
             SaveChanges();
-            watch.Stop();
-            Console.WriteLine("--- DIAGNOSTIC: SaveChanges: " + watch.ElapsedMilliseconds + " ms");
 
             foreach (var card in cardsToAdd.Values) {
                 existingCards[card.Id] = card;
@@ -126,7 +112,6 @@ namespace HomeTG.API.Models.Contexts
 
         public CollectionCard? RemoveCard(CollectionCard card)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
             var existingCard = Cards.Find(card.Id, card.CollectionId);
             if (existingCard != null)
             {
@@ -139,8 +124,6 @@ namespace HomeTG.API.Models.Contexts
                 }
                 SaveChanges();
             }
-            watch.Stop();
-            Console.WriteLine("--- DIAGNOSTIC: RemoveCard: " + watch.ElapsedMilliseconds + " ms");
             return existingCard;
         }
 

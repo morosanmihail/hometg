@@ -1,10 +1,11 @@
 ﻿using HomeTG.API.Models.Contexts.Options;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeTG.API.Models.Contexts
 {
     public static class Search
     {
-        public static IEnumerable<Card> SearchCards(IQueryable<Card> cards, SearchOptions searchOptions)
+        public static IEnumerable<Card> SearchCards(IQueryable<Card> cards, SearchOptions searchOptions, int pageSize, int offset)
         {
             searchOptions.Name = searchOptions.Name?.ToLower();
             searchOptions.SetCode = searchOptions.SetCode?.ToLower();
@@ -41,7 +42,23 @@ namespace HomeTG.API.Models.Contexts
                 cards = cards.Where(c => c.Text!.ToLower().Contains(searchOptions.Text));
             }
 
-            return cards;
+            return cards.Skip(offset).Take(pageSize);
+        }
+
+        public static Dictionary<(string, string), Card> BulkSearchCards(IEnumerable<Card> cards, List<StrictSearchOptions> searchOptions, int pageSize, int offset) {
+            var itemsList = new List<(string, string)> { };
+            for (int i = 0; i < searchOptions.Count; i++)
+            {
+                itemsList.Add((searchOptions[i].CollectorNumber, searchOptions[i].SetCode));
+            }
+
+            var matchingCardsTest = cards.
+                Where(c => itemsList.Any(t => c.CollectorNumber == t.Item1 && c.SetCode == t.Item2)).
+                Skip(offset).Take(pageSize).
+                GroupBy(c => (c.CollectorNumber, c.SetCode)).
+                ToDictionary(c => c.Key, c => c.First());
+
+            return matchingCardsTest;
         }
     }
 }

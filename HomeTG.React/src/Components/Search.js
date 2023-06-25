@@ -1,12 +1,18 @@
 import React, { useState, useContext } from 'react';
+import { Link } from "react-router-dom";
 import Card from './Card';
 import { OperationsContext } from '../OperationsContext';
+import { CollectionContext } from './CollectionContext';
 
 function Search({ onAdd }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchOptions, setSearchOptions] = useState({});
+    const [offset, setOffset] = useState(0);
 
+    let pageSize = 24;
+
+    const collection = useContext(CollectionContext);
     const ops = useContext(OperationsContext);
 
     const renderCards = (cards) => {
@@ -19,9 +25,11 @@ function Search({ onAdd }) {
         );
     }
 
-    const populateSearch = () => {
+    const populateSearch = (event, newOffset = 0) => {
         setLoading(true);
-        ops.fetch("Searching the MtG database", [], '/mtg/cards/search', {
+        setOffset(newOffset);
+
+        ops.fetch("Searching the MtG database", [], '/mtg/cards/search?pageSize=' + pageSize + '&offset=' + newOffset, {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -66,6 +74,27 @@ function Search({ onAdd }) {
                     <div className="search-results" id="search-results">
                         {contents}
                     </div>
+                        { cards.length > 0 ?
+                    <nav aria-label="Page navigation">
+                <ul className="pagination center">
+                    <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
+                        {
+                            parseInt(offset) > 0 ?
+                            <button onClick={e => populateSearch(e, parseInt(offset) - pageSize)} className="page-link">Previous</button>
+                        : <button className="page-link">Previous</button>}
+                    </li>
+                    <li className="page-item disabled">
+                        <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
+                    </li>
+                    <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
+                        {
+                            cards.length >= pageSize ?
+                            <button onClick={e => populateSearch(e, parseInt(offset) + pageSize)}  className="page-link">Next</button>
+                        : <button className="page-link">Next</button>}
+                    </li>
+                </ul>
+            </nav>
+            : null }
                 </div>
                 <hr />
             </div>

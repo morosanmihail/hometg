@@ -78,17 +78,23 @@ export default function CardList({ offset, collections }) {
             <nav aria-label="Page navigation">
                 <ul className="pagination center">
                     <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
+                        {
+                            parseInt(offset) > 0 ?
                         <Link to={"/" + collection + "/" + (parseInt(offset) - pageSize)}>
                             <button className="page-link">Previous</button>
                         </Link>
+                        : <button className="page-link">Previous</button>}
                     </li>
                     <li className="page-item disabled">
                         <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
                     </li>
                     <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
+                        {
+                            cards.length >= pageSize ?
                         <Link to={"/" + collection + "/" + (parseInt(offset) + pageSize)}>
                             <button className="page-link">Next</button>
                         </Link>
+                        : <button className="page-link">Next</button>}
                     </li>
                 </ul>
             </nav>

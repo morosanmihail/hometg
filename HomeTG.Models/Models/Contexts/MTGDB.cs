@@ -11,25 +11,22 @@ namespace HomeTG.API.Models.Contexts
         public MTGDB(DbContextOptions<MTGDB> options) : base(options)
         { }
 
-        public IEnumerable<Card> SearchCards(SearchOptions searchOptions)
+        public IEnumerable<Card> SearchCards(SearchOptions searchOptions, int pageSize = 24, int offset = 0)
         {
-            return Search.SearchCards(Cards.Include(x => x.CardIdentifiers).Select(x => x), searchOptions);
+            return Search.SearchCards(
+                Cards.Include(x => x.CardIdentifiers).Select(x => x),
+                searchOptions,
+                pageSize, offset
+            );
         }
 
-        public Dictionary<(string, string), Card> BulkSearchCards(List<StrictSearchOptions> searchOptions)
+        public Dictionary<(string, string), Card> BulkSearchCards(List<StrictSearchOptions> searchOptions, int pageSize = 24, int offset = 0)
         {
-            var itemsList = new List<(string, string)> { };
-            for (int i = 0; i < searchOptions.Count; i++)
-            {
-                itemsList.Add((searchOptions[i].CollectorNumber, searchOptions[i].SetCode));
-            }
-
-            var matchingCardsTest = Cards.Include(x => x.CardIdentifiers).AsEnumerable().
-                Where(c => itemsList.Any(t => c.CollectorNumber == t.Item1 && c.SetCode == t.Item2)).
-                GroupBy(c => (c.CollectorNumber, c.SetCode)).
-                ToDictionary(c => c.Key, c => c.First());
-
-            return matchingCardsTest;
+            return Search.BulkSearchCards(
+                Cards.Include(x => x.CardIdentifiers).Select(x => x).AsEnumerable(),
+                searchOptions,
+                pageSize, offset
+            );
         }
 
         public Dictionary<string, Card> GetCards(List<string> ids)

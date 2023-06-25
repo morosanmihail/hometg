@@ -17,9 +17,9 @@ namespace HomeTG.API.Controllers.MtG
         }
 
         [HttpPost("cards/search")]
-        public IEnumerable<Card> SearchCards(SearchOptions options)
+        public IEnumerable<Card> SearchCards(SearchOptions options, int pageSize = 24, int offset = 0)
         {
-            return _db.SearchCards(options);
+            return _db.SearchCards(options, pageSize, offset);
         }
 
         [HttpGet("cards")]
