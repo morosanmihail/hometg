@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
 import AddCollectionForm from './AddCollectionForm';
-import { CollectionContext } from './CollectionContext';
+import { useCollection, useCollections } from './CollectionContext';
 
-export default function Sidebar({ collections, setCollections, loading }) {
-    const collection = useContext(CollectionContext);
+export default function Sidebar() {
+    const collection = useCollection();
+    const collections = useCollections();
 
-    const renderCollections = (collections) => {
+    const renderCollections = () => {
         return (
             collections.map(c =>
                 <Link to={"/c/" + c.id} key={c.id} className={"nav-link" + (c.id === collection ? " active" : "")}>
@@ -15,16 +16,6 @@ export default function Sidebar({ collections, setCollections, loading }) {
             )
         );
     }
-
-    const addCollection = (newCollection) => {
-        setCollections(
-            [...collections, newCollection]
-        );
-    }
-
-    let contents = loading
-        ? <p>Loading...</p>
-        : renderCollections(collections);
 
     return (
         <header>
@@ -35,9 +26,11 @@ export default function Sidebar({ collections, setCollections, loading }) {
                     </div>
                     <hr/>
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
-                        {contents}
+                        <React.Fragment>
+                            {renderCollections(collections)}
+                        </React.Fragment>
                         <hr/>
-                        <AddCollectionForm onAdd={addCollection} />
+                        <AddCollectionForm />
                     </div>
                 </div>
             </nav>

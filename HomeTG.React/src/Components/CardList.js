@@ -1,19 +1,21 @@
-﻿import React, { useState, useEffect, useContext } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import { Link } from "react-router-dom";
 import Search from "./Search";
-import MoveCardsNav from "./MoveCardsNav";
+import CardListNav from "./CardListNav";
 import { CardCacheProvider } from './CardCacheContext';
-import { CollectionContext } from './CollectionContext';
-import { OperationsContext } from '../OperationsContext';
+import { useCollection, useCollections, useOffset } from './CollectionContext';
+import { useOperations } from '../OperationsContext';
 
-export default function CardList({ offset, collections, showSearch=false }) {
+export default function CardList({ showSearch=false }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [selected, setSelected] = useState([]);
-    const collection = useContext(CollectionContext);
-    const ops = useContext(OperationsContext);
+    const collection = useCollection();
+    const collections = useCollections();
+    const offset = useOffset();
+    const ops = useOperations();
 
     let pageSize = 12;
 
@@ -61,7 +63,7 @@ export default function CardList({ offset, collections, showSearch=false }) {
     return (
         <CardCacheProvider>
             <Search onAdd={onAdd} dedicatedPage={showSearch} />
-            <MoveCardsNav
+            <CardListNav
                 collections={collections}
                 selected={selected} setSelected={setSelected} setRefresh={setRefresh} />
             <div className="card-grid list">

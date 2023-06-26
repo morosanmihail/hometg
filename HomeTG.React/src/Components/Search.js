@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams  } from "react-router-dom";
 import Card from './Card';
-import { OperationsContext } from '../OperationsContext';
+import { useOperations } from '../OperationsContext';
 
 function Search({ dedicatedPage = false, onAdd }) {
     const [cards, setCards] = useState([]);
@@ -20,7 +20,7 @@ function Search({ dedicatedPage = false, onAdd }) {
 
     let pageSize = 24;
 
-    const ops = useContext(OperationsContext);
+    const ops = useOperations();
 
     const renderCards = (cards) => {
         return (

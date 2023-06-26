@@ -1,16 +1,16 @@
-﻿import React, { ChangeEvent, Fragment, useState, useContext } from 'react';
+﻿import React, { Fragment, useState } from 'react';
 import { confirm } from "./ConfirmCollectionDelete";
 import { useNavigate } from "react-router-dom";
-import { OperationsContext } from '../OperationsContext';
-import { CollectionContext } from './CollectionContext';
+import { useOperations } from '../OperationsContext';
+import { useCollection } from './CollectionContext';
 
-function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
+export default function CardListNav({ collections, selected, setSelected, setRefresh }) {
     const navigate = useNavigate();
-    const collection = useContext(CollectionContext);
+    const collection = useCollection();
     const [destinationCollection, setDestinationCollection] = useState(collection);
     const [file, setFile] = useState();
 
-    const ops = useContext(OperationsContext);
+    const ops = useOperations();
 
     const handleFileChange = (e) => {
         if (e.target.files) {
@@ -85,7 +85,7 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
                     },
                     body: JSON.stringify(selected),
                 }).then(data => {
-                    navigate('/' + collection);
+                    navigate('/' + (input ? 'c/' + input : ''));
                 });
             },
             () => {
@@ -140,5 +140,3 @@ function MoveCardsNav({ collections, selected, setSelected, setRefresh }) {
         </Fragment>
     );
 }
-
-export default MoveCardsNav;

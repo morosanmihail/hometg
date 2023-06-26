@@ -1,9 +1,9 @@
-import React from 'react';
+import { createContext, useContext, useReducer } from 'react';
 
-const CardCacheContext = React.createContext();
+const CardCacheContext = createContext();
 
 function CardCacheProvider(props) {
-    const [cache, dispatch] = React.useReducer(CardCacheReducer, {})
+    const [cache, dispatch] = useReducer(CardCacheReducer, {})
     const value = [cache, dispatch]
 
     return (
@@ -22,11 +22,7 @@ function CardCacheReducer(state, action) {
 }
 
 function useCardCache() {
-    const MyContext = React.useContext(CardCacheContext)
-    if (!MyContext) {
-        throw new Error(`useCardCache must be within a CardCacheProvider`)
-    }
-    return MyContext
+    return useContext(CardCacheContext);
 }
 
 export {

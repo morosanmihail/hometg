@@ -1,7 +1,7 @@
-﻿import React, { useState, useEffect, useContext } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useCardCache } from './CardCacheContext';
 import CardDetails from './CardDetails';
-import { OperationsContext } from '../OperationsContext';
+import { useOperations } from '../OperationsContext';
 
 export default function MtGCard({ id, card = null, details = null,
     onAdd = null, onSelectCard = null
@@ -10,7 +10,7 @@ export default function MtGCard({ id, card = null, details = null,
     const [selected, setSelected] = useState(false);
 
     const [cache, dispatch] = useCardCache();
-    const ops = useContext(OperationsContext);
+    const ops = useOperations();
 
     useEffect(() => {
         if (_card == null) {

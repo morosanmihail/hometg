@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { CollectionContext } from './CollectionContext';
-import { OperationsContext } from '../OperationsContext';
+import React from 'react';
+import { useCollection } from './CollectionContext';
+import { useOperations } from '../OperationsContext';
 
 export default function CardDetails({id, details = null, onAdd, selected, toggleSelected}) {
-    const ops = useContext(OperationsContext);
-    const currentCollection = useContext(CollectionContext);
+    const ops = useOperations();
+    const currentCollection = useCollection();
 
     const updateQuantity = (delta, deltaFoil) => {
         let collection = currentCollection != null ? currentCollection : details.collectionId;

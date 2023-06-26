@@ -1,12 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { OperationsContext } from '../OperationsContext';
+import { useOperations } from '../OperationsContext';
+import { useCollectionsDispatch } from './CollectionContext';
 
-function AddCollectionForm({ onAdd }) {
+function AddCollectionForm() {
     const [showForm, setShowForm] = useState(false);
     const [newItem, setNewItem] = useState('');
 
-    const ops = useContext(OperationsContext);
+    const collectionsDispatch = useCollectionsDispatch();
+    const ops = useOperations();
 
     const handleToggleForm = () => setShowForm(!showForm);
     const handleHideForm = () => setShowForm(false);
@@ -18,7 +20,12 @@ function AddCollectionForm({ onAdd }) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: newItem }),
         })
-            .then((data) => onAdd({id:newItem}))
+            .then((data) => {
+                collectionsDispatch({
+                    type: 'added',
+                    item: {id:newItem},
+                });
+            });
     };
 
     return (
