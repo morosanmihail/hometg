@@ -7,7 +7,7 @@ import { CardCacheProvider } from './CardCacheContext';
 import { useCollection, usePageNumber } from './CollectionContext';
 import { useOperations } from '../OperationsContext';
 import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
-import ReactPaginate from "https://cdn.skypack.dev/react-paginate@7.1.3";
+import ReactPaginate from "react-paginate";
 
 const RefreshCardListContext = createContext(null);
 export function useRefreshCardList() {
