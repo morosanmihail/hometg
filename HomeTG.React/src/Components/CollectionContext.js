@@ -3,7 +3,7 @@ import { useOperations } from '../OperationsContext';
 import { useParams } from "react-router-dom";
 
 export function CollectionsProvider({children}) {
-    const { collection = "Main", offset = 0 } = useParams();
+    const { collection = "Main", pageNumber = 1 } = useParams();
     const [collectionsLoading, setCollectionsLoading] = useState(true);
 
     const [collections, collectionsDispatch] = useReducer(
@@ -24,13 +24,13 @@ export function CollectionsProvider({children}) {
 
     return (
         <CollectionContext.Provider value={collection}>
-            <OffsetContext.Provider value={offset}>
+            <PageNumberContext.Provider value={pageNumber}>
                 <CollectionsContext.Provider value={collections}>
                     <CollectionsDispatchContext.Provider value={collectionsDispatch}>
                         {children}
                     </CollectionsDispatchContext.Provider>
                 </CollectionsContext.Provider>
-            </OffsetContext.Provider>
+            </PageNumberContext.Provider>
         </CollectionContext.Provider>
     );
 }
@@ -40,9 +40,9 @@ export function useCollection() {
     return useContext(CollectionContext);
 }
 
-const OffsetContext = createContext(0);
-export function useOffset() {
-    return useContext(OffsetContext);
+const PageNumberContext = createContext(0);
+export function usePageNumber() {
+    return useContext(PageNumberContext);
 }
 
 const CollectionsContext = createContext([]);

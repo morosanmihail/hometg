@@ -76,9 +76,9 @@ namespace HomeTG.API.Controllers.Collection
         }
 
         [HttpGet("cards/{collection}/list")]
-        public IEnumerable<CollectionCard> ListCards(string collection, int offset = 0)
+        public IEnumerable<CollectionCard> ListCards(string collection, int offset = 0, int pageSize = 12)
         {
-            return _db.ListCards(collection, offset).ToList();
+            return _db.ListCards(collection, offset, pageSize).ToList();
         }
 
         [HttpPost("import")]

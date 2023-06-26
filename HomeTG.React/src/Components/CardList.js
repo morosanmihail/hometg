@@ -1,12 +1,13 @@
 ﻿import React, { useState, useEffect, createContext, useContext } from 'react';
 import Card from './Card';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Search from "./Search";
 import CardListNav from "./CardListNav";
 import { CardCacheProvider } from './CardCacheContext';
-import { useCollection, useOffset } from './CollectionContext';
+import { useCollection, usePageNumber } from './CollectionContext';
 import { useOperations } from '../OperationsContext';
 import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
+import ReactPaginate from "https://cdn.skypack.dev/react-paginate@7.1.3";
 
 const RefreshCardListContext = createContext(null);
 export function useRefreshCardList() {
@@ -14,27 +15,36 @@ export function useRefreshCardList() {
 }
 
 export default function CardList({ showSearch=false }) {
+    const navigate = useNavigate();
+    const ops = useOperations();
+    const collection = useCollection();
+    const pageNumber = usePageNumber();
+    const selectedDispatch = useSelectedCardsDispatch();
+
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
-    const collection = useCollection();
-    const offset = useOffset();
-    const selectedDispatch = useSelectedCardsDispatch();
-    const ops = useOperations();
+    const [cardCount, setCardCount] = useState(0);
 
     let pageSize = 12;
 
     useEffect(() => {
         ops.fetch(
             "Listing items in " + collection, [],
-            '/collection/cards/' + collection + '/list?offset=' + offset
+            '/collection/cards/' + collection + '/list?offset=' + ((pageNumber-1) * pageSize) + '&pageSize=' + pageSize
             ).then(data => {
                 setCards(data);
                 setLoading(false);
                 setRefresh(false);
                 selectedDispatch({type:'empty'});
             });
-    }, [collection, offset, refresh])
+        ops.fetch(
+            "Getting card count in " + collection, 0,
+            '/collection/cards/' + collection + '/count'
+        ).then(data => {
+            setCardCount(data);
+        });
+    }, [collection, pageNumber, refresh])
 
     const onAdd = (newCard) => {
         let updated = false;
@@ -48,7 +58,7 @@ export default function CardList({ showSearch=false }) {
         if (updated) {
             setCards(newCards);
         } else {
-            if (offset === 0) {
+            if (pageNumber === 1) {
                 setCards([newCard, ...cards.slice(0, pageSize - 1)]);
             } else {
                 setRefresh(true)
@@ -59,6 +69,10 @@ export default function CardList({ showSearch=false }) {
     const triggerRefresh = () => {
         setRefresh(true);
     }
+
+    const handlePageChange = (event) => {
+        navigate('/c/' + collection + '/' + (parseInt(event.selected)+1));
+    };
 
     return (
         <CardCacheProvider>
@@ -76,29 +90,26 @@ export default function CardList({ showSearch=false }) {
                             </React.Fragment>
                     }
                 </div>
-                <nav aria-label="Page navigation">
-                    <ul className="pagination center">
-                        <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
-                            {
-                                parseInt(offset) > 0 ?
-                            <Link to={"/c/" + collection + "/" + (parseInt(offset) - pageSize)}>
-                                <button className="page-link">Previous</button>
-                            </Link>
-                            : <button className="page-link">Previous</button>}
-                        </li>
-                        <li className="page-item disabled">
-                            <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
-                        </li>
-                        <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
-                            {
-                                cards.length >= pageSize ?
-                            <Link to={"/c/" + collection + "/" + (parseInt(offset) + pageSize)}>
-                                <button className="page-link">Next</button>
-                            </Link>
-                            : <button className="page-link">Next</button>}
-                        </li>
-                    </ul>
-                </nav>
+                <ReactPaginate
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    pageCount={Math.ceil(parseInt(cardCount) / pageSize)}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={handlePageChange}
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    forcePage={pageNumber - 1}
+                />
             </RefreshCardListContext.Provider>
         </CardCacheProvider>
     );

@@ -11,7 +11,7 @@ export default function Sidebar() {
     const renderCollections = () => {
         return (
             collections.map(c =>
-                <Link to={"/c/" + c.id} key={c.id} className={"nav-link" + (c.id === collection ? " active" : "")}>
+                <Link to={"/c/" + c.id + "/1"} key={c.id} className={"nav-link" + (c.id === collection ? " active" : "")}>
                     {c.id}
                 </Link>
             )

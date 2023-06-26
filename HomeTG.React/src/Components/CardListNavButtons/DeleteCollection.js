@@ -22,7 +22,7 @@ export default function DeleteCollection() {
                         'Content-Type': 'application/json'
                     },
                 }).then(data => {
-                    navigate('/' + (input ? 'c/' + input : ''));
+                    navigate('/' + (input ? 'c/' + input + '/1' : ''));
                 });
             },
             () => {
