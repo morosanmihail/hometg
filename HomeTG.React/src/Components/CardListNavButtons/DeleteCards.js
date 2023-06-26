@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { confirm } from "../ConfirmCollectionDelete";
+import { confirm } from "./ConfirmCollectionDelete";
 import { useOperations } from '../../OperationsContext';
 import { useCollection } from '../CollectionContext';
 import { useSelectedCards, useSelectedCardsDispatch } from '../CardListContexts/SelectedCardsContext';
@@ -33,9 +33,7 @@ export default function DeleteCards({setRefresh}) {
 
     return (
         <Fragment>
-            <div className="col-auto">
-                <button onClick={deleteCards} type="button" className="btn btn-danger">🗑️</button>
-            </div>
+            <button onClick={deleteCards} type="button" className="btn btn-danger">🗑️</button>
         </Fragment>
     );
 }

@@ -6,9 +6,8 @@ export default function SelectionTracker() {
 
     return (
         <Fragment>
-            <div className="col-auto">
-                <span className="badge badge-primary">{selected.length} selected</span>
-            </div>
+                <span className="badge bg-secondary badge-primary">{selected.length} selected</span>
+
         </Fragment>
     )
 }

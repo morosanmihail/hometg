@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import AddCollectionForm from './AddCollectionForm';
 import { useCollection, useCollections } from './CollectionContext';
+import OperationsTracker from './CardListNavButtons/OperationsTracker';
 
 export default function Sidebar() {
     const collection = useCollection();
@@ -19,10 +20,10 @@ export default function Sidebar() {
 
     return (
         <header>
-            <nav id="sidebarMenu" className="collapse d-lg-block sidebar collapse bg-white">
+            <nav id="sidebarMenu" className="d-lg-block sidebar bg-white">
                 <div className="position-sticky">
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
-                        <button className="btn btn-default" type="button" data-toggle="collapse" data-target="#search">Search</button>
+                        <button className="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#search">Search</button>
                     </div>
                     <hr/>
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
@@ -31,10 +32,13 @@ export default function Sidebar() {
                         </React.Fragment>
                         <hr/>
                         <AddCollectionForm />
+                        <hr/>
+
+                        <OperationsTracker/>
                     </div>
                 </div>
             </nav>
-            <nav id="main-navbar" className="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+            <nav id="main-navbar" className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="/">
                         HomeTG

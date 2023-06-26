@@ -10,15 +10,14 @@ import OperationsTracker from './CardListNavButtons/OperationsTracker';
 export default function CardListNav({ selected, setSelected, setRefresh }) {
     return (
         <Fragment>
-            <nav className="navbar navbar-dark bg-dark">
-                <div className="form-row align-items-center">
+            <nav className="navbar navbar-expand-md bg-body-tertiary" data-bs-theme="dark">
+                <div className="container-fluid">
                     <SelectionTracker />
                     <DeleteCards setRefresh={setRefresh} />
                     <MoveCards setRefresh={setRefresh} />
-                    <ImportCards/>
+                    <ImportCards setRefresh={setRefresh} />
                     <ExportCollection/>
                     <DeleteCollection/>
-                    <OperationsTracker/>
                 </div>
             </nav>
         </Fragment>

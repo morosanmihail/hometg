@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useOperations } from '../../OperationsContext';
 import { useCollection } from '../CollectionContext';
 
-export default function ImportCards() {
+export default function ImportCards({ setRefresh }) {
     const ops = useOperations();
     const collection = useCollection();
 
@@ -21,25 +21,22 @@ export default function ImportCards() {
 
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("collection", collection);
 
-        ops.fetch("Importing into " + collection, [], '/collection/cards/' + collection + '/import', {
+        ops.fetch("Importing into " + collection, [], '/collection/import', {
             method: "post",
-            headers: {
-                'Content-Type': file.type,
-                'Content-Length': `${file.size}`,
-            },
             body: formData,
-            // body: file,
-        }).then(data => {});
+        }).then(data => {setRefresh(true);});
     }
 
     return (
         <Fragment>
-            <div className="col-auto">
-                <input type="file" onChange={handleFileChange} />
-                <div>{file && `${file.name} - ${file.type}`}</div>
-                <button type="button" className="btn btn-info" onClick={handleUploadClick}>Import</button>
-            </div>
+            <form className="d-flex">
+                <div className="input-group">
+                    <input onChange={handleFileChange} type="file" className="form-control" id="inputGroupFile02"/>
+                    <button onClick={handleUploadClick} className="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Import</button>
+                </div>
+            </form>
         </Fragment>
     );
 }

@@ -28,16 +28,14 @@ export default function MoveCards({setRefresh}) {
 
     return (
         <Fragment>
-            <div className="col-auto">
-                <button onClick={moveCards} type="button" className="btn btn-info" alt="Move to collection">Move to</button>
-            </div>
-            <div className="col-auto">
+            <form className="d-flex">
+                <button onClick={moveCards} type="button" className="btn btn-outline-info">Move</button>
                 <select onChange={(e) => setDestinationCollection(e.target.value)} className="form-control" id="exampleFormControlSelect1">
                     {collections.map(c =>
                         <option key={"cardlistcol-" + c.id} dropdown={c.id} value={c.id}>{c.id}</option>
                     )}
                 </select>
-            </div>
+            </form>
         </Fragment>
     );
 }

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { confirm } from "../ConfirmCollectionDelete";
+import { confirm } from "./ConfirmCollectionDelete";
 import { useNavigate } from "react-router-dom";
 import { useOperations } from '../../OperationsContext';
 import { useCollection, useCollections } from '../CollectionContext';
@@ -33,7 +33,7 @@ export default function DeleteCollection() {
 
     return (
         <Fragment>
-            <div className="col-auto">
+            <div className="d-flex">
                 <button onClick={deleteCollection} type="button" className="btn btn-danger">🗑️ collection</button>
             </div>
         </Fragment>

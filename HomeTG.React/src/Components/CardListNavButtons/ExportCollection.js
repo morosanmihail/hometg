@@ -6,7 +6,7 @@ export default function ExportCollection() {
 
     return (
         <Fragment>
-            <div className="col-auto">
+            <div className="d-flex">
                 <a href={'/collection/export/' + collection}>
                     <button type="button" className="btn btn-info">Export</button>
                 </a>

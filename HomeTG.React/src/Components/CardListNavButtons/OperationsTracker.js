@@ -6,13 +6,9 @@ export default function OperationsTracker() {
 
     return (
         <Fragment>
-            <div className="col-auto">
-                <span className="badge badge-primary">{Object.keys(ops.operations).length} operations active</span>
-            </div>
+            <span className="badge bg-secondary badge-primary">{Object.keys(ops.operations).length} operations active</span>
             {Object.entries(ops.operations).map( ([key, o]) =>
-                <div key={key} className="col-auto">
-                    <span className="badge badge-primary">{o.message}</span>
-                </div>
+                <span key={key} className="badge bg-secondary badge-primary">{o.message}</span>
             )}
         </Fragment>
     );

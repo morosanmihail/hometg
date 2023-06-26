@@ -42,13 +42,13 @@ export default function CardDetails({id, details = null, onAdd, selected, toggle
                 <span className="btn"></span>
 
                 <button onClick={event => updateQuantity(1, 0)} className="btn btn-sm btn-outline-success">+</button>
-                <span className="btn badge badge-light">{details.quantity}</span>
+                <span className="btn badge bg-secondary">{details.quantity}</span>
                 <button onClick={event => updateQuantity(-1, 0)} className="btn btn-sm btn-outline-danger">-</button>
 
                 <span className="btn"></span>
 
                 <button onClick={event => updateQuantity(0, 1)} className="btn btn-sm btn-outline-success">+</button>
-                <span className="btn badge badge-info">{details.foilQuantity}</span>
+                <span className="btn badge bg-info">{details.foilQuantity}</span>
                 <button onClick={event => updateQuantity(0, -1)} className="btn btn-sm btn-outline-danger">-</button>
             </React.Fragment>
             :

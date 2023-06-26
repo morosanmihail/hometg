@@ -81,8 +81,8 @@ namespace HomeTG.API.Controllers.Collection
             return _db.ListCards(collection, offset).ToList();
         }
 
-        [HttpPost("cards/{collection}/import")]
-        public async Task<IActionResult> UploadCardsList(string collection, [FromForm] IFormFile file)
+        [HttpPost("import")]
+        public async Task<int> UploadCardsList([FromForm] ImportModel model)
         {
             // TODO: use long running tasks
             //var task = CreateTask("test", 10);
@@ -90,19 +90,19 @@ namespace HomeTG.API.Controllers.Collection
             //return task;
 
             var filePath = Path.GetTempFileName();
-            if (file.Length > 0)
+            if (model.file.Length > 0)
             {
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await file.CopyToAsync(stream);
+                    await model.file.CopyToAsync(stream);
                 }
             }
 
             var items = CSVOperations.ImportFromCSV(filePath, null);
             System.IO.File.Delete(filePath);
 
-            _ops.BulkAddCards(collection, items);
-            return Ok();
+            _ops.BulkAddCards(model.collection, items);
+            return items.Count;
         }
 
         [HttpGet("export/{collection}")]
