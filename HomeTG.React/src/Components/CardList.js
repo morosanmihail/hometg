@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, createContext, useContext } from 'react';
 import Card from './Card';
 import { Link } from "react-router-dom";
 import Search from "./Search";
@@ -7,6 +7,11 @@ import { CardCacheProvider } from './CardCacheContext';
 import { useCollection, useOffset } from './CollectionContext';
 import { useOperations } from '../OperationsContext';
 import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
+
+const RefreshCardListContext = createContext(null);
+export function useRefreshCardList() {
+    return useContext(RefreshCardListContext);
+}
 
 export default function CardList({ showSearch=false }) {
     const [cards, setCards] = useState([]);
@@ -51,44 +56,50 @@ export default function CardList({ showSearch=false }) {
         }
     }
 
+    const triggerRefresh = () => {
+        setRefresh(true);
+    }
+
     return (
         <CardCacheProvider>
-            <Search onAdd={onAdd} dedicatedPage={showSearch} />
-            <CardListNav setRefresh={setRefresh} />
-            <div className="card-grid list">
-                {
-                    (loading || refresh) ? <p>Loading...</p> :
-                        <React.Fragment>
-                            {cards.map(card =>
-                                <Card id={card.id} details={card} key={card.collectionId + "-" + card.id}
-                                    onAdd={onAdd} />
-                            )}
-                        </React.Fragment>
-                }
-            </div>
-            <nav aria-label="Page navigation">
-                <ul className="pagination center">
-                    <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
-                        {
-                            parseInt(offset) > 0 ?
-                        <Link to={"/c/" + collection + "/" + (parseInt(offset) - pageSize)}>
-                            <button className="page-link">Previous</button>
-                        </Link>
-                        : <button className="page-link">Previous</button>}
-                    </li>
-                    <li className="page-item disabled">
-                        <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
-                    </li>
-                    <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
-                        {
-                            cards.length >= pageSize ?
-                        <Link to={"/c/" + collection + "/" + (parseInt(offset) + pageSize)}>
-                            <button className="page-link">Next</button>
-                        </Link>
-                        : <button className="page-link">Next</button>}
-                    </li>
-                </ul>
-            </nav>
+            <RefreshCardListContext.Provider value={triggerRefresh}>
+                <Search onAdd={onAdd} dedicatedPage={showSearch} />
+                <CardListNav/>
+                <div className="card-grid list">
+                    {
+                        (loading || refresh) ? <p>Loading...</p> :
+                            <React.Fragment>
+                                {cards.map(card =>
+                                    <Card id={card.id} details={card} key={card.collectionId + "-" + card.id}
+                                        onAdd={onAdd} />
+                                )}
+                            </React.Fragment>
+                    }
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul className="pagination center">
+                        <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
+                            {
+                                parseInt(offset) > 0 ?
+                            <Link to={"/c/" + collection + "/" + (parseInt(offset) - pageSize)}>
+                                <button className="page-link">Previous</button>
+                            </Link>
+                            : <button className="page-link">Previous</button>}
+                        </li>
+                        <li className="page-item disabled">
+                            <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
+                        </li>
+                        <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
+                            {
+                                cards.length >= pageSize ?
+                            <Link to={"/c/" + collection + "/" + (parseInt(offset) + pageSize)}>
+                                <button className="page-link">Next</button>
+                            </Link>
+                            : <button className="page-link">Next</button>}
+                        </li>
+                    </ul>
+                </nav>
+            </RefreshCardListContext.Provider>
         </CardCacheProvider>
     );
 }

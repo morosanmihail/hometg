@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from 'react';
 import { useOperations } from '../../OperationsContext';
 import { useCollection } from '../CollectionContext';
+import { useRefreshCardList } from '../CardList';
 
-export default function ImportCards({ setRefresh }) {
+export default function ImportCards() {
     const ops = useOperations();
     const collection = useCollection();
+    const triggerRefresh = useRefreshCardList();
 
     const [file, setFile] = useState();
 
@@ -26,7 +28,7 @@ export default function ImportCards({ setRefresh }) {
         ops.fetch("Importing into " + collection, [], '/collection/import', {
             method: "post",
             body: formData,
-        }).then(data => {setRefresh(true);});
+        }).then(data => triggerRefresh());
     }
 
     return (

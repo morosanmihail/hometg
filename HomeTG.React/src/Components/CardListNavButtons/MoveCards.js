@@ -2,13 +2,15 @@ import React, { Fragment, useState } from 'react';
 import { useOperations } from '../../OperationsContext';
 import { useCollection, useCollections } from '../CollectionContext';
 import { useSelectedCards, useSelectedCardsDispatch } from '../CardListContexts/SelectedCardsContext';
+import { useRefreshCardList } from '../CardList';
 
-export default function MoveCards({setRefresh}) {
+export default function MoveCards() {
     const ops = useOperations();
     const collection = useCollection();
     const collections = useCollections();
     const selected = useSelectedCards();
     const selectedDispatch = useSelectedCardsDispatch();
+    const triggerRefresh = useRefreshCardList();
 
     const [destinationCollection, setDestinationCollection] = useState(collection);
 
@@ -21,7 +23,7 @@ export default function MoveCards({setRefresh}) {
             },
             body: JSON.stringify(selected),
         }).then(data => {
-            setRefresh(true);
+            triggerRefresh();
             selectedDispatch({type:'empty'});
         });
     }

@@ -3,12 +3,14 @@ import { confirm } from "./ConfirmCollectionDelete";
 import { useOperations } from '../../OperationsContext';
 import { useCollection } from '../CollectionContext';
 import { useSelectedCards, useSelectedCardsDispatch } from '../CardListContexts/SelectedCardsContext';
+import { useRefreshCardList } from '../CardList';
 
-export default function DeleteCards({setRefresh}) {
+export default function DeleteCards() {
     const ops = useOperations();
     const collection = useCollection();
     const selected = useSelectedCards();
     const selectedDispatch = useSelectedCardsDispatch();
+    const triggerRefresh = useRefreshCardList();
 
     const deleteCards = () => {
         confirm({ confirmType: "cards", selectedCount: selected.length }).then(
@@ -21,7 +23,7 @@ export default function DeleteCards({setRefresh}) {
                     },
                     body: JSON.stringify(selected),
                 }).then(data => {
-                    setRefresh(true);
+                    triggerRefresh();
                     selectedDispatch({type:'empty'});
                 });
             },

@@ -5,17 +5,16 @@ import MoveCards from './CardListNavButtons/MoveCards';
 import ImportCards from './CardListNavButtons/ImportCards';
 import DeleteCollection from './CardListNavButtons/DeleteCollection';
 import ExportCollection from './CardListNavButtons/ExportCollection';
-import OperationsTracker from './CardListNavButtons/OperationsTracker';
 
-export default function CardListNav({ selected, setSelected, setRefresh }) {
+export default function CardListNav() {
     return (
         <Fragment>
             <nav className="navbar navbar-expand-md bg-body-tertiary" data-bs-theme="dark">
                 <div className="container-fluid">
-                    <SelectionTracker />
-                    <DeleteCards setRefresh={setRefresh} />
-                    <MoveCards setRefresh={setRefresh} />
-                    <ImportCards setRefresh={setRefresh} />
+                    <SelectionTracker/>
+                    <DeleteCards/>
+                    <MoveCards/>
+                    <ImportCards/>
                     <ExportCollection/>
                     <DeleteCollection/>
                 </div>
