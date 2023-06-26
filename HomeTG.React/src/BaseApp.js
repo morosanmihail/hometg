@@ -3,6 +3,7 @@ import Sidebar from "./Components/Sidebar";
 import CardList from "./Components/CardList";
 import { CollectionsProvider } from './Components/CollectionContext';
 import { OperationsProvider } from './OperationsContext';
+import { SelectedCardsProvider } from './Components/CardListContexts/SelectedCardsContext';
 
 export default function BaseApp({ showSearch = false }) {
     return (
@@ -19,7 +20,9 @@ export default function BaseApp({ showSearch = false }) {
                     </nav>
                 </header>
                 <main>
-                    <CardList showSearch={showSearch} />
+                    <SelectedCardsProvider>
+                        <CardList showSearch={showSearch} />
+                    </SelectedCardsProvider>
                 </main>
             </CollectionsProvider>
         </OperationsProvider>

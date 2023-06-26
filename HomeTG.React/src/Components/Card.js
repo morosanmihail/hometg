@@ -2,15 +2,22 @@
 import { useCardCache } from './CardCacheContext';
 import CardDetails from './CardDetails';
 import { useOperations } from '../OperationsContext';
+import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
 
-export default function MtGCard({ id, card = null, details = null,
-    onAdd = null, onSelectCard = null
-}) {
+export default function MtGCard({ id, card = null, details = null, onAdd = null}) {
     const [_card, setCard] = useState(card);
     const [selected, setSelected] = useState(false);
 
+    const selectedDispatch = useSelectedCardsDispatch();
     const [cache, dispatch] = useCardCache();
     const ops = useOperations();
+
+    const toggleSelected = () => {
+        if (details != null) {
+            selectedDispatch({type:(!selected ? 'added' : 'deleted'), card: details});
+            setSelected(s => !s);
+        }
+    }
 
     useEffect(() => {
         if (_card == null) {
@@ -24,12 +31,6 @@ export default function MtGCard({ id, card = null, details = null,
             }
         }
     }, [id, _card, details])
-
-    const toggleSelected = () => {
-        setSelected(s => !s);
-        onSelectCard(details, !selected);
-    }
-
 
     let imagePath = (_card != null && _card.cardIdentifiers != null) ? "https://api.scryfall.com/cards/" + _card.cardIdentifiers.scryfallId + "?format=image" : "";
 

@@ -4,17 +4,17 @@ import { Link } from "react-router-dom";
 import Search from "./Search";
 import CardListNav from "./CardListNav";
 import { CardCacheProvider } from './CardCacheContext';
-import { useCollection, useCollections, useOffset } from './CollectionContext';
+import { useCollection, useOffset } from './CollectionContext';
 import { useOperations } from '../OperationsContext';
+import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
 
 export default function CardList({ showSearch=false }) {
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
-    const [selected, setSelected] = useState([]);
     const collection = useCollection();
-    const collections = useCollections();
     const offset = useOffset();
+    const selectedDispatch = useSelectedCardsDispatch();
     const ops = useOperations();
 
     let pageSize = 12;
@@ -27,18 +27,9 @@ export default function CardList({ showSearch=false }) {
                 setCards(data);
                 setLoading(false);
                 setRefresh(false);
-                setSelected([]);
+                selectedDispatch({type:'empty'});
             });
     }, [collection, offset, refresh])
-
-    const onSelectCard = (card, isSelected) => {
-        if (card == null) return;
-        if (isSelected) {
-            setSelected(prev => [...prev, card]);
-        } else {
-            setSelected(prev => prev.filter(s => s.id !== card.id));
-        }
-    }
 
     const onAdd = (newCard) => {
         let updated = false;
@@ -63,16 +54,14 @@ export default function CardList({ showSearch=false }) {
     return (
         <CardCacheProvider>
             <Search onAdd={onAdd} dedicatedPage={showSearch} />
-            <CardListNav
-                collections={collections}
-                selected={selected} setSelected={setSelected} setRefresh={setRefresh} />
+            <CardListNav setRefresh={setRefresh} />
             <div className="card-grid list">
                 {
                     (loading || refresh) ? <p>Loading...</p> :
                         <React.Fragment>
                             {cards.map(card =>
                                 <Card id={card.id} details={card} key={card.collectionId + "-" + card.id}
-                                    onSelectCard={onSelectCard} onAdd={onAdd} />
+                                    onAdd={onAdd} />
                             )}
                         </React.Fragment>
                 }
