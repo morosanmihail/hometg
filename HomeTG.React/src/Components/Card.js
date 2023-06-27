@@ -1,16 +1,14 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { useCardCache } from './CardCacheContext';
 import CardDetails from './CardDetails';
-import { useOperations } from '../OperationsContext';
 import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
+import { useCardLoader } from './CardListContexts/CardLoaderContext';
 
 export default function MtGCard({ id, card = null, details = null, onAdd = null}) {
     const [_card, setCard] = useState(card);
     const [selected, setSelected] = useState(false);
 
     const selectedDispatch = useSelectedCardsDispatch();
-    const [cache, dispatch] = useCardCache();
-    const ops = useOperations();
+    const loader = useCardLoader();
 
     const toggleSelected = () => {
         if (details != null) {
@@ -21,14 +19,11 @@ export default function MtGCard({ id, card = null, details = null, onAdd = null}
 
     useEffect(() => {
         if (_card == null) {
-            if (cache[id]) {
-                setCard(cache[id]);
-            } else {
-                ops.fetch("Updating details for card " + id, {}, '/mtg/cards?ids=' + id).then(data => {
-                    setCard(data[id]);
-                    dispatch({ type: 'ADD-TO-CACHE', id: id, data: data[id] });
-                });
+            async function execute() {
+                const receivedCard = await loader(id);
+                setCard(receivedCard);
             }
+            execute();
         }
     }, [id, _card, details])
 

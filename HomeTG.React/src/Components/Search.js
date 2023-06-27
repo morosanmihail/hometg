@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams  } from "react-router-dom";
 import Card from './Card';
 import { useOperations } from '../OperationsContext';
+import ReactPaginate from "react-paginate";
 
 function Search({ dedicatedPage = false, onAdd }) {
     const [cards, setCards] = useState([]);
@@ -95,24 +96,24 @@ function Search({ dedicatedPage = false, onAdd }) {
                     </div>
                         { cards.length > 0 ?
                     <nav aria-label="Page navigation">
-                <ul className="pagination center">
-                    <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
-                        {
-                            parseInt(offset) > 0 ?
-                            <button onClick={e => triggerSearch(e, parseInt(offset) - pageSize)} className="page-link">Previous</button>
-                        : <button className="page-link">Previous</button>}
-                    </li>
-                    <li className="page-item disabled">
-                        <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
-                    </li>
-                    <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
-                        {
-                            cards.length >= pageSize ?
-                            <button onClick={e => triggerSearch(e, parseInt(offset) + pageSize)}  className="page-link">Next</button>
-                        : <button className="page-link">Next</button>}
-                    </li>
-                </ul>
-            </nav>
+                        <ul className="pagination center">
+                            <li className={"page-item" + (parseInt(offset) === 0 ? " disabled" : "")}>
+                                {
+                                    parseInt(offset) > 0 ?
+                                    <button onClick={e => triggerSearch(e, parseInt(offset) - pageSize)} className="page-link">Previous</button>
+                                : <button className="page-link">Previous</button>}
+                            </li>
+                            <li className="page-item disabled">
+                                <button id="list-page" className="page-link">{(parseInt(offset) + pageSize) / pageSize}</button>
+                            </li>
+                            <li className={"page-item" + (cards.length < pageSize ? " disabled" : "")}>
+                                {
+                                    cards.length >= pageSize ?
+                                    <button onClick={e => triggerSearch(e, parseInt(offset) + pageSize)}  className="page-link">Next</button>
+                                : <button className="page-link">Next</button>}
+                            </li>
+                        </ul>
+                    </nav>
             : null }
                 </div>
                 <hr />
