@@ -34,5 +34,11 @@ namespace HomeTG.API.Controllers.MtG
             var downloadNeeded = await DBFiles.DownloadPrintingsDBIfNotExists(@"https://mtgjson.com/api/v5/AllPrintings.sqlite", @"DB/AllPrintings.db");
             return downloadNeeded ? "New version downloaded." : "No new version needed.";
         }
+
+        [HttpGet("sets")]
+        public IEnumerable<string> GetSets()
+        {
+            return _db.Cards.Select(c => c.SetCode).Distinct();
+        }
     }
 }

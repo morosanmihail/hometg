@@ -33,31 +33,31 @@ export default function CardDetails({id, details = null, onAdd, selected, toggle
     }
 
     return (
-        <>
-        {
-            (details != null) ?
-            <React.Fragment>
-                <button className="btn btn-sm btn-outline-primary" onClick={toggleSelected}>{selected ? "☑️" : "◼️"}</button>
+        <div className="card-img-overlay d-flex" onClick={toggleSelected}>
+            <div className="align-self-center">
+                <div className="btn-group-vertical">
+                {
+                    (details != null) ?
+                    <React.Fragment>
+                        <button onClick={e => updateQuantity(1, 0)} className="btn btn-sm btn-outline-success">+</button>
+                        <span className="btn badge bg-secondary">{details.quantity}</span>
+                        <button onClick={e => updateQuantity(-1, 0)} className="btn btn-sm btn-outline-danger">-</button>
 
-                <span className="btn"></span>
+                        <span className="btn"></span>
 
-                <button onClick={event => updateQuantity(1, 0)} className="btn btn-sm btn-outline-success">+</button>
-                <span className="btn badge bg-secondary">{details.quantity}</span>
-                <button onClick={event => updateQuantity(-1, 0)} className="btn btn-sm btn-outline-danger">-</button>
-
-                <span className="btn"></span>
-
-                <button onClick={event => updateQuantity(0, 1)} className="btn btn-sm btn-outline-success">+</button>
-                <span className="btn badge bg-info">{details.foilQuantity}</span>
-                <button onClick={event => updateQuantity(0, -1)} className="btn btn-sm btn-outline-danger">-</button>
-            </React.Fragment>
-            :
-            <React.Fragment>
-                <button onClick={event => updateQuantity(1, 0)} className="btn btn-sm btn-light">Add</button>
-                <span className="btn"></span>
-                <button onClick={event => updateQuantity(0, 1)} className="btn btn-sm btn-info">Add Foil</button>
-            </React.Fragment>
-        }
-        </>
+                        <button onClick={e => updateQuantity(0, 1)} className="btn btn-sm btn-outline-success">+</button>
+                        <span className="btn badge bg-info">{details.foilQuantity}</span>
+                        <button onClick={e => updateQuantity(0, -1)} className="btn btn-sm btn-outline-danger">-</button>
+                    </React.Fragment>
+                    :
+                    <React.Fragment>
+                        <button onClick={e => updateQuantity(1, 0)} className="btn btn-sm btn-light">Add</button>
+                        <span className="btn"></span>
+                        <button onClick={e => updateQuantity(0, 1)} className="btn btn-sm btn-info">Add Foil</button>
+                    </React.Fragment>
+                }
+                </div>
+            </div>
+        </div>
     );
 }

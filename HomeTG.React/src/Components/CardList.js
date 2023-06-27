@@ -9,6 +9,7 @@ import { useOperations } from '../OperationsContext';
 import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
 import ReactPaginate from "react-paginate";
 import { CardLoaderProvider } from './CardListContexts/CardLoaderContext';
+import { CardSetsProvider } from './ReusableConstants/CardSets';
 
 const RefreshCardListContext = createContext(null);
 export function useRefreshCardList() {
@@ -79,8 +80,10 @@ export default function CardList({ showSearch=false }) {
         <CardCacheProvider>
             <CardLoaderProvider>
                 <RefreshCardListContext.Provider value={triggerRefresh}>
-                    <Search onAdd={onAdd} dedicatedPage={showSearch} />
-                    <CardListNav/>
+                    <CardSetsProvider>
+                        <Search onAdd={onAdd} dedicatedPage={showSearch} />
+                        <CardListNav/>
+                    </CardSetsProvider>
                     <div className="card-grid list">
                         {
                             (loading || refresh) ? <p>Loading...</p> :

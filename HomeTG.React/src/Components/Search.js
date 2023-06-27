@@ -3,6 +3,7 @@ import { useSearchParams  } from "react-router-dom";
 import Card from './Card';
 import { useOperations } from '../OperationsContext';
 import ReactPaginate from "react-paginate";
+import { useCardSets } from './ReusableConstants/CardSets';
 
 function Search({ dedicatedPage = false, onAdd }) {
     const ops = useOperations();
@@ -10,6 +11,7 @@ function Search({ dedicatedPage = false, onAdd }) {
     const [loading, setLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
     const [shouldSearch, setShouldSearch] = useState(dedicatedPage);
+    const cardSets = useCardSets();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchOptions, setSearchOptions] = useState({
@@ -43,14 +45,14 @@ function Search({ dedicatedPage = false, onAdd }) {
                 setShouldSearch(false);
             })
         }
-    }, [pageNumber, shouldSearch])
+    }, [pageNumber, shouldSearch]);
 
     const handleSearchInput = (event, field) => {
         let newState = Object.assign({}, searchOptions);
         newState[field] = event.target.value;
         setSearchOptions(newState);
         setSearchParams(newState);
-    }
+    };
 
     const handlePageChange = (event) => {
         setShouldSearch(true);
@@ -62,18 +64,23 @@ function Search({ dedicatedPage = false, onAdd }) {
             <div className={"collapse" + (dedicatedPage === true ? " show" : "")} id="search">
                 <h2>Search</h2>
                 <div className="list-group list-group-flush mx-3 mt-4">
-                    <div className="input-group mb-3">
+                    <div className="input-group">
                         <input onChange={event => handleSearchInput(event, "name")} type="text" className="form-control" id="search-bar-name" placeholder="Name" value={searchOptions["name"]} />
-                        <input onChange={event => handleSearchInput(event, "setCode")} type="text" className="form-control" id="search-bar-set" placeholder="Set" value={searchOptions["setCode"]} />
+                        <input onChange={event => handleSearchInput(event, "setCode")} className="form-control" list="datalistOptions" id="search-bar-set" placeholder="Set Code" value={searchOptions["setCode"]} />
+                        <datalist id="datalistOptions">
+                            {cardSets.map(c =>
+                                <option key={c} value={c}/>
+                            )}
+                        </datalist>
                     </div>
-                    <div className="input-group mb-3">
+                    <div className="input-group">
                         <input onChange={event => handleSearchInput(event, "artist")} type="text" className="form-control" id="search-bar-artist" placeholder="Artist" value={searchOptions["artist"]} />
                         <input onChange={event => handleSearchInput(event, "collectorNumber")} type="text" className="form-control" id="search-bar-collector-number" placeholder="Collector Number" value={searchOptions["collectorNumber"]} />
                     </div>
-                    <div className="input-group mb-3">
+                    <div className="input-group">
                         <input onChange={event => handleSearchInput(event, "text")} type="text" className="form-control" id="search-bar-text" placeholder="Text" value={searchOptions["text"]} />
                     </div>
-                    <div className="input-group mb-3">
+                    <div className="input-group">
                         <button onClick={event => setShouldSearch(true)} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
                     </div>
                     <div className="search-results" id="search-results">
