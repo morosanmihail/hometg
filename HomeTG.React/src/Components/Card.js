@@ -35,11 +35,16 @@ export default function MtGCard({ id, card = null, details = null, onAdd = null}
                 (_card == null) ? <p>Loading...</p> :
                     <div className={"card" + (selected ? " border border-primary" : "")}>
                         <img className="lazyload" src={imagePath} alt={_card.name} lazyload="on" />
-                            <CardDetails id={id} details={details} onAdd={onAdd} selected={selected} toggleSelected={toggleSelected} />
+                            <CardDetails id={id} details={details} onAdd={onAdd} toggleSelected={toggleSelected} />
                         <div className="card-info">
                             <div className="row align-items-center">
-                                <span className="name col-sm-11">{_card.name}</span>
-                                <span className="setCode col-sm-11">{_card.setCode}</span>
+                                <span className="col-sm-8">
+                                    {_card.name}
+                                    {
+                                        (details != null) ? <span className='badge bg-secondary'>{details.collectionId}</span> : ""
+                                    }
+                                </span>
+                                <span className="col-sm-11">{_card.setCode}</span>
                             </div>
                         </div>
                     </div>

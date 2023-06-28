@@ -13,9 +13,9 @@ namespace HomeTG.API.Models.Contexts
             _mtgdb = mtgdb;
         }
 
-        public IEnumerable<CollectionCardWithDetails> SearchCollection(string collection, SearchOptions searchOptions)
+        public IEnumerable<CollectionCardWithDetails> SearchCollection(string collection, SearchOptions searchOptions, int offset = 0, int pageSize = 12)
         {
-            var cards = _mtgdb.SearchCards(searchOptions).ToList();
+            var cards = _mtgdb.SearchCards(searchOptions, pageSize, offset).ToList();
             var cardsInCollection = _db.GetCardsFromCollection(collection, cards.Select(c => c.Id).ToList());
 
             return cards.Select(
@@ -24,6 +24,26 @@ namespace HomeTG.API.Models.Contexts
                     cardsInCollection[c.Id]
                 )
             );
+        }
+
+        public IEnumerable<CollectionCardWithDetails> SearchAllCollections(SearchOptions searchOptions, int offset = 0, int pageSize = 12, bool skipNotOwned = false)
+        {
+            var cards = _mtgdb.SearchCards(searchOptions, pageSize, offset).ToList();
+            var cardsInCollection = _db.GetCards(cards.Select(c => c.Id).ToList());
+
+            var finalResult = new List<CollectionCardWithDetails>();
+            foreach (var card in cards) {
+                if (cardsInCollection.ContainsKey(card.Id)) {
+                    foreach (var col in cardsInCollection[card.Id]) {
+                        finalResult.Add(new CollectionCardWithDetails(card, col));
+                    }
+                } else {
+                    if (!skipNotOwned)
+                        finalResult.Add(new CollectionCardWithDetails(card, null));
+                }
+            }
+
+            return finalResult;
         }
 
         public int Count(string collection)

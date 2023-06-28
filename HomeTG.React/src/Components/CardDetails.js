@@ -2,12 +2,12 @@ import React from 'react';
 import { useCollection } from './CollectionContext';
 import { useOperations } from '../OperationsContext';
 
-export default function CardDetails({id, details = null, onAdd, selected, toggleSelected}) {
+export default function CardDetails({id, details = null, onAdd, toggleSelected}) {
     const ops = useOperations();
     const currentCollection = useCollection();
 
     const updateQuantity = (delta, deltaFoil) => {
-        let collection = currentCollection != null ? currentCollection : details.collectionId;
+        let collection = details == null ? currentCollection : details.collectionId;
         let add = parseInt(delta) >= 0 && parseInt(deltaFoil) >= 0;
         let url = '/collection/cards/' + collection + '/' + (add ? 'add' : 'delete');
         let body = {

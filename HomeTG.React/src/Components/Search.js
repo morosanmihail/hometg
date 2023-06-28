@@ -30,7 +30,7 @@ function Search({ dedicatedPage = false, onAdd }) {
 
             ops.fetch(
                 "Searching the MtG database", [],
-                '/mtg/cards/search?pageSize=' + pageSize + '&offset=' + ((pageNumber-1) * pageSize),
+                '/collection/search?pageSize=' + pageSize + '&offset=' + ((pageNumber-1) * pageSize),
                 {
                     method: "post",
                     headers: {
@@ -90,7 +90,7 @@ function Search({ dedicatedPage = false, onAdd }) {
                             :
                             <div className="card-grid list">
                                 {cards.map(card =>
-                                    <Card key={card.id} id={card.id} card={card} onAdd={onAdd} />
+                                    <Card key={card.mtGCard.id + "-" + (card.card != null ? card.card.collectionId : "")} id={card.mtGCard.id} card={card.mtGCard} details={card.card} onAdd={onAdd} />
                                 )}
                             </div>
                         }
@@ -103,7 +103,7 @@ function Search({ dedicatedPage = false, onAdd }) {
                         nextClassName="page-item" nextLinkClassName="page-link"
                         breakLabel="..." breakClassName="page-item" breakLinkClassName="page-link"
                         containerClassName="pagination" activeClassName="active"
-                        pageCount={(cards.length === pageSize) ? pageNumber + 1 : pageNumber}
+                        pageCount={(cards.length >= pageSize) ? pageNumber + 1 : pageNumber}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={handlePageChange}
