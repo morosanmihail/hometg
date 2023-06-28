@@ -8,5 +8,6 @@
         public string? Artist { get; set; }
         public List<string>? ColorIdentities { get; set; }
         public string? Text { get; set; }
+        public string? Rarity { get; set; }
     }
 }

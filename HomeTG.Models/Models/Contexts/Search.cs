@@ -12,41 +12,52 @@ namespace HomeTG.API.Models.Contexts
             searchOptions.Artist = searchOptions.Artist?.ToLower();
             searchOptions.Text = searchOptions.Text?.ToLower();
 
+            IEnumerable<Card> allCards = cards;
+
             if (searchOptions.Name != null && searchOptions.Name.Length > 0)
             {
-                cards = cards.Where(c => c.Name.ToLower().Contains(searchOptions.Name));
+                allCards = allCards.Where(c => c.Name.ToLower().Contains(searchOptions.Name));
             }
 
             if (searchOptions.SetCode != null && searchOptions.SetCode.Length > 0)
             {
-                cards = cards.Where(c => c.SetCode.ToLower().Contains(searchOptions.SetCode));
+                allCards = allCards.Where(c => c.SetCode.ToLower().Contains(searchOptions.SetCode));
             }
 
             if (searchOptions.CollectorNumber != null && searchOptions.CollectorNumber.Length > 0)
             {
-                cards = cards.Where(c => c.CollectorNumber.ToLower().Equals(searchOptions.CollectorNumber));
+                allCards = allCards.Where(c => c.CollectorNumber.ToLower().Equals(searchOptions.CollectorNumber));
             }
 
             if (searchOptions.Artist != null && searchOptions.Artist.Length > 0)
             {
-                cards = cards.Where(c => c.Artist!.ToLower().Contains(searchOptions.Artist));
+                allCards = allCards.Where(c => c.Artist!.ToLower().Contains(searchOptions.Artist));
             }
 
-            if (searchOptions.ColorIdentities != null && searchOptions.ColorIdentities.Count > 0)
+            if (searchOptions.Rarity != null && searchOptions.Rarity.Length > 0)
             {
-                cards = cards.Where(c => searchOptions.ColorIdentities.All(y => c.ColorIdentity!.Contains(y)));
+                allCards = allCards.Where(c => c.Rarity!.ToLower().Equals(searchOptions.Rarity));
             }
 
             if (searchOptions.Text != null && searchOptions.Text.Length > 0)
             {
-                cards = cards.Where(c => c.Text!.ToLower().Contains(searchOptions.Text));
+                allCards = allCards.Where(c => c.Text!.ToLower().Contains(searchOptions.Text));
+            }
+
+            if (searchOptions.ColorIdentities != null && searchOptions.ColorIdentities.Count > 0)
+            {
+                allCards = allCards.ToList().Where(
+                    c => searchOptions.ColorIdentities.All(
+                        y => c.ColorIdentity!.Contains(y)
+                    )
+                );
             }
 
             if (pageSize < 0){
-                return cards;
+                return allCards;
             }
 
-            return cards.Skip(offset).Take(pageSize);
+            return allCards.Skip(offset).Take(pageSize);
         }
 
         public static Dictionary<(string, string), Card> BulkSearchCards(IEnumerable<Card> cards, List<StrictSearchOptions> searchOptions, int pageSize, int offset) {

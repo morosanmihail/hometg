@@ -22,6 +22,8 @@ function Search({ startSearch = false, dedicatedPage = false }) {
         "artist": searchParams.get("artist") != null ? searchParams.get("artist") : "",
         "collectorNumber": searchParams.get("collectorNumber") != null ? searchParams.get("collectorNumber") : "",
         "text": searchParams.get("text") != null ? searchParams.get("text") : "",
+        "rarity": searchParams.get("rarity") != null ? searchParams.get("rarity") : "",
+        "colorIdentities": searchParams.getAll("colorIdentities") != null ? searchParams.getAll("colorIdentities") : [],
     });
     const [searchCollection, setSearchCollection] = useState("");
 
@@ -65,6 +67,17 @@ function Search({ startSearch = false, dedicatedPage = false }) {
         setSearchParams(newState);
     };
 
+    const handleColourIdentitiesInput = (event, colour) => {
+        let newState = Object.assign({}, searchOptions);
+        if (event.target.checked) {
+            newState["colorIdentities"] = [...newState["colorIdentities"], event.target.value];
+        } else {
+            newState["colorIdentities"] = newState["colorIdentities"].filter(c => c != event.target.value);
+        }
+        setSearchOptions(newState);
+        setSearchParams(newState);
+    }
+
     const handleCollectionInput = (event) => {
         setSearchCollection(event.target.value);
     }
@@ -95,6 +108,48 @@ function Search({ startSearch = false, dedicatedPage = false }) {
                     <div className="input-group">
                         <input onChange={event => handleSearchInput(event, "text")} type="text" className="form-control" id="search-bar-text" placeholder="Text" value={searchOptions["text"]} />
                     </div>
+                    <div className='input-group'>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleColourIdentitiesInput(e, "W")} className="form-check-input" type="checkbox" id="inlineCheckbox1" value="W"/>
+                            <label className="form-check-label" for="inlineCheckbox1">W</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleColourIdentitiesInput(e, "U")} className="form-check-input" type="checkbox" id="inlineCheckbox2" value="U"/>
+                            <label className="form-check-label" for="inlineCheckbox2">U</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleColourIdentitiesInput(e, "B")} className="form-check-input" type="checkbox" id="inlineCheckbox3" value="B"/>
+                            <label className="form-check-label" for="inlineCheckbox3">B</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleColourIdentitiesInput(e, "R")} className="form-check-input" type="checkbox" id="inlineCheckbox4" value="R"/>
+                            <label className="form-check-label" for="inlineCheckbox4">R</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleColourIdentitiesInput(e, "G")} className="form-check-input" type="checkbox" id="inlineCheckbox5" value="G"/>
+                            <label className="form-check-label" for="inlineCheckbox5">G</label>
+                        </div>
+                    </div>
+                    { false ?
+                    <div className='input-group'>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio1" value="C"/>
+                            <label className="form-check-label" for="rarityRadio1">Common</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio2" value="U"/>
+                            <label className="form-check-label" for="rarityRadio2">Uncommon</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio3" value="R"/>
+                            <label className="form-check-label" for="rarityRadio3">Rare</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio4" value="M"/>
+                            <label className="form-check-label" for="rarityRadio4">Mythic</label>
+                        </div>
+                    </div>
+                    : null }
                     <div className="input-group">
                         <button onClick={event => {setPageNumber(1); setShouldSearch(true);}} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
                         <select onChange={(e) => handleCollectionInput(e)} className="form-control" id="searchInCollection">

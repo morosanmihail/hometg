@@ -18,10 +18,6 @@ code {
     }
 }
 
-main {
-    /* margin-top: 58px; */
-}
-
 /* Add some custom CSS for the grid and hover effects */
 .card-grid {
     display: grid;
