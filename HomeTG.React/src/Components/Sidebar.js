@@ -21,6 +21,13 @@ export default function Sidebar() {
     return (
         <header>
             <nav id="sidebarMenu" className="d-lg-block sidebar bg-white">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div className="container-fluid">
+                        <a className="navbar-brand" href="/">
+                            HomeTG
+                        </a>
+                    </div>
+                </nav>
                 <div className="position-sticky">
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
                         <Link to={"/search"} className='btn btn-secondary'>
@@ -38,13 +45,6 @@ export default function Sidebar() {
 
                         <OperationsTracker/>
                     </div>
-                </div>
-            </nav>
-            <nav id="main-navbar" className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="/">
-                        HomeTG
-                    </a>
                 </div>
             </nav>
         </header>
