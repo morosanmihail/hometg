@@ -23,7 +23,9 @@ export default function Sidebar() {
             <nav id="sidebarMenu" className="d-lg-block sidebar bg-white">
                 <div className="position-sticky">
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">
-                        <button className="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#search">Search</button>
+                        <Link to={"/search"} className='btn btn-secondary'>
+                            Search
+                        </Link>
                     </div>
                     <hr/>
                     <div className="nav flex-column nav-pills me-3" role="tablist" aria-orientation="vertical">

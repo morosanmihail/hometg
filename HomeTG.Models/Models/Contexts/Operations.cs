@@ -15,31 +15,42 @@ namespace HomeTG.API.Models.Contexts
 
         public IEnumerable<CollectionCardWithDetails> SearchCollection(string collection, SearchOptions searchOptions, int offset = 0, int pageSize = 12)
         {
-            var cards = _mtgdb.SearchCards(searchOptions, pageSize, offset).ToList();
+            var cards = _mtgdb.SearchCards(searchOptions, -1, 0).ToList();
             var cardsInCollection = _db.GetCardsFromCollection(collection, cards.Select(c => c.Id).ToList());
 
-            return cards.Select(
+            return cards.Where(c => cardsInCollection.ContainsKey(c.Id)).Select(
                 c => new CollectionCardWithDetails(
                     c,
                     cardsInCollection[c.Id]
                 )
-            );
+            ).Skip(offset).Take(pageSize);
         }
 
         public IEnumerable<CollectionCardWithDetails> SearchAllCollections(SearchOptions searchOptions, int offset = 0, int pageSize = 12, bool skipNotOwned = false)
         {
-            var cards = _mtgdb.SearchCards(searchOptions, pageSize, offset).ToList();
+            int searchPageSize = skipNotOwned ? -1 : pageSize;
+            int searchOffset = skipNotOwned ? 0 : offset;
+            int collectionOffset = skipNotOwned ? offset : 0;
+            var cards = _mtgdb.SearchCards(searchOptions, searchPageSize, searchOffset).ToList();
             var cardsInCollection = _db.GetCards(cards.Select(c => c.Id).ToList());
 
+            int skipped = 0;
             var finalResult = new List<CollectionCardWithDetails>();
             foreach (var card in cards) {
                 if (cardsInCollection.ContainsKey(card.Id)) {
-                    foreach (var col in cardsInCollection[card.Id]) {
-                        finalResult.Add(new CollectionCardWithDetails(card, col));
+                    if (skipped < collectionOffset) {
+                        skipped = skipped + cardsInCollection[card.Id].Count;
+                    } else {
+                        foreach (var col in cardsInCollection[card.Id]) {
+                            finalResult.Add(new CollectionCardWithDetails(card, col));
+                        }
                     }
                 } else {
                     if (!skipNotOwned)
                         finalResult.Add(new CollectionCardWithDetails(card, null));
+                }
+                if (finalResult.Count >= pageSize) {
+                    break;
                 }
             }
 

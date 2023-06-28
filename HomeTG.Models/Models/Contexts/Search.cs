@@ -42,6 +42,10 @@ namespace HomeTG.API.Models.Contexts
                 cards = cards.Where(c => c.Text!.ToLower().Contains(searchOptions.Text));
             }
 
+            if (pageSize < 0){
+                return cards;
+            }
+
             return cards.Skip(offset).Take(pageSize);
         }
 

@@ -121,16 +121,16 @@ namespace HomeTG.API.Controllers.Collection
             return _ops.Count(collection);
         }
 
-        [HttpGet("cards/{collection}/search")]
+        [HttpPost("cards/{collection}/search")]
         public IEnumerable<CollectionCardWithDetails> Search(string collection, SearchOptions searchOptions, int offset = 0, int pageSize = 12)
         {
             return _ops.SearchCollection(collection, searchOptions, offset, pageSize);
         }
 
         [HttpPost("search")]
-        public IEnumerable<CollectionCardWithDetails> SearchAllCollections(SearchOptions searchOptions, int offset = 0, int pageSize = 12)
+        public IEnumerable<CollectionCardWithDetails> SearchAllCollections(SearchOptions searchOptions, int offset = 0, int pageSize = 12, bool skipNotOwned = false)
         {
-            return _ops.SearchAllCollections(searchOptions, offset, pageSize);
+            return _ops.SearchAllCollections(searchOptions, offset, pageSize, skipNotOwned);
         }
 
         [HttpGet("progress/{filename}")]

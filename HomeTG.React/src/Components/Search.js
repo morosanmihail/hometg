@@ -4,14 +4,16 @@ import Card from './Card';
 import { useOperations } from '../OperationsContext';
 import ReactPaginate from "react-paginate";
 import { useCardSets } from './ReusableConstants/CardSets';
+import { useCollections } from './CollectionContext';
 
-function Search({ dedicatedPage = false }) {
+function Search({ startSearch = false, dedicatedPage = false }) {
     const ops = useOperations();
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
-    const [shouldSearch, setShouldSearch] = useState(dedicatedPage);
+    const [shouldSearch, setShouldSearch] = useState(startSearch);
     const cardSets = useCardSets();
+    const collections = useCollections();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchOptions, setSearchOptions] = useState({
@@ -21,6 +23,7 @@ function Search({ dedicatedPage = false }) {
         "collectorNumber": searchParams.get("collectorNumber") != null ? searchParams.get("collectorNumber") : "",
         "text": searchParams.get("text") != null ? searchParams.get("text") : "",
     });
+    const [searchCollection, setSearchCollection] = useState("");
 
     let pageSize = 24;
 
@@ -28,9 +31,17 @@ function Search({ dedicatedPage = false }) {
         if(shouldSearch) {
             setLoading(true);
 
+            let url = (searchCollection !== "" && searchCollection !== "skipNotOwned") ?
+                "/collection/cards/" + searchCollection + "/search?pageSize=" :
+                "/collection/search?pageSize=";
+            url = url + pageSize + '&offset=' + ((pageNumber-1) * pageSize);
+
+            if (searchCollection === "skipNotOwned") {
+                url = url + "&skipNotOwned=true"
+            }
+
             ops.fetch(
-                "Searching the MtG database", [],
-                '/collection/search?pageSize=' + pageSize + '&offset=' + ((pageNumber-1) * pageSize),
+                "Searching", [], url,
                 {
                     method: "post",
                     headers: {
@@ -54,6 +65,10 @@ function Search({ dedicatedPage = false }) {
         setSearchParams(newState);
     };
 
+    const handleCollectionInput = (event) => {
+        setSearchCollection(event.target.value);
+    }
+
     const handlePageChange = (event) => {
         setShouldSearch(true);
         setPageNumber(parseInt(event.selected)+1);
@@ -61,7 +76,7 @@ function Search({ dedicatedPage = false }) {
 
     return (
         <React.Fragment>
-            <div className={"collapse" + (dedicatedPage === true ? " show" : "")} id="search">
+            <div className={(dedicatedPage === true ? "" : "collapse")} id={dedicatedPage ? "main-search" : "search"}>
                 <h2>Search</h2>
                 <div className="list-group list-group-flush mx-3 mt-4">
                     <div className="input-group">
@@ -81,7 +96,14 @@ function Search({ dedicatedPage = false }) {
                         <input onChange={event => handleSearchInput(event, "text")} type="text" className="form-control" id="search-bar-text" placeholder="Text" value={searchOptions["text"]} />
                     </div>
                     <div className="input-group">
-                        <button onClick={event => setShouldSearch(true)} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                        <button onClick={event => {setPageNumber(1); setShouldSearch(true);}} className="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                        <select onChange={(e) => handleCollectionInput(e)} className="form-control" id="searchInCollection">
+                            <option key={"searchincol-empty"} dropdown="in MtG database" value={""}>in MtG database</option>
+                            <option key={"searchincol-collections"} dropdown="in all collections" value={"skipNotOwned"}>in all collections</option>
+                            {collections.map(c =>
+                                <option key={"searchincol-" + c.id} dropdown={c.id} value={c.id}>{"in " + c.id}</option>
+                            )}
+                        </select>
                     </div>
                     <div className="search-results" id="search-results">
                         {
