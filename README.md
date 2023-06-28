@@ -43,7 +43,7 @@ Coming soon:
 
 You can search for cards by various filters (more to be added) in both the Magic database and in your existing collections.
 
-![Example of the Search UI](https://github.com/morosanmihail/hometg/blob/main/images/search20230628.jpg?raw=true)
+![Example of the Search UI](https://github.com/morosanmihail/hometg/blob/main/images/search20230628.png?raw=true)
 
 ### Collection management
 
