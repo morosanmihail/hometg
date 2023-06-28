@@ -6,6 +6,8 @@ Spawned from the desire to have an easy to manage collection (easily done by man
 The main use case is to scan cards with Delver Lens, then using its HTTP request feature, add the cards to HomeTG as well.
 Then be able to manage the collection outside of Delver Lens however needed.
 
+![Example of the UI](https://github.com/morosanmihail/hometg/blob/main/images/ui20230628.jpg?raw=true)
+
 ## Installation
 
 ### Docker
