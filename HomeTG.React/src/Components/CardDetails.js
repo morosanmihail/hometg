@@ -1,10 +1,14 @@
 import React from 'react';
 import { useCollection } from './CollectionContext';
 import { useOperations } from '../OperationsContext';
+import { useCardsDispatch } from '../Components/CardListContexts/CardsContext';
+import { useRefreshCardList } from './CardListContexts/RefreshCardListContext';
 
-export default function CardDetails({id, details = null, onAdd, toggleSelected}) {
+export default function CardDetails({id, details = null, toggleSelected}) {
     const ops = useOperations();
     const currentCollection = useCollection();
+    const cardsDispatch = useCardsDispatch();
+    const triggerRefresh = useRefreshCardList();
 
     const updateQuantity = (delta, deltaFoil) => {
         let collection = details == null ? currentCollection : details.collectionId;
@@ -28,7 +32,8 @@ export default function CardDetails({id, details = null, onAdd, toggleSelected})
                 body: JSON.stringify(body),
             }
         ).then(data => {
-            onAdd(add ? data[0] : data);
+            cardsDispatch({type: 'added', card: add ? data[0] : data});
+            triggerRefresh(true);
         })
     }
 

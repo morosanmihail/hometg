@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useOperations } from '../../OperationsContext';
 import { useCollection, useCollections } from '../CollectionContext';
 import { useSelectedCards, useSelectedCardsDispatch } from '../CardListContexts/SelectedCardsContext';
-import { useRefreshCardList } from '../CardList';
+import { useRefreshCardList } from '../CardListContexts/RefreshCardListContext';
 
 export default function MoveCards() {
     const ops = useOperations();
@@ -23,7 +23,7 @@ export default function MoveCards() {
             },
             body: JSON.stringify(selected),
         }).then(data => {
-            triggerRefresh();
+            triggerRefresh(true);
             selectedDispatch({type:'empty'});
         });
     }

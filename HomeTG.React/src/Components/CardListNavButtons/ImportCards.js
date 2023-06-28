@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { useOperations } from '../../OperationsContext';
 import { useCollection } from '../CollectionContext';
-import { useRefreshCardList } from '../CardList';
+import { useRefreshCardList } from '../CardListContexts/RefreshCardListContext';
 
 export default function ImportCards() {
     const ops = useOperations();
@@ -28,7 +28,7 @@ export default function ImportCards() {
         ops.fetch("Importing into " + collection, [], '/collection/import', {
             method: "post",
             body: formData,
-        }).then(data => triggerRefresh());
+        }).then(data => triggerRefresh(true));
     }
 
     return (

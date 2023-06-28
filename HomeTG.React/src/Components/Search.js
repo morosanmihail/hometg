@@ -5,7 +5,7 @@ import { useOperations } from '../OperationsContext';
 import ReactPaginate from "react-paginate";
 import { useCardSets } from './ReusableConstants/CardSets';
 
-function Search({ dedicatedPage = false, onAdd }) {
+function Search({ dedicatedPage = false }) {
     const ops = useOperations();
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -90,7 +90,7 @@ function Search({ dedicatedPage = false, onAdd }) {
                             :
                             <div className="card-grid list">
                                 {cards.map(card =>
-                                    <Card key={card.mtGCard.id + "-" + (card.card != null ? card.card.collectionId : "")} id={card.mtGCard.id} card={card.mtGCard} details={card.card} onAdd={onAdd} />
+                                    <Card key={card.mtGCard.id + "-" + (card.card != null ? card.card.collectionId : "")} id={card.mtGCard.id} card={card.mtGCard} details={card.card} />
                                 )}
                             </div>
                         }

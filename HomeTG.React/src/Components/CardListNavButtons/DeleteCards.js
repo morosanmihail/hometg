@@ -3,7 +3,7 @@ import { confirm } from "./ConfirmCollectionDelete";
 import { useOperations } from '../../OperationsContext';
 import { useCollection } from '../CollectionContext';
 import { useSelectedCards, useSelectedCardsDispatch } from '../CardListContexts/SelectedCardsContext';
-import { useRefreshCardList } from '../CardList';
+import { useRefreshCardList } from '../CardListContexts/RefreshCardListContext';
 
 export default function DeleteCards() {
     const ops = useOperations();
@@ -23,7 +23,7 @@ export default function DeleteCards() {
                     },
                     body: JSON.stringify(selected),
                 }).then(data => {
-                    triggerRefresh();
+                    triggerRefresh(true);
                     selectedDispatch({type:'empty'});
                 });
             },

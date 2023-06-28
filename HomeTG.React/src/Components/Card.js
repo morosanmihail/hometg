@@ -3,7 +3,7 @@ import CardDetails from './CardDetails';
 import { useSelectedCardsDispatch } from './CardListContexts/SelectedCardsContext';
 import { useCardLoader } from './CardListContexts/CardLoaderContext';
 
-export default function MtGCard({ id, card = null, details = null, onAdd = null}) {
+export default function MtGCard({ id, card = null, details = null}) {
     const [_card, setCard] = useState(card);
     const [selected, setSelected] = useState(false);
 
@@ -35,7 +35,7 @@ export default function MtGCard({ id, card = null, details = null, onAdd = null}
                 (_card == null) ? <p>Loading...</p> :
                     <div className={"card" + (selected ? " border border-primary" : "")}>
                         <img className="lazyload" src={imagePath} alt={_card.name} lazyload="on" />
-                            <CardDetails id={id} details={details} onAdd={onAdd} toggleSelected={toggleSelected} />
+                            <CardDetails id={id} details={details} toggleSelected={toggleSelected} />
                         <div className="card-info">
                             <div className="row align-items-center">
                                 <span className="col-sm-8">
