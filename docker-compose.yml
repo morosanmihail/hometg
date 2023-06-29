@@ -22,7 +22,7 @@ services:
       - private
     depends_on:
       - database
-    restart: always
+    restart: "unless-stopped"
 
   hometg-react:
     build:
@@ -54,6 +54,7 @@ services:
       - private
     volumes:
       - postgres-data:/var/lib/postgresql/data/
+    restart: "unless-stopped"
 
 networks:
   public:
