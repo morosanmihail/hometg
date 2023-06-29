@@ -111,42 +111,42 @@ function Search({ startSearch = false, dedicatedPage = false }) {
                     <div className='input-group'>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleColourIdentitiesInput(e, "W")} className="form-check-input" type="checkbox" id="inlineCheckbox1" value="W"/>
-                            <label className="form-check-label" for="inlineCheckbox1">W</label>
+                            <label className="form-check-label" htmlFor="inlineCheckbox1">W</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleColourIdentitiesInput(e, "U")} className="form-check-input" type="checkbox" id="inlineCheckbox2" value="U"/>
-                            <label className="form-check-label" for="inlineCheckbox2">U</label>
+                            <label className="form-check-label" htmlFor="inlineCheckbox2">U</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleColourIdentitiesInput(e, "B")} className="form-check-input" type="checkbox" id="inlineCheckbox3" value="B"/>
-                            <label className="form-check-label" for="inlineCheckbox3">B</label>
+                            <label className="form-check-label" htmlFor="inlineCheckbox3">B</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleColourIdentitiesInput(e, "R")} className="form-check-input" type="checkbox" id="inlineCheckbox4" value="R"/>
-                            <label className="form-check-label" for="inlineCheckbox4">R</label>
+                            <label className="form-check-label" htmlFor="inlineCheckbox4">R</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleColourIdentitiesInput(e, "G")} className="form-check-input" type="checkbox" id="inlineCheckbox5" value="G"/>
-                            <label className="form-check-label" for="inlineCheckbox5">G</label>
+                            <label className="form-check-label" htmlFor="inlineCheckbox5">G</label>
                         </div>
                     </div>
                     { false ?
                     <div className='input-group'>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio1" value="C"/>
-                            <label className="form-check-label" for="rarityRadio1">Common</label>
+                            <label className="form-check-label" htmlFor="rarityRadio1">Common</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio2" value="U"/>
-                            <label className="form-check-label" for="rarityRadio2">Uncommon</label>
+                            <label className="form-check-label" htmlFor="rarityRadio2">Uncommon</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio3" value="R"/>
-                            <label className="form-check-label" for="rarityRadio3">Rare</label>
+                            <label className="form-check-label" htmlFor="rarityRadio3">Rare</label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input onChange={e => handleSearchInput(e, "rarity")} className="form-check-input" type="radio" id="rarityRadio4" value="M"/>
-                            <label className="form-check-label" for="rarityRadio4">Mythic</label>
+                            <label className="form-check-label" htmlFor="rarityRadio4">Mythic</label>
                         </div>
                     </div>
                     : null }

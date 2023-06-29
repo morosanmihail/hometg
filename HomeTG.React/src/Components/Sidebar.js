@@ -21,7 +21,7 @@ export default function Sidebar() {
     return (
         <header>
             <nav id="sidebarMenu" className="d-lg-block sidebar bg-white">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container-fluid">
                         <a className="navbar-brand" href="/">
                             HomeTG
