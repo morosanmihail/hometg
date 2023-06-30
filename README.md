@@ -1,3 +1,4 @@
+[![.NET](https://github.com/morosanmihail/hometg/actions/workflows/dotnet.yml/badge.svg)](https://github.com/morosanmihail/hometg/actions/workflows/dotnet.yml)
 # HomeTG
 
 Self-hosted Magic: the Gathering card collection tracker.
