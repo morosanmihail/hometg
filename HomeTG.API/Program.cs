@@ -15,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var MtGDBPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "hometg",
         "DB/AllPrintings.db"
     );
@@ -38,16 +38,22 @@ builder.Services.AddDbContext<CollectionDB>(options =>
     if (provider == Postgres.Name)
     {
         options.UseNpgsql(
-               builder.Configuration.GetConnectionString("Postgres")!,
-               x => x.MigrationsAssembly("HomeTG.Postgres")
+            builder.Configuration.GetConnectionString("Postgres")!,
+            x => x.MigrationsAssembly("HomeTG.Postgres")
         );
     }
 
     if (provider == Sqlite.Name)
     {
         options.UseSqlite(
-                builder.Configuration.GetConnectionString("Sqlite")!,
-               x => x.MigrationsAssembly("HomeTG.Sqlite")
+            "Data Source=" +
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "hometg",
+                "DB"
+            ) +
+            builder.Configuration.GetConnectionString("Sqlite")!,
+            x => x.MigrationsAssembly("HomeTG.Sqlite")
         );
     }
 });

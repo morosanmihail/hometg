@@ -9,7 +9,7 @@ services:
     ports:
       - "5234:80"
     volumes:
-      - /config/hometg:/usr/share/hometg
+      - /config/hometg:~/.local/share/hometg/DB/hometg
     environment:
       "ASPNETCORE_ENVIRONMENT": "linux"
       # Optional way to overwrite database connection.
