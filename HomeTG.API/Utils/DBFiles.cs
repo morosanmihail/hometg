@@ -9,6 +9,13 @@ namespace HomeTG.API.Utils
         {
             bool download = false;
 
+            string flag = Environment.GetEnvironmentVariable("SKIP_PRINTINGS_DB_DOWNLOAD");
+            if (string.Equals(flag, "TRUE", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("SKIP_PRINTINGS_DB_DOWNLOAD set to TRUE. Skipping DB download.");
+                return false;
+            }
+
             string remoteHash = "";
 
             string? LocalFolder = new FileInfo(Filename).DirectoryName;
@@ -33,7 +40,7 @@ namespace HomeTG.API.Utils
 
             if (download)
             {
-                Console.WriteLine("File is NOT up to date. Downloading...");
+                Console.WriteLine("File is NOT up to date. Downloading to " + Filename + "...");
                 await SaveUrlContent(DBURL, Filename);
                 Console.WriteLine("Downloaded.");
             }
@@ -55,14 +62,16 @@ namespace HomeTG.API.Utils
 
         static async Task SaveUrlContent(string url, string Filename)
         {
-            using (var client = new HttpClient())
-            using (var result = await client.GetAsync(url))
-            {
-                var content = result.IsSuccessStatusCode ? await result.Content.ReadAsByteArrayAsync() : null;
-
-                if (content != null)
+            using (var client = new HttpClient()) {
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                using (var result = await client.GetAsync(url))
                 {
-                    await File.WriteAllBytesAsync(Filename, content);
+                    var content = result.IsSuccessStatusCode ? await result.Content.ReadAsByteArrayAsync() : null;
+
+                    if (content != null)
+                    {
+                        await File.WriteAllBytesAsync(Filename, content);
+                    }
                 }
             }
         }
