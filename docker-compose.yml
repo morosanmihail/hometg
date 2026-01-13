@@ -17,6 +17,8 @@ services:
       # "provider": "Sqlite"
       "ConnectionStrings__Postgres": "Host=database;Username=hometg;Password=supersecretpassword;Database=hometg_db"
       "provider": "Postgres"
+      # Uncomment the following line if you do not want to download the latest card DB on startup.
+      # "SKIP_PRINTINGS_DB_DOWNLOAD": "TRUE"
     networks:
       - public
       - private
