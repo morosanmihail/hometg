@@ -1,4 +1,10 @@
+> [!NOTE]
+> This is no longer actively maintained, but I do encourage people to contribute and I will review.
+> Or you can fork it.
+> But if you would like something that _is_ maintained, GOOD NEWS! [GatheRs](https://codeberg.org/morosanmihail/gathers) is a rewrite of this in Rust and actively maintained.
+
 [![.NET](https://github.com/morosanmihail/hometg/actions/workflows/dotnet.yml/badge.svg)](https://github.com/morosanmihail/hometg/actions/workflows/dotnet.yml)
+
 # HomeTG
 
 Self-hosted Magic: the Gathering card collection tracker.
@@ -21,6 +27,7 @@ The card database is downloaded on start-up from www.mtgjson.com if a newer vers
 You can trigger a manual update check via the `/mtg/update` endpoint.
 
 Coming soon:
+
 - scheduled automatic update.
 - live migration of mtgjson.com Sqlite database into Postgres, for higher performance.
 
